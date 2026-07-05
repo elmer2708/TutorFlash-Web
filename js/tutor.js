@@ -1,3 +1,9 @@
+import {
+  observarUsuario,
+  obtenerPostulacionTutorPorUid,
+  guardarPostulacionTutor,
+} from "./firebase-service.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const btnPostularTutor = document.getElementById("btnPostularTutor");
   const modalPostulacionTutor = document.getElementById(
@@ -8,7 +14,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const formPostulacionTutor = document.getElementById("formPostulacionTutor");
   const mensajeTutor = document.getElementById("mensajeTutor");
 
+  let usuarioActual = null;
+  let postulacionExistente = null;
+
+  observarUsuario(async (usuario) => {
+    usuarioActual = usuario;
+
+    if (!usuarioActual) {
+      postulacionExistente = null;
+      return;
+    }
+
+    try {
+      postulacionExistente = await obtenerPostulacionTutorPorUid(
+        usuarioActual.uid,
+      );
+    } catch (error) {
+      console.error("Error al revisar la postulación del tutor:", error);
+    }
+  });
+
   function abrirModalTutor() {
+    if (!usuarioActual) {
+      alert("Para postular como tutor, primero debes iniciar sesión.");
+      window.location.href = "cuenta.html";
+      return;
+    }
+
+    if (postulacionExistente) {
+      alert(
+        `Ya tienes una postulación registrada con estado: ${postulacionExistente.estado}.`,
+      );
+      return;
+    }
+
     if (!modalPostulacionTutor) return;
 
     modalPostulacionTutor.classList.add("activo");
@@ -61,8 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (formPostulacionTutor) {
-    formPostulacionTutor.addEventListener("submit", (event) => {
+    formPostulacionTutor.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      if (!usuarioActual) {
+        mostrarMensajeTutor(
+          "Debes iniciar sesión antes de enviar tu postulación.",
+          "error",
+        );
+        return;
+      }
 
       const nombreTutor = document.getElementById("nombreTutor").value.trim();
       const correoTutor = document.getElementById("correoTutor").value.trim();
@@ -94,15 +141,46 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      mostrarMensajeTutor(
-        "Tu postulación fue registrada como maqueta. Muy pronto TutorFlash activará esta función.",
-        "exito",
-      );
+      try {
+        await guardarPostulacionTutor({
+          nombre: nombreTutor,
+          correo: correoTutor,
+          telefono: telefonoTutor,
+          cursos: cursosTutor,
+          nivel: nivelTutor,
+          disponibilidad: disponibilidadTutor,
+          experiencia: experienciaTutor,
+        });
 
-      setTimeout(() => {
-        formPostulacionTutor.reset();
-        cerrarModalPostulacion();
-      }, 1800);
+        postulacionExistente = {
+          uid: usuarioActual.uid,
+          nombre: nombreTutor,
+          correo: correoTutor,
+          telefono: telefonoTutor,
+          cursos: cursosTutor,
+          nivel: nivelTutor,
+          disponibilidad: disponibilidadTutor,
+          experiencia: experienciaTutor,
+          estado: "pendiente",
+        };
+
+        mostrarMensajeTutor(
+          "Tu postulación fue enviada correctamente. TutorFlash revisará tu información.",
+          "exito",
+        );
+
+        setTimeout(() => {
+          formPostulacionTutor.reset();
+          cerrarModalPostulacion();
+        }, 1800);
+      } catch (error) {
+        console.error("Error al guardar la postulación:", error);
+
+        mostrarMensajeTutor(
+          error.message || "Ocurrió un error al enviar tu postulación.",
+          "error",
+        );
+      }
     });
   }
 });

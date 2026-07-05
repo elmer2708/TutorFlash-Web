@@ -15,6 +15,7 @@ import {
   getDocs,
   query,
   where,
+  limit,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -100,4 +101,57 @@ export async function obtenerMisSesiones() {
     id: documento.id,
     ...documento.data(),
   }));
+}
+
+/* ============================= */
+/* POSTULACIONES DE TUTORES */
+/* ============================= */
+
+export async function obtenerPostulacionTutorPorUid(uid) {
+  const consulta = query(
+    collection(db, "postulacionesTutores"),
+    where("uid", "==", uid),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    return null;
+  }
+
+  const documento = resultado.docs[0];
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+}
+
+export async function guardarPostulacionTutor(postulacion) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para postular como tutor.");
+  }
+
+  const postulacionExistente = await obtenerPostulacionTutorPorUid(usuario.uid);
+
+  if (postulacionExistente) {
+    throw new Error("Ya tienes una postulación registrada.");
+  }
+
+  await addDoc(collection(db, "postulacionesTutores"), {
+    uid: usuario.uid,
+    correoUsuario: usuario.email,
+    nombre: postulacion.nombre,
+    correo: postulacion.correo,
+    telefono: postulacion.telefono,
+    cursos: postulacion.cursos,
+    nivel: postulacion.nivel,
+    disponibilidad: postulacion.disponibilidad,
+    experiencia: postulacion.experiencia,
+    estado: "pendiente",
+    fechaPostulacion: serverTimestamp(),
+  });
 }

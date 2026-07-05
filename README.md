@@ -97,3 +97,14 @@ Colecciones usadas:
 - Pago real futuro.
 - Chat futuro.
 - Videollamada futura.
+
+1. Guardar postulación real en Firestore.
+2. Validar que el usuario haya iniciado sesión.
+3. Evitar postulaciones duplicadas.
+4. Crear página admin.html.
+5. Aprobar o rechazar postulaciones.
+6. Crear tutores reales en Firestore.
+7. Hacer que app.html muestre tutores desde Firestore.
+8. Ajustar reservas para que usen tutorId real.
+9. Crear panel del tutor.
+10. Poner reglas seguras de Firestore.
