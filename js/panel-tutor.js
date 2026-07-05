@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return fecha;
   }
+
   function ordenarReservasPorFechaHora(reservas, direccion = "asc") {
     return [...reservas].sort((a, b) => {
       const fechaA = obtenerFechaHora(a);
@@ -261,20 +262,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     proximaSesionCard.className = "proxima-detalle";
     proximaSesionCard.innerHTML = `
-      <div class="proxima-curso">${proxima.curso || "Curso no indicado"}</div>
+  <div class="proxima-curso">
+    ${limpiarTexto(proxima.curso || "Curso no indicado")}
+  </div>
 
-      <span class="estado-pill estado-${normalizarEstado(proxima.estado)}">
-        ${obtenerEtiquetaEstado(proxima.estado)}
-      </span>
+  <span class="estado-pill estado-${normalizarEstado(proxima.estado)}">
+    ${limpiarTexto(obtenerEtiquetaEstado(proxima.estado))}
+  </span>
 
-      <div class="proxima-meta">
-        <div><strong>Estudiante:</strong> ${proxima.correoUsuario || "No registrado"}</div>
-        <div><strong>Fecha:</strong> ${formatearFecha(proxima.fecha)}</div>
-        <div><strong>Hora:</strong> ${proxima.hora || "No indicada"}</div>
-        <div><strong>Modalidad:</strong> ${proxima.modalidad || "No indicada"}</div>
-        <div><strong>Total:</strong> S/ ${proxima.total || "0"}</div>
-      </div>
-    `;
+  <div class="proxima-meta">
+    <div><strong>Estudiante:</strong> ${limpiarTexto(proxima.correoUsuario || "No registrado")}</div>
+    <div><strong>Fecha:</strong> ${limpiarTexto(formatearFecha(proxima.fecha))}</div>
+    <div><strong>Hora:</strong> ${limpiarTexto(proxima.hora || "No indicada")}</div>
+    <div><strong>Modalidad:</strong> ${limpiarTexto(proxima.modalidad || "No indicada")}</div>
+    <div><strong>Total:</strong> S/ ${formatearMonto(proxima.total)}</div>
+  </div>
+`;
   }
 
   function obtenerReservasFiltradas() {
@@ -503,6 +506,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      const textoOriginalBoton = boton.textContent;
+
       try {
         boton.disabled = true;
         boton.textContent = "Actualizando...";
@@ -519,6 +524,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Error al actualizar reserva:", error);
+
+        boton.disabled = false;
+        boton.textContent = textoOriginalBoton;
+
         mostrarMensaje(
           "No se pudo actualizar el estado de la reserva.",
           "error",
