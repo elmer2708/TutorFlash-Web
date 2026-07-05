@@ -361,3 +361,100 @@ export async function actualizarPerfilTutorActual(datosPerfil) {
     ...datosPerfil,
   };
 }
+export async function obtenerDisponibilidadTutorActual() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para ver tu disponibilidad.");
+  }
+
+  const tutorActivo = await obtenerTutorActivoActual();
+
+  if (!tutorActivo) {
+    throw new Error("Solo un tutor activo puede ver su disponibilidad.");
+  }
+
+  const consulta = query(
+    collection(db, "disponibilidadTutores"),
+    where("uid", "==", usuario.uid),
+    where("tutorId", "==", tutorActivo.id),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    return {
+      tutorId: tutorActivo.id,
+      uid: usuario.uid,
+      bloques: [],
+    };
+  }
+
+  const documento = resultado.docs[0];
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+}
+
+export async function guardarDisponibilidadTutorActual(bloques) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para guardar tu disponibilidad.");
+  }
+
+  const tutorActivo = await obtenerTutorActivoActual();
+
+  if (!tutorActivo) {
+    throw new Error("Solo un tutor activo puede guardar disponibilidad.");
+  }
+
+  if (!Array.isArray(bloques)) {
+    throw new Error("La disponibilidad debe tener una lista de horarios.");
+  }
+
+  const datosDisponibilidad = {
+    uid: usuario.uid,
+    tutorId: tutorActivo.id,
+    tutorNombre: tutorActivo.nombre || "",
+    bloques,
+    actualizadoEn: serverTimestamp(),
+  };
+
+  const consulta = query(
+    collection(db, "disponibilidadTutores"),
+    where("uid", "==", usuario.uid),
+    where("tutorId", "==", tutorActivo.id),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    const nuevoDocumento = await addDoc(
+      collection(db, "disponibilidadTutores"),
+      {
+        ...datosDisponibilidad,
+        creadoEn: serverTimestamp(),
+      },
+    );
+
+    return {
+      id: nuevoDocumento.id,
+      ...datosDisponibilidad,
+    };
+  }
+
+  const documento = resultado.docs[0];
+  const disponibilidadRef = doc(db, "disponibilidadTutores", documento.id);
+
+  await updateDoc(disponibilidadRef, datosDisponibilidad);
+
+  return {
+    id: documento.id,
+    ...datosDisponibilidad,
+  };
+}
