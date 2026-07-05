@@ -189,6 +189,7 @@ body {
     text-align: center;
     align-items: center;
     justify-content: center;
+    transform: translateY(-3dvh);
   }
 
   .tf-logo-card {
@@ -217,13 +218,9 @@ body {
   .tf-welcome-actions a {
     width: 100%;
   }
-
-  .tf-welcome {
-    transform: translateY(-3dvh);
-  }
 }
 
-/* CELULAR PEQUEÑO */
+/* CELULAR NORMAL */
 
 @media (max-width: 520px) {
   .tf-welcome-page {
@@ -231,10 +228,10 @@ body {
   }
 
   .tf-welcome {
-    min-height: auto;
     width: 100%;
     max-width: 100%;
     padding: 0;
+    transform: translateY(-9dvh);
   }
 
   .tf-logo-card {
@@ -252,6 +249,7 @@ body {
   .tf-welcome-title {
     margin: -75px auto 18px;
     font-size: clamp(1.15rem, 6.5vw, 1.65rem);
+    line-height: 1.1;
   }
 
   .tf-welcome-actions {
@@ -267,7 +265,94 @@ body {
     min-height: 48px;
     font-size: 15px;
   }
+}
+
+/* CELULAR PEQUEÑO */
+
+@media (max-width: 360px) {
   .tf-welcome {
     transform: translateY(-9dvh);
+  }
+
+  .tf-welcome-logo {
+    max-width: 290px;
+  }
+
+  .tf-welcome-title {
+    margin: -55px auto 18px;
+    font-size: 1.25rem;
+    line-height: 1.12;
+  }
+
+  .tf-welcome-actions {
+    max-width: 290px;
+    padding: 8px;
+  }
+
+  .tf-enter-btn,
+  .tf-link-btn {
+    min-height: 48px;
+    font-size: 14px;
+  }
+}
+
+/* CELULAR MUY PEQUEÑO */
+
+@media (max-width: 320px) {
+  .tf-welcome-page {
+    padding: 18px 12px;
+  }
+
+  .tf-welcome {
+    transform: translateY(-9dvh);
+  }
+
+  .tf-welcome-logo {
+    max-width: 270px;
+  }
+
+  .tf-welcome-title {
+    margin: -50px auto 16px;
+    font-size: 1.12rem;
+    line-height: 1.1;
+  }
+
+  .tf-welcome-actions {
+    max-width: 270px;
+    padding: 7px;
+    gap: 10px;
+  }
+
+  .tf-enter-btn,
+  .tf-link-btn {
+    min-height: 44px;
+    font-size: 13px;
+  }
+}
+
+/* CELULAR EXTREMADAMENTE PEQUEÑO */
+
+@media (max-width: 305px) {
+  .tf-welcome {
+    transform: translateY(-9dvh);
+  }
+
+  .tf-welcome-logo {
+    max-width: 250px;
+  }
+
+  .tf-welcome-title {
+    margin: -45px auto 14px;
+    font-size: 1rem;
+  }
+
+  .tf-welcome-actions {
+    max-width: 250px;
+  }
+
+  .tf-enter-btn,
+  .tf-link-btn {
+    min-height: 42px;
+    font-size: 12px;
   }
 }
