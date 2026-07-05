@@ -209,10 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const calcularTotal = () => {
-    const precioBase = Number(tutorSeleccionado.price) || 0;
+    const precioPorHora = Number(tutorSeleccionado.price) || 0;
     const minutos = obtenerMinutos();
 
-    return precioBase * (minutos / 30);
+    return precioPorHora * (minutos / 60);
   };
 
   const formatearSoles = (monto) => {
@@ -288,9 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const corregirListaCursos = (cursos) => {
     return cursos.map((curso) => corregirCurso(curso));
   };
-  const obtenerPrecioTutor = () => {
-    return 25;
-  };
 
   const obtenerRatingTutor = () => {
     return "4.8";
@@ -339,9 +336,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombreTutor = capitalizarTexto(tutor.nombre || "Tutor");
     const cursos = corregirListaCursos(separarCursos(tutor.cursos));
     const cursoPrincipal = cursos[0] || "Curso general";
-    const precio = tutor.precio || obtenerPrecioTutor();
+
+    const precio = Number(
+      tutor.precioHora || tutor.precio || obtenerPrecioTutor(),
+    );
     const rating = tutor.rating || obtenerRatingTutor();
     const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
+
+    const modalidad = tutor.modalidad || "Modalidad no indicada";
+    const nivel = tutor.nivel || "Nivel no indicado";
+    const distrito = tutor.distrito || tutor.zona || "Zona no indicada";
+
+    const presentacion =
+      tutor.presentacion ||
+      tutor.experiencia ||
+      "Tutor disponible para ayudarte a reforzar tus cursos.";
+
     return `
     <article
       class="tf-tutor-card"
@@ -351,27 +361,40 @@ document.addEventListener("DOMContentLoaded", () => {
       data-rating="${rating}"
       data-price="${precio}"
       data-availability="${disponibilidad}"
+      data-modalidad="${modalidad}"
+      data-nivel="${nivel}"
+      data-distrito="${distrito}"
     >
       <div class="tf-avatar">
-        ${obtenerInicial(tutor.nombre || "Tutor")}
+        ${obtenerInicial(nombreTutor)}
       </div>
 
       <h3>${nombreTutor}</h3>
 
-      <p>
+      <p class="tf-tutor-courses">
         ${cursos.length > 0 ? cursos.join(", ") : "Cursos disponibles"}
       </p>
 
-      <span>
+      <p class="tf-tutor-description">
+        ${presentacion}
+      </p>
+
+      <div class="tf-tutor-tags">
+        <span>${nivel}</span>
+        <span>${modalidad}</span>
+        <span>${distrito}</span>
+      </div>
+
+      <span class="tf-tutor-meta">
         ⭐ ${rating} · ${disponibilidad}
       </span>
 
-      <strong>
-        S/ ${precio} por 30 min
+      <strong class="tf-tutor-price">
+        S/ ${precio.toFixed(2)} por hora
       </strong>
 
       <button type="button" class="tf-card-btn">
-        Solicitar
+        Reservar tutoría
       </button>
     </article>
   `;
@@ -407,7 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
         listaTutores.innerHTML = `
         <div class="tf-empty-tutors">
           <h3>Aún no hay tutores activos</h3>
-          <p>Cuando se aprueben postulaciones, los tutores aparecerán aquí.</p>
+          <p>Cuando un tutor aprobado complete su perfil público, aparecerá aquí.</p>
         </div>
       `;
 
@@ -621,7 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tutorId: tutorSeleccionado.tutorId || "",
       tutor: tutorSeleccionado.tutor,
       curso: tutorSeleccionado.curso,
-      fecha: formatearFecha(fechaReserva.value),
+      fecha: fechaReserva.value,
       hora: horaReserva.value,
       modalidad: modalidadReserva.value,
       duracion: duracionReserva.value,
@@ -634,7 +657,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       finalTutor.textContent = reserva.tutor;
       finalCurso.textContent = reserva.curso;
-      finalFecha.textContent = reserva.fecha;
+      finalFecha.textContent = formatearFecha(reserva.fecha);
       finalHora.textContent = reserva.hora;
       finalModalidad.textContent = reserva.modalidad;
       finalDuracion.textContent = reserva.duracion;

@@ -82,7 +82,7 @@ export async function guardarReserva(reserva) {
     duracion: reserva.duracion,
     total: reserva.total,
     metodoPago: reserva.metodoPago,
-    estado: "Confirmada",
+    estado: "pendiente",
     creadoEn: serverTimestamp(),
   });
 }
@@ -227,10 +227,16 @@ export async function obtenerTutoresActivos() {
 
   const resultado = await getDocs(consulta);
 
-  return resultado.docs.map((documento) => ({
-    id: documento.id,
-    ...documento.data(),
-  }));
+  return resultado.docs
+    .map((documento) => ({
+      id: documento.id,
+      ...documento.data(),
+    }))
+    .filter((tutor) => {
+      const estadoPublico = tutor.estadoPublico || "activo";
+
+      return estadoPublico === "activo" && tutor.perfilCompleto === true;
+    });
 }
 /* ============================= */
 /* PANEL DEL TUTOR */
