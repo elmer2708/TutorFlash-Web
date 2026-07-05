@@ -3,37 +3,169 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Panel del tutor | TutorFlash</title>
-
+    <title>Panel Tutor | TutorFlash</title>
     <link rel="stylesheet" href="../css/panel-tutor.css" />
   </head>
   <body>
-    <header class="panel-header">
-      <nav class="panel-nav">
-        <a href="app.html" class="panel-logo">TutorFlash Tutor</a>
+    <aside class="tutor-sidebar">
+      <a href="../index.html" class="sidebar-logo">
+        <span>⚡</span>
+        <strong>TutorFlash</strong>
+      </a>
 
-        <div class="panel-links">
-          <a href="app.html">Plataforma</a>
-          <a href="tutor.html">Quiero ser tutor</a>
-          <a href="sesiones.html">Mis sesiones</a>
-          <button type="button" id="btnCerrarSesionTutor">Cerrar sesión</button>
-        </div>
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="activo">Dashboard</a>
+        <a href="#reservas">Mis reservas</a>
+        <a href="#historial">Historial</a>
+        <a href="#" class="nav-proximo">Mi perfil tutor</a>
+        <a href="#" class="nav-proximo">Disponibilidad</a>
+        <a href="app.html">Ver plataforma</a>
       </nav>
-    </header>
 
-    <main class="panel-main">
-      <section class="panel-hero">
-        <span>Panel del tutor</span>
-        <h1>Mis reservas recibidas</h1>
-        <p id="textoTutorActivo">Verificando tu perfil de tutor...</p>
+      <button id="btnCerrarSesionTutor" class="btn-salir">Salir</button>
+    </aside>
+
+    <main class="tutor-main">
+      <header class="panel-header" id="dashboard">
+        <div>
+          <span class="panel-label">Panel del tutor aprobado</span>
+          <h1 id="nombreTutorPanel">Cargando tutor...</h1>
+          <p id="correoTutorPanel">Validando tu acceso como tutor activo.</p>
+        </div>
+
+        <div class="header-actions">
+          <a href="app.html" class="btn-outline">Ver plataforma</a>
+          <a href="cuenta.html" class="btn-primary">Mi cuenta</a>
+        </div>
+      </header>
+
+      <section class="perfil-resumen">
+        <article class="perfil-card">
+          <div class="avatar-tutor" id="avatarTutor">TF</div>
+
+          <div>
+            <h2 id="nombreTutorCard">TutorFlash Tutor</h2>
+            <p id="cursosTutorPanel">Cursos no registrados</p>
+
+            <div class="perfil-tags">
+              <span id="nivelTutorPanel">Nivel no indicado</span>
+              <span id="disponibilidadTutorPanel"
+                >Disponibilidad no indicada</span
+              >
+              <span id="estadoTutorPanel">Activo</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="mensaje-panel" id="panelMensaje">
+          Revisando reservas del tutor...
+        </article>
       </section>
 
-      <section id="mensajePanelTutor" class="panel-mensaje">
-        Cargando reservas...
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Reservas pendientes</span>
+          <strong id="statPendientes">0</strong>
+          <p>Solicitudes por revisar.</p>
+        </article>
+
+        <article class="stat-card">
+          <span>Reservas aceptadas</span>
+          <strong id="statAceptadas">0</strong>
+          <p>Sesiones listas para atender.</p>
+        </article>
+
+        <article class="stat-card">
+          <span>Sesiones realizadas</span>
+          <strong id="statRealizadas">0</strong>
+          <p>Clases marcadas como completadas.</p>
+        </article>
+
+        <article class="stat-card">
+          <span>Ingresos estimados</span>
+          <strong id="statIngresos">S/ 0</strong>
+          <p>Según reservas aceptadas o realizadas.</p>
+        </article>
       </section>
 
-      <section id="listaReservasTutor" class="reservas-grid"></section>
+      <section class="dashboard-grid">
+        <article class="panel-card proxima-card">
+          <div class="card-heading">
+            <div>
+              <span>Agenda</span>
+              <h2>Próxima sesión</h2>
+            </div>
+          </div>
+
+          <div id="proximaSesionCard" class="empty-state">
+            Todavía no hay una próxima sesión registrada.
+          </div>
+        </article>
+
+        <article class="panel-card acciones-card">
+          <div class="card-heading">
+            <div>
+              <span>Accesos rápidos</span>
+              <h2>Gestiona tu plataforma</h2>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+            <a href="#" class="quick-action">
+              <strong>Mi perfil tutor</strong>
+              <span>Próximamente editarás tu perfil público.</span>
+            </a>
+
+            <a href="#" class="quick-action">
+              <strong>Disponibilidad</strong>
+              <span>Próximamente configurarás tus horarios.</span>
+            </a>
+
+            <a href="app.html" class="quick-action">
+              <strong>Ver plataforma</strong>
+              <span>Revisa cómo ven los estudiantes TutorFlash.</span>
+            </a>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel-card reservas-section" id="reservas">
+        <div class="reservas-header">
+          <div>
+            <span>Reservas recibidas</span>
+            <h2>Mis reservas</h2>
+            <p>
+              Aquí aparecerán las reservas que los estudiantes realicen contigo.
+            </p>
+          </div>
+
+          <select id="filtroReservas">
+            <option value="todas">Todas</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="aceptada">Aceptadas</option>
+            <option value="realizada">Realizadas</option>
+            <option value="rechazada">Rechazadas</option>
+            <option value="cancelada">Canceladas</option>
+          </select>
+        </div>
+
+        <div id="listaReservasTutor" class="reservas-lista">
+          <div class="empty-state">Cargando reservas...</div>
+        </div>
+      </section>
+
+      <section class="panel-card historial-section" id="historial">
+        <div class="card-heading">
+          <div>
+            <span>Historial</span>
+            <h2>Sesiones realizadas</h2>
+          </div>
+        </div>
+
+        <div id="listaHistorialTutor" class="historial-lista">
+          <div class="empty-state">Todavía no tienes sesiones realizadas.</div>
+        </div>
+      </section>
     </main>
 
     <script type="module" src="../js/panel-tutor.js"></script>

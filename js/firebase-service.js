@@ -284,6 +284,23 @@ export async function obtenerReservasDelTutor() {
   }));
 }
 
+export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para actualizar una reserva.");
+  }
+
+  if (!reservaId || !nuevoEstado) {
+    throw new Error("Faltan datos para actualizar la reserva.");
+  }
+
+  await updateDoc(doc(db, "reservas", reservaId), {
+    estado: nuevoEstado,
+    actualizadoEn: serverTimestamp(),
+  });
+}
+
 export async function obtenerPerfilUsuarioActual() {
   const usuario = auth.currentUser;
 
