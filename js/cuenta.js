@@ -3,11 +3,13 @@ import {
   registrarUsuario,
   iniciarSesion,
   cerrarSesion,
+  obtenerTutorActivoActual,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector("#loginForm");
   const registroForm = document.querySelector("#registroForm");
+
   const mostrarRegistro = document.querySelector("#mostrarRegistro");
   const mostrarLogin = document.querySelector("#mostrarLogin");
 
@@ -26,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuarioActualTexto = document.querySelector("#usuarioActualTexto");
   const authMensaje = document.querySelector("#authMensaje");
 
+  let redireccionando = false;
+  let accionAuthEnProceso = false;
+
   function mostrarMensaje(mensaje) {
     if (authMensaje) {
       authMensaje.textContent = mensaje;
@@ -43,13 +48,36 @@ document.addEventListener("DOMContentLoaded", () => {
   function mostrarVistaLogin() {
     if (loginForm) loginForm.classList.remove("oculto");
     if (registroForm) registroForm.classList.add("oculto");
+
     mostrarMensaje("Inicia sesión para continuar.");
   }
 
   function mostrarVistaRegistro() {
     if (loginForm) loginForm.classList.add("oculto");
     if (registroForm) registroForm.classList.remove("oculto");
+
     mostrarMensaje("Crea una cuenta para guardar tus reservas.");
+  }
+
+  async function redirigirSegunRol() {
+    if (redireccionando) return;
+
+    redireccionando = true;
+    mostrarMensaje("Revisando tu tipo de usuario...");
+
+    try {
+      const tutorActivo = await obtenerTutorActivoActual();
+
+      if (tutorActivo) {
+        window.location.href = "panel-tutor.html";
+      } else {
+        window.location.href = "app.html";
+      }
+    } catch (error) {
+      redireccionando = false;
+      mostrarMensaje("No se pudo revisar el tipo de usuario.");
+      console.error(error);
+    }
   }
 
   if (mostrarRegistro) {
@@ -71,6 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       mostrarMensaje("Sesión iniciada correctamente.");
+
+      if (!accionAuthEnProceso) {
+        redirigirSegunRol();
+      }
     } else {
       if (cuentaActiva) cuentaActiva.classList.add("oculto");
       mostrarVistaLogin();
@@ -95,19 +127,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        await registrarUsuario(nombre, correo, password, rol);
-        limpiarCampos();
+        accionAuthEnProceso = true;
 
+        await registrarUsuario(nombre, correo, password, rol);
+
+        limpiarCampos();
         mostrarMensaje("Cuenta creada correctamente. Redirigiendo...");
 
-        setTimeout(() => {
-          window.location.href = "app.html";
-        }, 800);
+        await redirigirSegunRol();
       } catch (error) {
         mostrarMensaje(
           "No se pudo crear la cuenta. Revisa el correo o la contraseña.",
         );
         console.error(error);
+      } finally {
+        accionAuthEnProceso = false;
       }
     });
   }
@@ -123,17 +157,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        await iniciarSesion(correo, password);
-        limpiarCampos();
+        accionAuthEnProceso = true;
 
+        await iniciarSesion(correo, password);
+
+        limpiarCampos();
         mostrarMensaje("Inicio de sesión correcto. Redirigiendo...");
 
-        setTimeout(() => {
-          window.location.href = "app.html";
-        }, 800);
+        await redirigirSegunRol();
       } catch (error) {
         mostrarMensaje("Correo o contraseña incorrectos.");
         console.error(error);
+      } finally {
+        accionAuthEnProceso = false;
       }
     });
   }
