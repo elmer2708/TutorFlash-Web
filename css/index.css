@@ -167,7 +167,9 @@ body {
 
 @media (max-width: 760px) {
   .tf-welcome {
+    min-height: auto;
     padding: 28px 18px 36px;
+    justify-content: center;
   }
 
   .tf-logo-card {
