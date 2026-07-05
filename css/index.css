@@ -5,6 +5,8 @@
 html,
 body {
   min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -16,6 +18,7 @@ body {
   display: grid;
   place-items: center;
   padding: 24px;
+  overflow-x: hidden;
   background:
     radial-gradient(
       circle at 52% 35%,
@@ -165,6 +168,8 @@ body {
   }
 }
 
+/* TABLET Y CELULAR */
+
 @media (max-width: 760px) {
   .tf-welcome-page {
     min-height: 100dvh;
@@ -172,27 +177,37 @@ body {
     justify-content: center;
     align-items: center;
     padding: 24px;
+    overflow-x: hidden;
   }
 
   .tf-welcome {
+    min-height: auto;
     width: 100%;
     max-width: 680px;
     margin-inline: auto;
+    padding: 0 16px;
     text-align: center;
+    align-items: center;
+    justify-content: center;
   }
 
   .tf-logo-card {
-    width: min(620px, 98vw);
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
   }
 
   .tf-welcome-logo {
+    width: 100%;
     max-width: 620px;
+    height: auto;
   }
 
   .tf-welcome-title {
     margin: -92px auto 20px;
     font-size: clamp(1.25rem, 6vw, 1.9rem);
   }
+
   .tf-welcome-actions {
     width: 100%;
     max-width: 600px;
@@ -204,17 +219,30 @@ body {
   }
 }
 
+/* CELULAR PEQUEÑO */
+
 @media (max-width: 520px) {
+  .tf-welcome-page {
+    padding: 24px 16px;
+  }
+
   .tf-welcome {
-    padding: 24px 16px 32px;
+    min-height: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
 
   .tf-logo-card {
-    width: min(520px, 110vw);
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   .tf-welcome-logo {
-    max-width: 520px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
   }
 
   .tf-welcome-title {
@@ -224,6 +252,7 @@ body {
 
   .tf-welcome-actions {
     width: 100%;
+    max-width: 100%;
     border-radius: 24px;
     flex-direction: column;
   }
