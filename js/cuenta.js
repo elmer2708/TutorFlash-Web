@@ -3,6 +3,8 @@ import {
   registrarUsuario,
   iniciarSesion,
   cerrarSesion,
+  obtenerUsuarioActual,
+  obtenerPerfilUsuarioActual,
   obtenerTutorActivoActual,
 } from "./firebase-service.js";
 
@@ -28,8 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuarioActualTexto = document.querySelector("#usuarioActualTexto");
   const authMensaje = document.querySelector("#authMensaje");
 
-  let redireccionando = false;
+  const ADMIN_EMAILS = ["admin@gmail.com"];
+
   let accionAuthEnProceso = false;
+  let redireccionando = false;
 
   function mostrarMensaje(mensaje) {
     if (authMensaje) {
@@ -56,27 +60,55 @@ document.addEventListener("DOMContentLoaded", () => {
     if (loginForm) loginForm.classList.add("oculto");
     if (registroForm) registroForm.classList.remove("oculto");
 
-    mostrarMensaje("Crea una cuenta para guardar tus reservas.");
+    mostrarMensaje("Crea una cuenta para continuar en TutorFlash.");
   }
 
-  async function redirigirSegunRol() {
+  function normalizarCorreo(correo) {
+    return correo.trim().toLowerCase();
+  }
+
+  function esAdmin(correo) {
+    return ADMIN_EMAILS.includes(normalizarCorreo(correo));
+  }
+
+  async function redirigirSegunRol(rolRegistro = null) {
     if (redireccionando) return;
+
+    const usuario = obtenerUsuarioActual();
+
+    if (!usuario) {
+      return;
+    }
 
     redireccionando = true;
     mostrarMensaje("Revisando tu tipo de usuario...");
 
     try {
+      if (esAdmin(usuario.email)) {
+        window.location.href = "admin.html";
+        return;
+      }
+
       const tutorActivo = await obtenerTutorActivoActual();
 
       if (tutorActivo) {
         window.location.href = "panel-tutor.html";
-      } else {
-        window.location.href = "app.html";
+        return;
       }
+
+      const perfilUsuario = await obtenerPerfilUsuarioActual();
+      const rol = rolRegistro || perfilUsuario?.rol || "estudiante";
+
+      if (rol === "tutor") {
+        window.location.href = "tutor.html";
+        return;
+      }
+
+      window.location.href = "app.html";
     } catch (error) {
-      redireccionando = false;
-      mostrarMensaje("No se pudo revisar el tipo de usuario.");
       console.error(error);
+      redireccionando = false;
+      mostrarMensaje("No se pudo validar el acceso. Intenta nuevamente.");
     }
   }
 
@@ -104,7 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
         redirigirSegunRol();
       }
     } else {
+      redireccionando = false;
+
       if (cuentaActiva) cuentaActiva.classList.add("oculto");
+
       mostrarVistaLogin();
     }
   });
@@ -132,14 +167,21 @@ document.addEventListener("DOMContentLoaded", () => {
         await registrarUsuario(nombre, correo, password, rol);
 
         limpiarCampos();
-        mostrarMensaje("Cuenta creada correctamente. Redirigiendo...");
 
-        await redirigirSegunRol();
+        if (rol === "tutor") {
+          mostrarMensaje(
+            "Cuenta creada. Ahora completa tu postulación como tutor.",
+          );
+        } else {
+          mostrarMensaje("Cuenta creada correctamente. Redirigiendo...");
+        }
+
+        await redirigirSegunRol(rol);
       } catch (error) {
+        console.error(error);
         mostrarMensaje(
           "No se pudo crear la cuenta. Revisa el correo o la contraseña.",
         );
-        console.error(error);
       } finally {
         accionAuthEnProceso = false;
       }
@@ -166,8 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         await redirigirSegunRol();
       } catch (error) {
-        mostrarMensaje("Correo o contraseña incorrectos.");
         console.error(error);
+        mostrarMensaje("Correo o contraseña incorrectos.");
       } finally {
         accionAuthEnProceso = false;
       }
@@ -180,8 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
         await cerrarSesion();
         mostrarMensaje("Sesión cerrada.");
       } catch (error) {
-        mostrarMensaje("No se pudo cerrar sesión.");
         console.error(error);
+        mostrarMensaje("No se pudo cerrar sesión.");
       }
     });
   }

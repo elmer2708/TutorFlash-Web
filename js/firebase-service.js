@@ -283,3 +283,30 @@ export async function obtenerReservasDelTutor() {
     ...documento.data(),
   }));
 }
+
+export async function obtenerPerfilUsuarioActual() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    return null;
+  }
+
+  const consulta = query(
+    collection(db, "usuarios"),
+    where("usuarioId", "==", usuario.uid),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    return null;
+  }
+
+  const documento = resultado.docs[0];
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+}

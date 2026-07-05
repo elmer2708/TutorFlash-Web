@@ -10,7 +10,7 @@ import {
   Coloca aquí el correo que usarás como administrador.
   Debe ser el mismo correo con el que inicias sesión en TutorFlash.
 */
-const ADMIN_EMAILS = ["prueba.tutorflash01@gmail.com"];
+const ADMIN_EMAILS = ["admin@gmail.com"];
 
 document.addEventListener("DOMContentLoaded", () => {
   const adminMensaje = document.getElementById("adminMensaje");
@@ -207,9 +207,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!ADMIN_EMAILS.includes(usuario.email)) {
       mostrarMensaje(
-        "No tienes permiso para acceder a este panel. Inicia sesión con el correo administrador.",
+        "No tienes permiso para acceder a este panel. Serás redirigido a la plataforma.",
         "error",
       );
+
+      setTimeout(() => {
+        window.location.href = "app.html";
+      }, 1500);
+
       return;
     }
 
