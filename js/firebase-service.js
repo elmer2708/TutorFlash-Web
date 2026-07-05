@@ -327,3 +327,37 @@ export async function obtenerPerfilUsuarioActual() {
     ...documento.data(),
   };
 }
+export async function actualizarPerfilTutorActual(datosPerfil) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para actualizar tu perfil.");
+  }
+
+  const consulta = query(
+    collection(db, "tutores"),
+    where("uid", "==", usuario.uid),
+    where("estado", "==", "activo"),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    throw new Error("No se encontró un perfil de tutor activo.");
+  }
+
+  const documentoTutor = resultado.docs[0];
+  const tutorRef = doc(db, "tutores", documentoTutor.id);
+
+  await updateDoc(tutorRef, {
+    ...datosPerfil,
+    actualizadoEn: serverTimestamp(),
+  });
+
+  return {
+    id: documentoTutor.id,
+    ...documentoTutor.data(),
+    ...datosPerfil,
+  };
+}

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi perfil tutor | TutorFlash</title>
+    <link rel="stylesheet" href="../css/perfil-tutor.css" />
+  </head>
+  <body>
+    <aside class="perfil-sidebar">
+      <a href="../index.html" class="sidebar-logo">
+        <span>⚡</span>
+        <strong>TutorFlash</strong>
+      </a>
+
+      <nav class="sidebar-nav">
+        <a href="panel-tutor.html">Dashboard</a>
+        <a href="panel-tutor.html#reservas">Mis reservas</a>
+        <a href="perfil-tutor.html" class="activo">Mi perfil tutor</a>
+        <a href="disponibilidad-tutor.html">Disponibilidad</a>
+        <a href="app.html">Ver plataforma</a>
+      </nav>
+
+      <button id="btnCerrarSesionTutor" class="btn-salir">Salir</button>
+    </aside>
+
+    <main class="perfil-main">
+      <header class="perfil-header">
+        <div>
+          <span class="perfil-label">Perfil público del tutor</span>
+          <h1>Mi perfil tutor</h1>
+          <p>
+            Actualiza la información que verán los estudiantes antes de reservar
+            una tutoría contigo.
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <a href="panel-tutor.html" class="btn-outline">Volver al panel</a>
+          <a href="app.html" class="btn-primary">Ver plataforma</a>
+        </div>
+      </header>
+
+      <section class="perfil-layout">
+        <article class="preview-card">
+          <span class="preview-label">Vista previa</span>
+
+          <div class="avatar-preview" id="avatarTutorPreview">TF</div>
+
+          <h2 id="previewNombre">TutorFlash Tutor</h2>
+
+          <p id="previewPresentacion">Tu presentación aparecerá aquí.</p>
+
+          <div class="preview-tags">
+            <span id="previewCursos">Cursos no registrados</span>
+            <span id="previewNivel">Nivel no indicado</span>
+            <span id="previewModalidad">Modalidad no indicada</span>
+          </div>
+
+          <div class="preview-price">
+            <span>Precio por hora</span>
+            <strong id="previewPrecio">S/ 0.00</strong>
+          </div>
+
+          <div class="preview-info">
+            <p>
+              <strong>Disponibilidad:</strong>
+              <span id="previewDisponibilidad">No indicada</span>
+            </p>
+            <p>
+              <strong>Distrito/Zona:</strong>
+              <span id="previewDistrito">No indicado</span>
+            </p>
+            <p>
+              <strong>Estado público:</strong>
+              <span id="previewEstado">Activo</span>
+            </p>
+          </div>
+        </article>
+
+        <section class="form-card">
+          <div class="form-heading">
+            <span>Editar información</span>
+            <h2>Datos del perfil</h2>
+            <p id="mensajePerfilTutor" class="mensaje-perfil">
+              Cargando perfil...
+            </p>
+          </div>
+
+          <form id="formPerfilTutor" class="form-perfil">
+            <div class="form-doble">
+              <div class="form-grupo">
+                <label for="nombreTutorPerfil">Nombre público</label>
+                <input
+                  type="text"
+                  id="nombreTutorPerfil"
+                  placeholder="Ejemplo: Ana Torres"
+                />
+              </div>
+
+              <div class="form-grupo">
+                <label for="correoTutorPerfil">Correo</label>
+                <input
+                  type="email"
+                  id="correoTutorPerfil"
+                  placeholder="correo@gmail.com"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <div class="form-grupo">
+              <label for="presentacionTutorPerfil">Presentación breve</label>
+              <textarea
+                id="presentacionTutorPerfil"
+                rows="4"
+                placeholder="Ejemplo: Soy tutor de Matemática con experiencia ayudando a estudiantes de secundaria."
+              ></textarea>
+            </div>
+
+            <div class="form-grupo">
+              <label for="experienciaTutorPerfil">Experiencia</label>
+              <textarea
+                id="experienciaTutorPerfil"
+                rows="5"
+                placeholder="Describe tu experiencia enseñando, cursos que dominas y cómo ayudas a tus estudiantes."
+              ></textarea>
+            </div>
+
+            <div class="form-doble">
+              <div class="form-grupo">
+                <label for="cursosTutorPerfil">Cursos que enseñas</label>
+                <input
+                  type="text"
+                  id="cursosTutorPerfil"
+                  placeholder="Matemática, Física, Inglés"
+                />
+              </div>
+
+              <div class="form-grupo">
+                <label for="nivelTutorPerfil">Nivel</label>
+                <select id="nivelTutorPerfil">
+                  <option value="">Selecciona un nivel</option>
+                  <option value="Escolar">Escolar</option>
+                  <option value="Preuniversitario">Preuniversitario</option>
+                  <option value="Técnico">Técnico</option>
+                  <option value="Universitario">Universitario</option>
+                  <option value="Escolar y preuniversitario">
+                    Escolar y preuniversitario
+                  </option>
+                  <option value="Preuniversitario y universitario">
+                    Preuniversitario y universitario
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-doble">
+              <div class="form-grupo">
+                <label for="modalidadTutorPerfil">Modalidad</label>
+                <select id="modalidadTutorPerfil">
+                  <option value="">Selecciona una modalidad</option>
+                  <option value="Virtual">Virtual</option>
+                  <option value="Presencial">Presencial</option>
+                  <option value="Virtual y presencial">
+                    Virtual y presencial
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-grupo">
+                <label for="precioTutorPerfil">Precio por hora</label>
+                <input
+                  type="number"
+                  id="precioTutorPerfil"
+                  min="0"
+                  step="1"
+                  placeholder="Ejemplo: 25"
+                />
+              </div>
+            </div>
+
+            <div class="form-doble">
+              <div class="form-grupo">
+                <label for="disponibilidadTutorPerfil"
+                  >Disponibilidad general</label
+                >
+                <select id="disponibilidadTutorPerfil">
+                  <option value="">Selecciona disponibilidad</option>
+                  <option value="Mañana">Mañana</option>
+                  <option value="Tarde">Tarde</option>
+                  <option value="Noche">Noche</option>
+                  <option value="Fines de semana">Fines de semana</option>
+                  <option value="Tardes y fines de semana">
+                    Tardes y fines de semana
+                  </option>
+                  <option value="Horario flexible">Horario flexible</option>
+                </select>
+              </div>
+
+              <div class="form-grupo">
+                <label for="distritoTutorPerfil">Distrito o zona</label>
+                <input
+                  type="text"
+                  id="distritoTutorPerfil"
+                  placeholder="Ejemplo: San Juan de Lurigancho"
+                />
+              </div>
+            </div>
+
+            <div class="form-grupo">
+              <label for="estadoPublicoTutorPerfil">Estado público</label>
+              <select id="estadoPublicoTutorPerfil">
+                <option value="activo">Activo para recibir reservas</option>
+                <option value="pausado">Pausado temporalmente</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              id="btnGuardarPerfilTutor"
+              class="btn-guardar"
+            >
+              Guardar perfil
+            </button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="../js/perfil-tutor.js"></script>
+  </body>
+</html>
