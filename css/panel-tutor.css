@@ -9,7 +9,7 @@ body {
   color: #10243a;
 }
 
-.admin-header {
+.panel-header {
   position: sticky;
   top: 0;
   z-index: 20;
@@ -17,7 +17,7 @@ body {
   box-shadow: 0 4px 18px rgba(16, 36, 58, 0.08);
 }
 
-.admin-nav {
+.panel-nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 18px 8%;
@@ -27,21 +27,21 @@ body {
   gap: 18px;
 }
 
-.admin-logo {
-  color: #123b5d;
+.panel-logo {
   text-decoration: none;
+  color: #123b5d;
   font-size: 1.4rem;
   font-weight: 800;
 }
 
-.admin-links {
+.panel-links {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.admin-links a,
-.admin-links button {
+.panel-links a,
+.panel-links button {
   border: none;
   background: transparent;
   color: #10243a;
@@ -51,22 +51,22 @@ body {
   cursor: pointer;
 }
 
-.admin-links a:hover,
-.admin-links button:hover {
+.panel-links a:hover,
+.panel-links button:hover {
   color: #f2b705;
 }
 
-.admin-main {
+.panel-main {
   padding: 60px 8%;
 }
 
-.admin-hero {
+.panel-hero {
   max-width: 950px;
   margin: 0 auto 34px;
   text-align: center;
 }
 
-.admin-hero span {
+.panel-hero span {
   display: inline-block;
   margin-bottom: 14px;
   padding: 8px 16px;
@@ -76,20 +76,20 @@ body {
   font-weight: 800;
 }
 
-.admin-hero h1 {
-  margin: 0 0 16px;
+.panel-hero h1 {
+  margin: 0 0 14px;
   font-size: 2.4rem;
   color: #123b5d;
 }
 
-.admin-hero p {
+.panel-hero p {
   margin: 0 auto;
-  max-width: 760px;
+  max-width: 720px;
   color: #4a5c6f;
   line-height: 1.6;
 }
 
-.admin-mensaje {
+.panel-mensaje {
   max-width: 950px;
   margin: 0 auto 24px;
   padding: 16px 18px;
@@ -100,140 +100,87 @@ body {
   font-weight: 700;
 }
 
-.admin-mensaje.oculto {
+.panel-mensaje.oculto {
   display: none;
 }
 
-.admin-mensaje.error {
+.panel-mensaje.error {
   background: #ffe6e6;
   color: #b42318;
 }
 
-.admin-mensaje.exito {
+.panel-mensaje.exito {
   background: #e8f8ef;
   color: #137333;
 }
 
-.postulaciones-grid {
-  max-width: 1200px;
+.reservas-grid {
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
-.postulacion-card {
+.reserva-card {
   padding: 26px;
   border-radius: 24px;
   background: #ffffff;
   box-shadow: 0 12px 35px rgba(16, 36, 58, 0.08);
 }
 
-.postulacion-card h2 {
-  margin: 0 0 8px;
+.reserva-card h2 {
+  margin: 0 0 10px;
   color: #123b5d;
   font-size: 1.35rem;
 }
 
-.estado-postulacion {
+.reserva-estado {
   display: inline-block;
   margin-bottom: 18px;
   padding: 7px 13px;
   border-radius: 999px;
+  background: #e8f8ef;
+  color: #137333;
   font-size: 0.85rem;
   font-weight: 800;
 }
 
-.estado-pendiente {
-  background: #fff1bd;
-  color: #8a6500;
-}
-
-.estado-aprobado {
-  background: #e8f8ef;
-  color: #137333;
-}
-
-.estado-rechazado {
-  background: #ffe6e6;
-  color: #b42318;
-}
-
-.postulacion-dato {
+.reserva-dato {
   margin: 0 0 12px;
-  line-height: 1.5;
   color: #4a5c6f;
+  line-height: 1.5;
 }
 
-.postulacion-dato strong {
+.reserva-dato strong {
   color: #10243a;
-}
-
-.postulacion-acciones {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.btn-aprobar,
-.btn-rechazar {
-  border: none;
-  padding: 12px 18px;
-  border-radius: 999px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.btn-aprobar {
-  background: #ffcc4d;
-  color: #10243a;
-}
-
-.btn-rechazar {
-  background: #edf1f5;
-  color: #10243a;
-}
-
-.btn-aprobar:disabled,
-.btn-rechazar:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 @media (max-width: 850px) {
-  .admin-nav {
+  .panel-nav {
     flex-direction: column;
   }
 
-  .admin-links {
+  .panel-links {
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .postulaciones-grid {
+  .reservas-grid {
     grid-template-columns: 1fr;
   }
 
-  .admin-hero h1 {
+  .panel-hero h1 {
     font-size: 2rem;
   }
 }
 
 @media (max-width: 500px) {
-  .admin-main {
+  .panel-main {
     padding: 45px 6%;
   }
 
-  .postulacion-card {
+  .reserva-card {
     padding: 22px;
-  }
-
-  .postulacion-acciones {
-    flex-direction: column;
-  }
-
-  .btn-aprobar,
-  .btn-rechazar {
-    width: 100%;
   }
 }

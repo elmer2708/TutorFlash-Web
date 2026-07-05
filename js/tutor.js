@@ -17,6 +17,71 @@ document.addEventListener("DOMContentLoaded", () => {
   let usuarioActual = null;
   let postulacionExistente = null;
 
+  const normalizar = (texto) => {
+    return String(texto || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  };
+
+  const capitalizarTexto = (texto) => {
+    return String(texto || "")
+      .toLowerCase()
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((palabra, index) => {
+        const palabrasMinusculas = ["de", "del", "la", "las", "el", "los", "y"];
+
+        if (index > 0 && palabrasMinusculas.includes(palabra)) {
+          return palabra;
+        }
+
+        return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+      })
+      .join(" ");
+  };
+
+  const cursosCorregidos = {
+    matematica: "Matemática",
+    calculo: "Cálculo",
+    algebra: "Álgebra",
+    estadistica: "Estadística",
+    quimica: "Química",
+    fisica: "Física",
+    ingles: "Inglés",
+    programacion: "Programación",
+    comunicacion: "Comunicación",
+    economia: "Economía",
+    contabilidad: "Contabilidad",
+    biologia: "Biología",
+    historia: "Historia",
+    geografia: "Geografía",
+    filosofia: "Filosofía",
+    psicologia: "Psicología",
+    computacion: "Computación",
+    informatica: "Informática",
+    administracion: "Administración",
+    "matematica financiera": "Matemática financiera",
+    "razonamiento matematico": "Razonamiento matemático",
+    "razonamiento verbal": "Razonamiento verbal",
+  };
+
+  const corregirCurso = (curso) => {
+    const clave = normalizar(curso);
+
+    return cursosCorregidos[clave] || capitalizarTexto(curso);
+  };
+
+  const corregirCursosTexto = (texto) => {
+    return String(texto || "")
+      .split(",")
+      .map((curso) => corregirCurso(curso.trim()))
+      .filter(Boolean)
+      .join(", ");
+  };
+
   observarUsuario(async (usuario) => {
     usuarioActual = usuario;
 
@@ -42,6 +107,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (postulacionExistente) {
+      if (postulacionExistente.estado === "aprobado") {
+        alert(
+          "Tu postulación ya fue aprobada. Ahora formas parte de TutorFlash como tutor.",
+        );
+        return;
+      }
+
+      if (postulacionExistente.estado === "pendiente") {
+        alert(
+          "Ya tienes una postulación pendiente. TutorFlash está revisando tu información.",
+        );
+        return;
+      }
+
+      if (postulacionExistente.estado === "rechazado") {
+        alert(
+          "Tu postulación fue revisada. Más adelante podrás volver a postular.",
+        );
+        return;
+      }
+
       alert(
         `Ya tienes una postulación registrada con estado: ${postulacionExistente.estado}.`,
       );
@@ -111,12 +197,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const nombreTutor = document.getElementById("nombreTutor").value.trim();
-      const correoTutor = document.getElementById("correoTutor").value.trim();
+      const nombreTutor = capitalizarTexto(
+        document.getElementById("nombreTutor").value,
+      );
+
+      const correoTutor = document
+        .getElementById("correoTutor")
+        .value.trim()
+        .toLowerCase();
+
       const telefonoTutor = document
         .getElementById("telefonoTutor")
         .value.trim();
-      const cursosTutor = document.getElementById("cursosTutor").value.trim();
+
+      const cursosTutor = corregirCursosTexto(
+        document.getElementById("cursosTutor").value,
+      );
+
       const nivelTutor = document.getElementById("nivelTutor").value;
       const disponibilidadTutor = document.getElementById(
         "disponibilidadTutor",
@@ -183,4 +280,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  const inputNombreTutor = document.getElementById("nombreTutor");
+  const inputCursosTutor = document.getElementById("cursosTutor");
+
+  inputNombreTutor?.addEventListener("blur", () => {
+    inputNombreTutor.value = capitalizarTexto(inputNombreTutor.value);
+  });
+
+  inputCursosTutor?.addEventListener("blur", () => {
+    inputCursosTutor.value = corregirCursosTexto(inputCursosTutor.value);
+  });
 });

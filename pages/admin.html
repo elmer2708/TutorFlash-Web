@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Admin | TutorFlash</title>
+
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <header class="admin-header">
+      <nav class="admin-nav">
+        <a href="app.html" class="admin-logo">TutorFlash Admin</a>
+
+        <div class="admin-links">
+          <a href="app.html">Plataforma</a>
+          <a href="tutor.html">Quiero ser tutor</a>
+          <button id="btnCerrarSesionAdmin" type="button">Cerrar sesión</button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-hero">
+        <span>Panel interno</span>
+        <h1>Postulaciones de tutores</h1>
+        <p>
+          Revisa las postulaciones enviadas por futuros tutores. Puedes
+          aprobarlas para crear un tutor real o rechazarlas si no cumplen con el
+          perfil.
+        </p>
+      </section>
+
+      <section id="adminMensaje" class="admin-mensaje">
+        Cargando postulaciones...
+      </section>
+
+      <section
+        id="contenedorPostulaciones"
+        class="postulaciones-grid"
+      ></section>
+    </main>
+
+    <script type="module" src="../js/admin.js"></script>
+  </body>
+</html>

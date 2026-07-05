@@ -3,15 +3,18 @@ import {
   cerrarSesion,
   obtenerUsuarioActual,
   guardarReserva,
+  obtenerTutoresActivos,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const inputBuscar = document.querySelector("#buscarCurso");
   const btnBuscar = document.querySelector("#btnBuscar");
   const mensaje = document.querySelector("#mensajeBusqueda");
-  const tarjetas = document.querySelectorAll(".tf-tutor-card");
+  let tarjetas = [];
+  let tutoresActivos = [];
   const botonesCursos = document.querySelectorAll(".tf-courses button");
   const seccionTutores = document.querySelector("#tutores");
+  const listaTutores = document.querySelector("#listaTutores");
 
   const modal = document.querySelector("#reservaModal");
   const cerrarModal = document.querySelector("#cerrarModal");
@@ -233,6 +236,208 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
   };
 
+  const capitalizarTexto = (texto) => {
+    return String(texto || "")
+      .toLowerCase()
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((palabra, index) => {
+        const palabrasMinusculas = ["de", "del", "la", "las", "el", "los", "y"];
+
+        if (index > 0 && palabrasMinusculas.includes(palabra)) {
+          return palabra;
+        }
+
+        return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+      })
+      .join(" ");
+  };
+
+  const cursosCorregidos = {
+    matematica: "Matemática",
+    calculo: "Cálculo",
+    algebra: "Álgebra",
+    estadistica: "Estadística",
+    quimica: "Química",
+    fisica: "Física",
+    ingles: "Inglés",
+    programacion: "Programación",
+    comunicacion: "Comunicación",
+    economia: "Economía",
+    contabilidad: "Contabilidad",
+    biologia: "Biología",
+    historia: "Historia",
+    geografia: "Geografía",
+    filosofia: "Filosofía",
+    psicologia: "Psicología",
+    computacion: "Computación",
+    informatica: "Informática",
+    administracion: "Administración",
+    "matematica financiera": "Matemática financiera",
+    "razonamiento matematico": "Razonamiento matemático",
+    "razonamiento verbal": "Razonamiento verbal",
+  };
+
+  const corregirCurso = (curso) => {
+    const clave = normalizar(curso);
+
+    return cursosCorregidos[clave] || capitalizarTexto(curso);
+  };
+
+  const corregirListaCursos = (cursos) => {
+    return cursos.map((curso) => corregirCurso(curso));
+  };
+  const obtenerPrecioTutor = () => {
+    return 25;
+  };
+
+  const obtenerRatingTutor = () => {
+    return "4.8";
+  };
+
+  const obtenerDisponibilidadTutor = (disponibilidad) => {
+    if (!disponibilidad) {
+      return "Disponible hoy";
+    }
+
+    if (disponibilidad === "Mañana") {
+      return "Disponible mañana";
+    }
+
+    if (disponibilidad === "Tarde") {
+      return "Disponible hoy";
+    }
+
+    if (disponibilidad === "Noche") {
+      return "Disponible hoy";
+    }
+
+    if (disponibilidad === "Fines de semana") {
+      return "Disponible fines de semana";
+    }
+
+    return disponibilidad;
+  };
+
+  const separarCursos = (cursos) => {
+    if (Array.isArray(cursos)) {
+      return cursos;
+    }
+
+    return String(cursos || "")
+      .split(",")
+      .map((curso) => curso.trim())
+      .filter(Boolean);
+  };
+
+  const obtenerInicial = (nombre) => {
+    return nombre.trim().charAt(0).toUpperCase() || "T";
+  };
+
+  const crearTarjetaTutor = (tutor) => {
+    const nombreTutor = capitalizarTexto(tutor.nombre || "Tutor");
+    const cursos = corregirListaCursos(separarCursos(tutor.cursos));
+    const cursoPrincipal = cursos[0] || "Curso general";
+    const precio = tutor.precio || obtenerPrecioTutor();
+    const rating = tutor.rating || obtenerRatingTutor();
+    const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
+    return `
+    <article
+      class="tf-tutor-card"
+      data-id="${tutor.id || tutor.uid || ""}"
+      data-tutor="${nombreTutor}"
+      data-course="${cursoPrincipal}"
+      data-rating="${rating}"
+      data-price="${precio}"
+      data-availability="${disponibilidad}"
+    >
+      <div class="tf-avatar">
+        ${obtenerInicial(tutor.nombre || "Tutor")}
+      </div>
+
+      <h3>${nombreTutor}</h3>
+
+      <p>
+        ${cursos.length > 0 ? cursos.join(", ") : "Cursos disponibles"}
+      </p>
+
+      <span>
+        ⭐ ${rating} · ${disponibilidad}
+      </span>
+
+      <strong>
+        S/ ${precio} por 30 min
+      </strong>
+
+      <button type="button" class="tf-card-btn">
+        Solicitar
+      </button>
+    </article>
+  `;
+  };
+
+  const activarBotonesReserva = () => {
+    document.querySelectorAll(".tf-card-btn").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        const tarjeta = boton.closest(".tf-tutor-card");
+
+        tutorSeleccionado = {
+          tutorId: tarjeta.dataset.id,
+          tutor: tarjeta.dataset.tutor,
+          curso: tarjeta.dataset.course,
+          rating: tarjeta.dataset.rating,
+          price: tarjeta.dataset.price,
+          availability: obtenerDisponibilidadReal(tarjeta.dataset.availability),
+        };
+
+        actualizarModal();
+        abrirModal();
+      });
+    });
+  };
+
+  const cargarTutoresDesdeFirestore = async () => {
+    try {
+      if (!listaTutores) return;
+
+      tutoresActivos = await obtenerTutoresActivos();
+
+      if (tutoresActivos.length === 0) {
+        listaTutores.innerHTML = `
+        <div class="tf-empty-tutors">
+          <h3>Aún no hay tutores activos</h3>
+          <p>Cuando se aprueben postulaciones, los tutores aparecerán aquí.</p>
+        </div>
+      `;
+
+        if (mensaje) {
+          mensaje.textContent = "Todavía no hay tutores activos registrados.";
+        }
+
+        return;
+      }
+
+      listaTutores.innerHTML = tutoresActivos
+        .map((tutor) => crearTarjetaTutor(tutor))
+        .join("");
+
+      tarjetas = Array.from(listaTutores.querySelectorAll(".tf-tutor-card"));
+
+      activarBotonesReserva();
+
+      if (mensaje) {
+        mensaje.textContent = "Mostrando tutores activos de TutorFlash.";
+      }
+    } catch (error) {
+      console.error("Error al cargar tutores:", error);
+
+      if (mensaje) {
+        mensaje.textContent = "No se pudieron cargar los tutores activos.";
+      }
+    }
+  };
+
   const buscarTutores = () => {
     const textoOriginal = inputBuscar.value.trim();
     const texto = normalizar(textoOriginal);
@@ -332,10 +537,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("tf-modal-open");
   };
 
-  const obtenerInicial = (nombre) => {
-    return nombre.trim().charAt(0).toUpperCase() || "T";
-  };
-
   const actualizarModal = () => {
     modalAvatar.textContent = obtenerInicial(tutorSeleccionado.tutor);
     modalTutor.textContent = tutorSeleccionado.tutor;
@@ -345,23 +546,6 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarTotal();
   };
   duracionReserva?.addEventListener("change", actualizarTotal);
-
-  document.querySelectorAll(".tf-card-btn").forEach((boton) => {
-    boton.addEventListener("click", () => {
-      const tarjeta = boton.closest(".tf-tutor-card");
-
-      tutorSeleccionado = {
-        tutor: tarjeta.dataset.tutor,
-        curso: tarjeta.dataset.course,
-        rating: tarjeta.dataset.rating,
-        price: tarjeta.dataset.price,
-        availability: obtenerDisponibilidadReal(tarjeta.dataset.availability),
-      };
-
-      actualizarModal();
-      abrirModal();
-    });
-  });
 
   if (fechaReserva) {
     const hoy = obtenerFechaLocal();
@@ -434,6 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalFormateado = formatearSoles(totalCalculado);
 
     const reserva = {
+      tutorId: tutorSeleccionado.tutorId || "",
       tutor: tutorSeleccionado.tutor,
       curso: tutorSeleccionado.curso,
       fecha: formatearFecha(fechaReserva.value),
@@ -523,4 +708,5 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("No se pudo cerrar sesión.");
     }
   });
+  cargarTutoresDesdeFirestore();
 });

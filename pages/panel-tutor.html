@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Panel del tutor | TutorFlash</title>
+
+    <link rel="stylesheet" href="../css/panel-tutor.css" />
+  </head>
+  <body>
+    <header class="panel-header">
+      <nav class="panel-nav">
+        <a href="app.html" class="panel-logo">TutorFlash Tutor</a>
+
+        <div class="panel-links">
+          <a href="app.html">Plataforma</a>
+          <a href="tutor.html">Quiero ser tutor</a>
+          <a href="sesiones.html">Mis sesiones</a>
+          <button type="button" id="btnCerrarSesionTutor">Cerrar sesión</button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="panel-main">
+      <section class="panel-hero">
+        <span>Panel del tutor</span>
+        <h1>Mis reservas recibidas</h1>
+        <p id="textoTutorActivo">Verificando tu perfil de tutor...</p>
+      </section>
+
+      <section id="mensajePanelTutor" class="panel-mensaje">
+        Cargando reservas...
+      </section>
+
+      <section id="listaReservasTutor" class="reservas-grid"></section>
+    </main>
+
+    <script type="module" src="../js/panel-tutor.js"></script>
+  </body>
+</html>

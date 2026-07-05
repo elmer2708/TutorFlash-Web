@@ -16,6 +16,9 @@ import {
   query,
   where,
   limit,
+  doc,
+  setDoc,
+  updateDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -70,6 +73,7 @@ export async function guardarReserva(reserva) {
   await addDoc(collection(db, "reservas"), {
     usuarioId: usuario.uid,
     correoUsuario: usuario.email,
+    tutorId: reserva.tutorId || "",
     tutor: reserva.tutor,
     curso: reserva.curso,
     fecha: reserva.fecha,
@@ -154,4 +158,128 @@ export async function guardarPostulacionTutor(postulacion) {
     estado: "pendiente",
     fechaPostulacion: serverTimestamp(),
   });
+}
+
+/* ============================= */
+/* ADMIN - POSTULACIONES TUTORES */
+/* ============================= */
+
+export async function obtenerPostulacionesTutores() {
+  const resultado = await getDocs(collection(db, "postulacionesTutores"));
+
+  return resultado.docs.map((documento) => ({
+    id: documento.id,
+    ...documento.data(),
+  }));
+}
+
+export async function aprobarPostulacionTutor(postulacion) {
+  if (!postulacion.id || !postulacion.uid) {
+    throw new Error(
+      "La postulación no tiene datos suficientes para aprobarse.",
+    );
+  }
+
+  await setDoc(
+    doc(db, "tutores", postulacion.uid),
+    {
+      uid: postulacion.uid,
+      nombre: postulacion.nombre,
+      correo: postulacion.correo,
+      correoUsuario: postulacion.correoUsuario || postulacion.correo,
+      telefono: postulacion.telefono,
+      cursos: postulacion.cursos,
+      nivel: postulacion.nivel,
+      disponibilidad: postulacion.disponibilidad,
+      descripcion: postulacion.experiencia,
+      estado: "activo",
+      fechaAprobacion: serverTimestamp(),
+    },
+    { merge: true },
+  );
+
+  await updateDoc(doc(db, "postulacionesTutores", postulacion.id), {
+    estado: "aprobado",
+    fechaRevision: serverTimestamp(),
+  });
+}
+
+export async function rechazarPostulacionTutor(postulacionId) {
+  if (!postulacionId) {
+    throw new Error("No se encontró la postulación para rechazar.");
+  }
+
+  await updateDoc(doc(db, "postulacionesTutores", postulacionId), {
+    estado: "rechazado",
+    fechaRevision: serverTimestamp(),
+  });
+}
+
+/* ============================= */
+/* TUTORES ACTIVOS */
+/* ============================= */
+
+export async function obtenerTutoresActivos() {
+  const consulta = query(
+    collection(db, "tutores"),
+    where("estado", "==", "activo"),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  return resultado.docs.map((documento) => ({
+    id: documento.id,
+    ...documento.data(),
+  }));
+}
+/* ============================= */
+/* PANEL DEL TUTOR */
+/* ============================= */
+
+export async function obtenerTutorActivoActual() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    return null;
+  }
+
+  const consulta = query(
+    collection(db, "tutores"),
+    where("uid", "==", usuario.uid),
+    where("estado", "==", "activo"),
+    limit(1),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    return null;
+  }
+
+  const documento = resultado.docs[0];
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+}
+
+export async function obtenerReservasDelTutor() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    return [];
+  }
+
+  const consulta = query(
+    collection(db, "reservas"),
+    where("tutorId", "==", usuario.uid),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  return resultado.docs.map((documento) => ({
+    id: documento.id,
+    ...documento.data(),
+  }));
 }

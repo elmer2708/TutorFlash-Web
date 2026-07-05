@@ -1,6 +1,6 @@
 # TutorFlash-Web
 
-TutorFlash-Web es un MVP web hecho con HTML, CSS y JavaScript puro. Funciona como una plataforma de tutorías rápidas para estudiantes que necesitan reforzar un curso antes de un examen.
+TutorFlash-Web es un MVP web hecho con HTML, CSS y JavaScript puro. Funciona como una plataforma de tutorias rapidas para estudiantes que necesitan reforzar un curso antes de un examen.
 
 ## Enlaces
 
@@ -10,101 +10,68 @@ TutorFlash-Web es un MVP web hecho con HTML, CSS y JavaScript puro. Funciona com
 ## Estructura actual
 
 ```txt
-TUTORFLASH-WEB
-├── assets
-│   └── img
-│       ├── logo-preview.html
-│       ├── logo-tutorflash-transparente.png
-│       └── referencia-pantalla.png
-├── css
-│   ├── index.css
-│   ├── presentacion.css
-│   ├── app.css
-│   ├── cuenta.css
-│   └── sesiones.css
-├── js
-│   ├── script.js
-│   ├── app.js
-│   ├── cuenta.js
-│   ├── sesiones.js
-│   ├── firebase-config.js
-│   └── firebase-service.js
+TutorFlash-Web/
 ├── index.html
-├── presentacion.html
-├── app.html
-├── cuenta.html
-├── sesiones.html
-├── README.md
-└── README-FUTURO-FIREBASE.md
+├── assets/
+│   └── img/
+├── css/
+├── js/
+├── pages/
+├── docs/
+├── legacy/
+└── README.md
 ```
 
-## Páginas principales
+## Paginas activas
 
-- `index.html`: pantalla inicial de TutorFlash con accesos a la plataforma y a la presentación.
-- `presentacion.html`: presentación académica del proyecto.
-- `app.html`: plataforma principal con buscador, filtros, tutores, modal de reserva, contacto y estado de sesión.
-- `cuenta.html`: inicio de sesión, creación de cuenta y cierre de sesión.
-- `sesiones.html`: listado de reservas guardadas del usuario autenticado.
+- `index.html`: entrada principal para GitHub Pages.
+- `pages/app.html`: plataforma principal con busqueda de tutores y reservas.
+- `pages/cuenta.html`: login, registro y cierre de sesion.
+- `pages/sesiones.html`: listado de reservas del usuario.
+- `pages/tutor.html`: postulacion para tutores.
+- `pages/panel-tutor.html`: panel del tutor.
+- `pages/admin.html`: panel interno accesible por enlace directo.
 
-## Archivos JavaScript
+## Archivos principales
 
-- `js/app.js`: búsqueda de tutores, filtros, modal de reserva, cálculo de total, validación de fecha y hora, guardado de reservas, estado de sesión y menú móvil.
-- `js/cuenta.js`: login, registro, cambio entre formularios, cierre de sesión y redirección a `app.html`.
-- `js/sesiones.js`: lectura de reservas del usuario y renderizado de tarjetas de sesiones.
-- `js/firebase-service.js`: funciones compartidas de Firebase Authentication y Firestore.
-- `js/firebase-config.js`: configuración real de Firebase.
+- `css/`: estilos activos de cada pagina.
+- `js/firebase-config.js`: configuracion de Firebase.
+- `js/firebase-service.js`: servicios compartidos de Firebase Authentication y Firestore.
+- `js/app.js`: busqueda, tutores y reservas.
+- `js/cuenta.js`: autenticacion de usuarios.
+- `js/sesiones.js`: lectura de sesiones.
+- `js/tutor.js`: postulaciones de tutores.
+- `js/panel-tutor.js`: reservas recibidas por el tutor.
+- `js/admin.js`: aprobacion y rechazo de postulaciones.
 
-## Funcionalidades terminadas
+## Carpetas de soporte
 
-- Pantalla inicial responsive.
-- Página de presentación académica.
-- Buscador de tutores.
-- Filtro por cursos.
-- Tarjetas de tutores.
-- Modal de reserva.
-- Cálculo de total por duración:
-  - 30 minutos = precio base.
-  - 45 minutos = precio base x 1.5.
-  - 60 minutos = precio base x 2.
-- Validación de fecha desde hoy hasta el 31 de diciembre del año actual.
-- Bloqueo de horas pasadas.
-- Cambio automático a mañana si hoy ya no quedan horarios disponibles.
-- Firebase Authentication funcionando.
-- Registro de usuarios funcionando.
-- Inicio y cierre de sesión funcionando.
-- Firestore funcionando.
-- Reservas guardadas en Firestore.
-- Página `sesiones.html` separada para ver Mis sesiones.
-- Pago simulado con Yape, Plin o tarjeta simulada.
-- Indicador de sesión en `app.html`.
+- `docs/`: documentacion secundaria del proyecto.
+- `legacy/`: archivos antiguos que ya no forman parte de la web activa.
 
 ## Firebase
 
 El proyecto usa Firebase para:
 
-- Authentication: crear cuenta, iniciar sesión y cerrar sesión.
-- Firestore: guardar reservas y leer las sesiones del usuario.
+- Authentication: crear cuenta, iniciar sesion y cerrar sesion.
+- Firestore: guardar reservas, postulaciones y datos de tutores.
 
 Colecciones usadas:
 
 - `usuarios`
 - `reservas`
+- `postulacionesTutores`
+- `tutores`
 
-## Pendientes
+## Funcionalidades
 
-- Reglas seguras de Firestore.
-- Panel de tutor futuro.
-- Pago real futuro.
-- Chat futuro.
-- Videollamada futura.
-
-1. Guardar postulación real en Firestore.
-2. Validar que el usuario haya iniciado sesión.
-3. Evitar postulaciones duplicadas.
-4. Crear página admin.html.
-5. Aprobar o rechazar postulaciones.
-6. Crear tutores reales en Firestore.
-7. Hacer que app.html muestre tutores desde Firestore.
-8. Ajustar reservas para que usen tutorId real.
-9. Crear panel del tutor.
-10. Poner reglas seguras de Firestore.
+- Pantalla inicial responsive.
+- Buscador de tutores.
+- Modal de reserva.
+- Firebase Authentication funcionando.
+- Firestore funcionando.
+- Reservas guardadas en Firestore con tutor asociado.
+- Pagina de sesiones del usuario.
+- Pagina de postulacion para tutores.
+- Panel admin para aprobar o rechazar postulaciones.
+- Panel del tutor para ver reservas recibidas.
