@@ -96,11 +96,55 @@ document.addEventListener("DOMContentLoaded", () => {
     return Number.isFinite(numero) ? numero : 0;
   }
 
-  function obtenerFechaHora(reserva) {
-    const fecha = reserva.fecha || "";
-    const hora = reserva.hora || "00:00";
+  function limpiarTexto(valor) {
+    return String(valor ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-    const fechaHora = new Date(`${fecha}T${hora}`);
+  function formatearMonto(valor) {
+    const monto = convertirNumero(valor);
+    return monto.toFixed(2);
+  }
+
+  function convertirHoraAMinutos(textoHora) {
+    const texto = String(textoHora || "")
+      .toLowerCase()
+      .trim();
+    const numeros = texto.match(/\d+/g) || [];
+
+    let horas = Number(numeros[0] || 0);
+    const minutos = Number(numeros[1] || 0);
+
+    if ((texto.includes("p.m") || texto.includes("pm")) && horas !== 12) {
+      horas += 12;
+    }
+
+    if ((texto.includes("a.m") || texto.includes("am")) && horas === 12) {
+      horas = 0;
+    }
+
+    return horas * 60 + minutos;
+  }
+
+  function obtenerFechaHora(reserva) {
+    const fecha = String(reserva.fecha || "");
+    const partesFecha = fecha.split("-").map(Number);
+
+    if (partesFecha.length !== 3) {
+      return null;
+    }
+
+    const [year, month, day] = partesFecha;
+    const minutosTotales = convertirHoraAMinutos(reserva.hora);
+
+    const horas = Math.floor(minutosTotales / 60);
+    const minutos = minutosTotales % 60;
+
+    const fechaHora = new Date(year, month - 1, day, horas, minutos, 0, 0);
 
     if (Number.isNaN(fechaHora.getTime())) {
       return null;
@@ -119,6 +163,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return fecha;
+  }
+  function ordenarReservasPorFechaHora(reservas, direccion = "asc") {
+    return [...reservas].sort((a, b) => {
+      const fechaA = obtenerFechaHora(a);
+      const fechaB = obtenerFechaHora(b);
+
+      if (!fechaA && !fechaB) return 0;
+      if (!fechaA) return 1;
+      if (!fechaB) return -1;
+
+      if (direccion === "desc") {
+        return fechaB - fechaA;
+      }
+
+      return fechaA - fechaB;
+    });
   }
 
   function pintarPerfilTutor(tutor) {
@@ -234,29 +294,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (estado === "pendiente") {
       return `
-        <button class="btn-accion btn-aceptar" data-id="${reserva.id}" data-estado="aceptada">
-          Aceptar
-        </button>
+      <button class="btn-accion btn-aceptar" data-id="${reserva.id}" data-estado="aceptada">
+        Aceptar
+      </button>
 
-        <button class="btn-accion btn-rechazar" data-id="${reserva.id}" data-estado="rechazada">
-          Rechazar
-        </button>
-      `;
+      <button class="btn-accion btn-rechazar" data-id="${reserva.id}" data-estado="rechazada">
+        Rechazar
+      </button>
+    `;
     }
 
     if (estado === "aceptada") {
       return `
-        <button class="btn-accion btn-realizada" data-id="${reserva.id}" data-estado="realizada">
-          Marcar realizada
-        </button>
+      <button class="btn-accion btn-realizada" data-id="${reserva.id}" data-estado="realizada">
+        Marcar realizada
+      </button>
 
-        <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada">
-          Cancelar
-        </button>
-      `;
+      <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada">
+        Cancelar
+      </button>
+    `;
     }
 
-    return "";
+    return `
+    <span class="sin-acciones">
+      Sin acciones pendientes
+    </span>
+  `;
   }
 
   function pintarReservas() {
@@ -266,92 +330,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!reservas.length) {
       listaReservasTutor.innerHTML = `
-        <div class="empty-state">
-          No hay reservas para este filtro.
-        </div>
-      `;
+      <div class="empty-state">
+        No hay reservas para este filtro.
+      </div>
+    `;
       return;
     }
 
-    const reservasOrdenadas = [...reservas].sort((a, b) => {
-      const fechaA = obtenerFechaHora(a);
-      const fechaB = obtenerFechaHora(b);
-
-      if (!fechaA && !fechaB) return 0;
-      if (!fechaA) return 1;
-      if (!fechaB) return -1;
-
-      return fechaA - fechaB;
-    });
+    const reservasOrdenadas = ordenarReservasPorFechaHora(reservas, "asc");
 
     listaReservasTutor.innerHTML = reservasOrdenadas
       .map((reserva) => {
         const estado = normalizarEstado(reserva.estado);
 
         return `
-          <article class="reserva-card">
-            <div>
-              <h3>${reserva.curso || "Curso no indicado"}</h3>
+        <article class="reserva-card reserva-${estado}">
+          <div>
+            <div class="reserva-card-header">
+              <h3>${limpiarTexto(reserva.curso || "Curso no indicado")}</h3>
 
               <span class="estado-pill estado-${estado}">
                 ${obtenerEtiquetaEstado(reserva.estado)}
               </span>
-
-              <div class="reserva-grid">
-                <div><strong>Estudiante:</strong> ${reserva.correoUsuario || "No registrado"}</div>
-                <div><strong>Tutor:</strong> ${reserva.tutor || tutorActual?.nombre || "Tutor"}</div>
-                <div><strong>Fecha:</strong> ${formatearFecha(reserva.fecha)}</div>
-                <div><strong>Hora:</strong> ${reserva.hora || "No indicada"}</div>
-                <div><strong>Modalidad:</strong> ${reserva.modalidad || "No indicada"}</div>
-                <div><strong>Duración:</strong> ${reserva.duracion || "No indicada"}</div>
-                <div><strong>Total:</strong> S/ ${reserva.total || "0"}</div>
-                <div><strong>Método:</strong> ${reserva.metodoPago || "Simulado"}</div>
-              </div>
             </div>
 
-            <div class="reserva-actions">
-              ${crearBotonesAccion(reserva)}
+            <div class="reserva-grid">
+              <div><strong>Estudiante:</strong> ${limpiarTexto(reserva.correoUsuario || "No registrado")}</div>
+              <div><strong>Tutor:</strong> ${limpiarTexto(reserva.tutor || tutorActual?.nombre || "Tutor")}</div>
+              <div><strong>Fecha:</strong> ${limpiarTexto(formatearFecha(reserva.fecha))}</div>
+              <div><strong>Hora:</strong> ${limpiarTexto(reserva.hora || "No indicada")}</div>
+              <div><strong>Modalidad:</strong> ${limpiarTexto(reserva.modalidad || "No indicada")}</div>
+              <div><strong>Duración:</strong> ${limpiarTexto(reserva.duracion || "No indicada")}</div>
+              <div><strong>Total:</strong> S/ ${formatearMonto(reserva.total)}</div>
+              <div><strong>Método:</strong> ${limpiarTexto(reserva.metodoPago || "Simulado")}</div>
             </div>
-          </article>
-        `;
+          </div>
+
+          <div class="reserva-actions">
+            ${crearBotonesAccion(reserva)}
+          </div>
+        </article>
+      `;
       })
       .join("");
   }
-
   function pintarHistorial(reservas) {
     if (!listaHistorialTutor) return;
 
-    const realizadas = reservas.filter(
-      (reserva) => normalizarEstado(reserva.estado) === "realizada",
+    const realizadas = ordenarReservasPorFechaHora(
+      reservas.filter(
+        (reserva) => normalizarEstado(reserva.estado) === "realizada",
+      ),
+      "desc",
     );
 
     if (!realizadas.length) {
       listaHistorialTutor.innerHTML = `
-        <div class="empty-state">
-          Todavía no tienes sesiones realizadas.
-        </div>
-      `;
+      <div class="empty-state">
+        Todavía no tienes sesiones realizadas.
+      </div>
+    `;
       return;
     }
 
     listaHistorialTutor.innerHTML = realizadas
       .map((reserva) => {
         return `
-          <article class="reserva-card">
-            <div>
-              <h3>${reserva.curso || "Curso no indicado"}</h3>
+        <article class="reserva-card reserva-realizada">
+          <div>
+            <div class="reserva-card-header">
+              <h3>${limpiarTexto(reserva.curso || "Curso no indicado")}</h3>
 
-              <div class="reserva-grid">
-                <div><strong>Estudiante:</strong> ${reserva.correoUsuario || "No registrado"}</div>
-                <div><strong>Fecha:</strong> ${formatearFecha(reserva.fecha)}</div>
-                <div><strong>Hora:</strong> ${reserva.hora || "No indicada"}</div>
-                <div><strong>Total:</strong> S/ ${reserva.total || "0"}</div>
-              </div>
+              <span class="estado-pill estado-realizada">
+                Realizada
+              </span>
             </div>
 
-            <span class="estado-pill estado-realizada">Realizada</span>
-          </article>
-        `;
+            <div class="reserva-grid">
+              <div><strong>Estudiante:</strong> ${limpiarTexto(reserva.correoUsuario || "No registrado")}</div>
+              <div><strong>Fecha:</strong> ${limpiarTexto(formatearFecha(reserva.fecha))}</div>
+              <div><strong>Hora:</strong> ${limpiarTexto(reserva.hora || "No indicada")}</div>
+              <div><strong>Total:</strong> S/ ${formatearMonto(reserva.total)}</div>
+            </div>
+          </div>
+        </article>
+      `;
       })
       .join("");
   }
@@ -425,6 +488,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const reservaId = boton.dataset.id;
       const nuevoEstado = boton.dataset.estado;
+      const mensajesConfirmacion = {
+        aceptada: "¿Deseas aceptar esta reserva?",
+        rechazada: "¿Deseas rechazar esta reserva?",
+        realizada: "¿Deseas marcar esta sesión como realizada?",
+        cancelada: "¿Deseas cancelar esta reserva?",
+      };
+
+      const confirmarCambio = confirm(
+        mensajesConfirmacion[nuevoEstado] || "¿Deseas actualizar esta reserva?",
+      );
+
+      if (!confirmarCambio) {
+        return;
+      }
 
       try {
         boton.disabled = true;
