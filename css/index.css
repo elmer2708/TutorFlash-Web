@@ -166,10 +166,18 @@ body {
 }
 
 @media (max-width: 760px) {
+  .tf-welcome-page {
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+  }
+
   .tf-welcome {
     width: 100%;
-    max-width: 100%;
-    align-items: center;
+    max-width: 680px;
+    margin-inline: auto;
     text-align: center;
   }
 
@@ -186,6 +194,12 @@ body {
     font-size: clamp(1.25rem, 6vw, 1.9rem);
   }
   .tf-welcome-actions {
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .tf-welcome-actions a {
     width: 100%;
   }
 }
