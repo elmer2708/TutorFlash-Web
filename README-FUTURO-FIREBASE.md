@@ -557,8 +557,53 @@ service cloud.firestore {
   }
 }
 ```
+
 ## Nota importante sobre reglas de Firestore
 
 Firestore está en modo de prueba durante el desarrollo. Antes de presentar o publicar una versión más completa, se deben cambiar las reglas a reglas seguras.
 
 Cada usuario solo debe poder ver y modificar sus propias reservas. No se debe dejar la base de datos abierta permanentemente.
+
+## Mejoras futuras con Firebase
+
+Más adelante, TutorFlash-Web podrá seguir creciendo con nuevas funciones relacionadas con Firebase y la gestión de usuarios.
+
+### Funciones que se pueden agregar más adelante
+
+- Recuperación de contraseña.
+- Perfil del usuario.
+- Panel del tutor.
+- Roles separados: estudiante y tutor.
+- Estado de reserva: pendiente, confirmada o cancelada.
+- Historial de sesiones.
+- Edición o cancelación de reservas.
+- Notificaciones.
+- Chat interno.
+- Pago real.
+- Integración con calendario.
+
+## Orden recomendado para próximas versiones
+
+Para no complicar el proyecto, las mejoras futuras se pueden desarrollar en este orden:
+
+1. Cambiar las reglas de Firestore a reglas seguras.
+2. Probar que cada usuario solo vea sus propias reservas.
+3. Agregar recuperación de contraseña.
+4. Crear perfil básico de usuario.
+5. Crear panel de tutor.
+6. Agregar estados de reserva.
+7. Mejorar el diseño de “Mis sesiones”.
+8. Evaluar la implementación de pago real.
+
+## Nota importante
+
+Estas funciones no forman parte de la versión actual del MVP.  
+Por ahora, TutorFlash-Web ya cumple con la base funcional:
+
+- Registro de usuarios.
+- Inicio de sesión.
+- Cierre de sesión.
+- Reserva de tutorías.
+- Pago simulado.
+- Guardado de reservas en Firestore.
+- Visualización de reservas en “Mis sesiones”.

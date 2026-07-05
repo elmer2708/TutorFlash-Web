@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiero ser tutor | TutorFlash</title>
+
+    <link rel="stylesheet" href="../css/tutor.css" />
+  </head>
+  <body>
+    <header class="tutor-header">
+      <a href="../index.html" class="logo-link">
+        <img
+          src="../assets/img/logo-tutorflash-transparente.png"
+          alt="TutorFlash"
+        />
+        <span>TutorFlash</span>
+      </a>
+
+      <nav class="tutor-nav" aria-label="Navegación principal">
+        <a href="../index.html">Inicio</a>
+        <a href="app.html">Plataforma</a>
+        <a href="sesiones.html">Mis sesiones</a>
+        <a href="cuenta.html">Mi cuenta</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="tutor-hero">
+        <div class="tutor-hero-content">
+          <span class="tutor-label">TutorFlash para tutores</span>
+          <h1>Quiero ser tutor</h1>
+          <p>
+            Gana por cada tutoría realizada, elige tus horarios y ayuda a otros
+            estudiantes a resolver sus dudas antes de exámenes, prácticas o
+            entregas.
+          </p>
+
+          <button type="button" class="tutor-cta" id="btnPostularTutor">
+            Postular como tutor
+          </button>
+        </div>
+
+        <aside class="tutor-summary" aria-label="Resumen para tutores">
+          <strong>Ideal para apoyo rápido</strong>
+          <p>
+            Conecta con estudiantes que necesitan una explicación clara, puntual
+            y cercana.
+          </p>
+          <div class="summary-stat">
+            <span>Horarios</span>
+            <strong>Flexibles</strong>
+          </div>
+          <div class="summary-stat">
+            <span>Sesiones</span>
+            <strong>Pagadas</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="tutor-section">
+        <div class="section-heading">
+          <span>Beneficios</span>
+          <h2>Enseña a tu ritmo</h2>
+        </div>
+
+        <div class="benefits-grid">
+          <article>
+            <span>01</span>
+            <h3>Elige tus horarios.</h3>
+            <p>Organiza tus sesiones según tu disponibilidad real.</p>
+          </article>
+
+          <article>
+            <span>02</span>
+            <h3>Enseña cursos que dominas.</h3>
+            <p>Ofrece ayuda en los temas donde tienes más seguridad.</p>
+          </article>
+
+          <article>
+            <span>03</span>
+            <h3>Gana por cada sesión.</h3>
+            <p>Recibe pago por cada tutoría completada en la plataforma.</p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <h3>Ayuda a estudiantes que necesitan apoyo rápido.</h3>
+            <p>Acompaña dudas urgentes antes de exámenes o entregas.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="tutor-section tutor-profile">
+        <div class="section-heading">
+          <span>Perfil de tutor</span>
+          <h2>¿Quién puede postular?</h2>
+        </div>
+
+        <div class="profile-list">
+          <div>Estudiantes destacados.</div>
+          <div>Universitarios de ciclos avanzados.</div>
+          <div>Profesores independientes.</div>
+          <div>
+            Personas con experiencia en cursos escolares, técnicos o
+            universitarios.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="tutor-footer">
+      <p>TutorFlash. Tutorías rápidas para estudiar mejor.</p>
+      <div>
+        <a href="../index.html">Volver a inicio</a>
+        <a href="sesiones.html">Mis sesiones</a>
+        <a href="cuenta.html">Mi cuenta</a>
+      </div>
+    </footer>
+
+    <div id="modalPostulacionTutor" class="modal-tutor">
+      <div class="modal-tutor-contenido">
+        <button id="cerrarModalTutor" class="cerrar-modal-tutor" type="button">
+          &times;
+        </button>
+
+        <h2>Postulación como tutor</h2>
+
+        <p class="modal-tutor-texto">
+          Completa tus datos para formar parte de TutorFlash. Por ahora esta
+          opción funciona como maqueta.
+        </p>
+
+        <form id="formPostulacionTutor" class="form-tutor">
+          <div class="form-grupo">
+            <label for="nombreTutor">Nombre completo</label>
+            <input
+              type="text"
+              id="nombreTutor"
+              placeholder="Ejemplo: Ana López"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label for="correoTutor">Correo electrónico</label>
+            <input
+              type="email"
+              id="correoTutor"
+              placeholder="correo@ejemplo.com"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label for="telefonoTutor">Teléfono o WhatsApp</label>
+            <input
+              type="tel"
+              id="telefonoTutor"
+              placeholder="Ejemplo: 987654321"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label for="cursosTutor">Cursos que puede enseñar</label>
+            <input
+              type="text"
+              id="cursosTutor"
+              placeholder="Ejemplo: Matemática, Inglés, Física"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label for="nivelTutor">Nivel que puede enseñar</label>
+            <select id="nivelTutor">
+              <option value="">Selecciona un nivel</option>
+              <option value="Escolar">Escolar</option>
+              <option value="Preuniversitario">Preuniversitario</option>
+              <option value="Técnico">Técnico</option>
+              <option value="Universitario">Universitario</option>
+            </select>
+          </div>
+
+          <div class="form-grupo">
+            <label for="disponibilidadTutor">Disponibilidad</label>
+            <select id="disponibilidadTutor">
+              <option value="">Selecciona tu disponibilidad</option>
+              <option value="Mañana">Mañana</option>
+              <option value="Tarde">Tarde</option>
+              <option value="Noche">Noche</option>
+              <option value="Fines de semana">Fines de semana</option>
+            </select>
+          </div>
+
+          <div class="form-grupo">
+            <label for="experienciaTutor"
+              >Experiencia o breve descripción</label
+            >
+            <textarea
+              id="experienciaTutor"
+              rows="4"
+              placeholder="Cuéntanos brevemente tu experiencia o por qué quieres ser tutor"
+            ></textarea>
+          </div>
+
+          <p id="mensajeTutor" class="mensaje-tutor"></p>
+
+          <div class="acciones-modal-tutor">
+            <button type="button" id="cancelarTutor" class="btn-cancelar-tutor">
+              Cancelar
+            </button>
+
+            <button type="submit" class="btn-enviar-tutor">
+              Enviar postulación
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/tutor.js"></script>
+  </body>
+</html>
