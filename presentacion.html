@@ -1,308 +1,603 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TutorFlash | Tutorías rápidas</title>
+    <title>TutorFlash | Tutorías rápidas antes de exámenes</title>
     <link rel="stylesheet" href="css/presentacion.css" />
-
-    <!-- Conexión con el archivo de estilos -->
-    <link rel="stylesheet" href="css/style.css" />
   </head>
 
-  <body>
-    <!-- ENCABEZADO -->
-    <header class="header">
-      <nav class="navbar">
-        <a href="index.html" class="logo">TutorFlash ⚡</a>
+  <body class="tutorflash-home">
+    <header class="tf-header">
+      <nav class="tf-navbar">
+        <a href="index.html" class="tf-logo">TutorFlash ⚡</a>
 
-        <ul class="menu">
+        <button class="tf-mobile-toggle" type="button" aria-label="Abrir menú">
+          ☰
+        </button>
+
+        <ul class="tf-menu">
           <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#problema">Problema</a></li>
-          <li><a href="#solucion">Solución</a></li>
-          <li><a href="#funciona">Cómo funciona</a></li>
-          <li><a href="#mvp">MVP</a></li>
-          <li><a href="#usuario">Usuario</a></li>
+          <li><a href="#buscar">Buscar tutoría</a></li>
+          <li><a href="#tutores">Tutores</a></li>
+          <li><a href="#reservar">Reservar</a></li>
+          <li><a href="#como-funciona">Cómo funciona</a></li>
         </ul>
+
+        <a href="#reservar" class="tf-nav-btn">Reservar sesión</a>
       </nav>
     </header>
 
-    <!-- PORTADA -->
-    <section id="inicio" class="hero">
-      <div class="hero-text">
-        <span class="etiqueta">Aplicación educativa</span>
-        <h1>TutorFlash</h1>
-        <h2>Tutorías rápidas antes de exámenes</h2>
-        <p>
-          TutorFlash conecta a estudiantes que necesitan reforzar un curso o
-          tema específico con tutores disponibles en poco tiempo.
-        </p>
+    <main>
+      <section id="inicio" class="tf-hero">
+        <div class="tf-hero-content">
+          <h1>Encuentra un tutor disponible antes de tu examen</h1>
 
-        <div class="hero-buttons">
-          <a href="#funciona" class="btn-principal">Ver cómo funciona</a>
-          <a href="#mvp" class="btn-secundario">Conocer el MVP</a>
-        </div>
-      </div>
+          <p>
+            TutorFlash conecta estudiantes con tutores que pueden ayudarlos a
+            reforzar un curso o tema específico en poco tiempo.
+          </p>
 
-      <div class="phone-preview">
-        <div class="phone-header">
-          <span>TutorFlash ⚡</span>
-          <span>☰</span>
+          <div class="tf-hero-actions">
+            <a href="#buscar" class="tf-primary-btn">Buscar tutor ahora</a>
+            <a href="#como-funciona" class="tf-secondary-btn"
+              >Ver cómo funciona</a
+            >
+          </div>
         </div>
 
-        <div class="phone-body">
-          <p class="phone-hi">¡Hola, Ana! 👋</p>
-          <h3>¿Qué tema necesitas reforzar?</h3>
+        <div class="tf-phone-card">
+          <div class="tf-app-preview-label">
+            <span>Vista previa futura app móvil</span>
+          </div>
+          <div class="tf-phone-screen">
+            <div class="tf-app-top">
+              <span class="tf-app-logo">TutorFlash ⚡</span>
+              <button class="tf-menu-btn">☰</button>
+            </div>
 
-          <div class="search-box">Buscar curso o tema...</div>
+            <div class="tf-greeting">
+              <p>¡Hola, Ana! 👋</p>
+              <h2>¿Qué tema necesitas reforzar?</h2>
+            </div>
 
-          <div class="course-grid">
-            <span>📐 Matemática</span>
-            <span>⚛️ Física</span>
-            <span>🧪 Química</span>
-            <span>📊 Estadística</span>
-            <span>💼 Contabilidad</span>
-            <span>💻 Programación</span>
+            <div class="tf-search-box">
+              <span>🔎</span>
+              <input type="text" placeholder="Buscar curso o tema..." />
+            </div>
+
+            <div class="tf-category-row">
+              <button>Matemática</button>
+              <button>Inglés</button>
+              <button>Contabilidad</button>
+            </div>
+
+            <div class="tf-section-title">
+              <h3>Tutores disponibles</h3>
+              <a href="#tutores">Ver todos</a>
+            </div>
+
+            <div class="tf-tutor-mini-card">
+              <div class="tf-avatar">LC</div>
+              <div>
+                <h4>Lucía Campos</h4>
+                <p>Matemática · Disponible hoy</p>
+              </div>
+              <button type="button" class="tf-demo-btn">Solicitar</button>
+            </div>
+
+            <div class="tf-tutor-mini-card">
+              <div class="tf-avatar purple">MR</div>
+              <div>
+                <h4>Marco Ruiz</h4>
+                <p>Inglés · Sesión rápida</p>
+              </div>
+              <button type="button" class="tf-demo-btn">Solicitar</button>
+            </div>
+
+            <div class="tf-bottom-nav">
+              <a class="active" href="#">Inicio</a>
+              <a href="#reservar">Sesiones</a>
+              <a href="#contacto">Mensajes</a>
+              <a href="#usuario">Perfil</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="buscar" class="tf-section tf-search-section">
+        <div class="tf-section-header">
+          <span>Buscar tutoría</span>
+          <h2>Refuerza el tema que necesitas</h2>
+          <p>
+            El estudiante puede buscar por curso, tema o disponibilidad del
+            tutor.
+          </p>
+        </div>
+
+        <div class="tf-search-panel">
+          <input
+            id="busquedaTutor"
+            type="text"
+            placeholder="Ejemplo: matemática financiera, inglés básico, costos..."
+          />
+          <button id="btnBuscarTutor" type="button">Buscar</button>
+        </div>
+
+        <p id="mensajeBusqueda" class="tf-search-message"></p>
+      </section>
+
+      <section id="tutores" class="tf-section">
+        <div class="tf-section-header">
+          <span>Tutores disponibles</span>
+          <h2>Elige un tutor según el curso</h2>
+          <p>
+            Cada tarjeta muestra el curso, disponibilidad, valoración y opción
+            para solicitar una sesión.
+          </p>
+        </div>
+
+        <div class="tf-tutor-grid">
+          <article
+            class="tf-tutor-card"
+            data-tutor="Lucía Campos"
+            data-course="Matemática"
+            data-rating="4.9"
+            data-availability="Hoy 7:00 p.m."
+            data-price="35"
+          >
+            <div class="tf-tutor-head">
+              <div class="tf-avatar large">LC</div>
+              <div>
+                <h3>Lucía Campos</h3>
+                <p>Matemática</p>
+              </div>
+            </div>
+
+            <p class="tf-tutor-text">
+              Apoyo en álgebra, funciones, ecuaciones y ejercicios antes de
+              prácticas o exámenes.
+            </p>
+
+            <div class="tf-tutor-info">
+              <span>⭐ 4.9</span>
+              <span>Hoy 7:00 p.m.</span>
+            </div>
+
+            <button class="tf-card-btn">Solicitar</button>
+          </article>
+
+          <article
+            class="tf-tutor-card"
+            data-tutor="Marco Ruiz"
+            data-course="Inglés"
+            data-rating="4.8"
+            data-availability="Disponible ahora"
+            data-price="35"
+          >
+            <div class="tf-tutor-head">
+              <div class="tf-avatar large purple">MR</div>
+              <div>
+                <h3>Marco Ruiz</h3>
+                <p>Inglés</p>
+              </div>
+            </div>
+
+            <p class="tf-tutor-text">
+              Refuerzo en vocabulario, pronunciación, traducción y preparación
+              para exposiciones.
+            </p>
+
+            <div class="tf-tutor-info">
+              <span>⭐ 4.8</span>
+              <span>Disponible ahora</span>
+            </div>
+
+            <button class="tf-card-btn">Solicitar</button>
+          </article>
+
+          <article
+            class="tf-tutor-card"
+            data-tutor="Ana Salazar"
+            data-course="Contabilidad"
+            data-rating="5.0"
+            data-availability="Mañana 6:00 p.m."
+            data-price="40"
+          >
+            <div class="tf-tutor-head">
+              <div class="tf-avatar large orange">AS</div>
+              <div>
+                <h3>Ana Salazar</h3>
+                <p>Contabilidad</p>
+              </div>
+            </div>
+
+            <p class="tf-tutor-text">
+              Refuerzo en cuentas contables, estados financieros, IGV, renta y
+              ejercicios prácticos.
+            </p>
+
+            <div class="tf-tutor-info">
+              <span>⭐ 5.0</span>
+              <span>Mañana 6:00 p.m.</span>
+            </div>
+
+            <button class="tf-card-btn">Solicitar</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="como-funciona" class="tf-section tf-steps-section">
+        <div class="tf-section-header">
+          <span>Cómo funciona</span>
+          <h2>Reserva una tutoría en pocos pasos</h2>
+        </div>
+
+        <div class="tf-steps-grid">
+          <div class="tf-step-card">
+            <strong>1</strong>
+            <h3>Busca un curso</h3>
+            <p>El estudiante escribe el curso o tema que necesita reforzar.</p>
+          </div>
+
+          <div class="tf-step-card">
+            <strong>2</strong>
+            <h3>Elige un tutor</h3>
+            <p>Revisa disponibilidad, valoración y especialidad del tutor.</p>
+          </div>
+
+          <div class="tf-step-card">
+            <strong>3</strong>
+            <h3>Reserva la sesión</h3>
+            <p>Selecciona horario, confirma la tutoría y realiza el pago.</p>
+          </div>
+
+          <div class="tf-step-card">
+            <strong>4</strong>
+            <h3>Aprende rápido</h3>
+            <p>Recibe una sesión enfocada en resolver dudas concretas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="reservar" class="tf-section tf-reserve-section">
+        <div class="tf-reserve-content">
+          <span>Reservar sesión</span>
+          <h2>Reserva tu sesión en pocos pasos</h2>
+          <p>
+            Elige un tutor disponible y completa tu reserva en una ventana
+            rápida, ordenada y fácil de usar.
+          </p>
+
+          <button type="button" class="tf-primary-btn" id="abrirReservaModal">
+            Abrir reserva
+          </button>
+        </div>
+      </section>
+
+      <div class="tf-reserva-modal" id="reservaModal" aria-hidden="true">
+        <div class="tf-reserva-modal-bg" id="cerrarReservaFondo"></div>
+
+        <div class="tf-reserva-modal-box">
+          <button
+            type="button"
+            class="tf-reserva-modal-close"
+            id="cerrarReservaModal"
+          >
+            ×
+          </button>
+
+          <div class="tf-reserve-workflow" aria-live="polite">
+            <div class="tf-reserve-steps">
+              <span class="is-active">1 Tutor</span>
+              <span>2 Horario</span>
+              <span>3 Modalidad</span>
+              <span>4 Confirmar</span>
+            </div>
+
+            <div class="tf-selected-tutor">
+              <div class="tf-selected-avatar" id="reservaAvatar">TF</div>
+              <div>
+                <small>Tutor seleccionado</small>
+                <h3 id="reservaTutorNombre">Selecciona un tutor</h3>
+                <p id="reservaTutorCurso">Curso pendiente</p>
+              </div>
+              <div class="tf-selected-meta">
+                <strong id="reservaTutorRating">--</strong>
+                <span id="reservaTutorDisponibilidad"
+                  >Disponibilidad pendiente</span
+                >
+              </div>
+            </div>
+
+            <form class="tf-reserve-form" id="formReserva">
+              <input id="cursoTema" type="hidden" />
+              <input id="tutorElegido" type="hidden" />
+
+              <div class="tf-reserve-group">
+                <h3>Selecciona fecha</h3>
+                <div class="tf-option-grid tf-date-options">
+                  <label class="tf-option-card is-selected">
+                    <input
+                      type="radio"
+                      name="fechaReserva"
+                      value="Hoy"
+                      checked
+                    />
+                    <strong>Hoy</strong>
+                    <span>Atención rápida</span>
+                  </label>
+                  <label class="tf-option-card">
+                    <input type="radio" name="fechaReserva" value="Mañana" />
+                    <strong>Mañana</strong>
+                    <span>Más horarios</span>
+                  </label>
+                  <label class="tf-option-card tf-custom-date-card">
+                    <input
+                      type="radio"
+                      name="fechaReserva"
+                      value="Elegir fecha"
+                    />
+                    <strong>Elegir fecha</strong>
+                    <input id="fechaPersonalizada" type="date" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="tf-reserve-group">
+                <h3>Selecciona hora</h3>
+                <div class="tf-option-grid tf-time-options">
+                  <label class="tf-pill-option is-selected">
+                    <input
+                      type="radio"
+                      name="horaReserva"
+                      value="5:00 p.m."
+                      checked
+                    />
+                    5:00 p.m.
+                  </label>
+                  <label class="tf-pill-option">
+                    <input type="radio" name="horaReserva" value="6:00 p.m." />
+                    6:00 p.m.
+                  </label>
+                  <label class="tf-pill-option">
+                    <input type="radio" name="horaReserva" value="7:00 p.m." />
+                    7:00 p.m.
+                  </label>
+                  <label class="tf-pill-option">
+                    <input type="radio" name="horaReserva" value="8:00 p.m." />
+                    8:00 p.m.
+                  </label>
+                </div>
+              </div>
+
+              <div class="tf-reserve-split">
+                <div class="tf-reserve-group">
+                  <h3>Modalidad</h3>
+                  <div class="tf-option-grid">
+                    <label class="tf-option-card is-selected">
+                      <input
+                        type="radio"
+                        name="modalidadReserva"
+                        value="Virtual"
+                        checked
+                      />
+                      <strong>Virtual</strong>
+                      <span>Videollamada</span>
+                    </label>
+                    <label class="tf-option-card">
+                      <input
+                        type="radio"
+                        name="modalidadReserva"
+                        value="Presencial"
+                      />
+                      <strong>Presencial</strong>
+                      <span>Según zona</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="tf-reserve-group">
+                  <h3>Duración</h3>
+                  <div class="tf-option-grid">
+                    <label class="tf-option-card">
+                      <input
+                        type="radio"
+                        name="duracionReserva"
+                        value="30 minutos"
+                        data-price="35"
+                      />
+                      <strong>30 minutos</strong>
+                      <span>S/ 35</span>
+                    </label>
+                    <label class="tf-option-card is-selected">
+                      <input
+                        type="radio"
+                        name="duracionReserva"
+                        value="45 minutos"
+                        data-price="45"
+                        checked
+                      />
+                      <strong>45 minutos</strong>
+                      <span>S/ 45</span>
+                    </label>
+                    <label class="tf-option-card">
+                      <input
+                        type="radio"
+                        name="duracionReserva"
+                        value="60 minutos"
+                        data-price="60"
+                      />
+                      <strong>60 minutos</strong>
+                      <span>S/ 60</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tf-reserve-summary">
+                <div>
+                  <span>Resumen de reserva</span>
+                  <h3 id="resumenTitulo">Completa tu reserva</h3>
+                </div>
+
+                <dl>
+                  <div>
+                    <dt>Tutor</dt>
+                    <dd id="resumenTutor">Pendiente</dd>
+                  </div>
+                  <div>
+                    <dt>Curso</dt>
+                    <dd id="resumenCurso">Pendiente</dd>
+                  </div>
+                  <div>
+                    <dt>Fecha</dt>
+                    <dd id="resumenFecha">Hoy</dd>
+                  </div>
+                  <div>
+                    <dt>Hora</dt>
+                    <dd id="resumenHora">5:00 p.m.</dd>
+                  </div>
+                  <div>
+                    <dt>Modalidad</dt>
+                    <dd id="resumenModalidad">Virtual</dd>
+                  </div>
+                  <div>
+                    <dt>Duración</dt>
+                    <dd id="resumenDuracion">45 minutos</dd>
+                  </div>
+                  <div class="tf-total-row">
+                    <dt>Total</dt>
+                    <dd id="resumenTotal">S/ 45</dd>
+                  </div>
+                </dl>
+
+                <button type="submit" class="tf-confirm-btn">
+                  Confirmar reserva
+                </button>
+              </div>
+            </form>
+
+            <div class="tf-confirmation-card" id="reservaConfirmacion" hidden>
+              <div class="tf-confirmation-icon">OK</div>
+              <h3>Solicitud enviada</h3>
+              <p>Tu reserva ha sido registrada correctamente.</p>
+              <dl>
+                <div>
+                  <dt>Tutor</dt>
+                  <dd id="finalTutor">-</dd>
+                </div>
+                <div>
+                  <dt>Curso</dt>
+                  <dd id="finalCurso">-</dd>
+                </div>
+                <div>
+                  <dt>Fecha</dt>
+                  <dd id="finalFecha">-</dd>
+                </div>
+                <div>
+                  <dt>Hora</dt>
+                  <dd id="finalHora">-</dd>
+                </div>
+                <div>
+                  <dt>Modalidad</dt>
+                  <dd id="finalModalidad">-</dd>
+                </div>
+                <div>
+                  <dt>Duración</dt>
+                  <dd id="finalDuracion">-</dd>
+                </div>
+                <div class="tf-total-row">
+                  <dt>Total</dt>
+                  <dd id="finalTotal">-</dd>
+                </div>
+              </dl>
+              <p class="tf-confirmation-note">
+                El tutor se comunicará contigo para confirmar la sesión.
+              </p>
+              <div class="tf-confirmation-actions">
+                <button
+                  type="button"
+                  class="tf-new-reserva-btn"
+                  id="nuevaReservaBtn"
+                >
+                  Elegir otro tutor
+                </button>
+
+                <button
+                  type="button"
+                  class="tf-close-reserva-btn"
+                  id="cerrarReservaFinalBtn"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- PROBLEMA -->
-    <section id="problema" class="section">
-      <div class="section-title">
-        <span>Problema identificado</span>
-        <h2>Los estudiantes necesitan apoyo rápido en momentos clave</h2>
-      </div>
-
-      <div class="grid-2">
-        <div class="text-box">
+      <section id="mvp" class="tf-section tf-about-section tf-about-single">
+        <div>
+          <span>Sobre TutorFlash</span>
+          <h2>Una solución pensada para estudiantes con poco tiempo</h2>
           <p>
-            Muchos estudiantes tienen dudas antes de una evaluación o entrega,
-            pero no siempre encuentran ayuda inmediata.
+            TutorFlash nace como un MVP para resolver una necesidad frecuente:
+            estudiantes que necesitan reforzar un tema específico antes de una
+            práctica, exposición o examen.
           </p>
 
-          <ul>
-            <li>Falta de apoyo rápido antes de exámenes.</li>
-            <li>Horarios de tutoría poco flexibles.</li>
-            <li>Demora para encontrar un tutor disponible.</li>
-            <li>Costos que a veces no se ajustan al estudiante.</li>
-          </ul>
-        </div>
-
-        <div class="highlight-box">
-          <h3>Necesidad real</h3>
           <p>
-            El tiempo apremia y la ayuda no siempre está disponible cuando más
-            se necesita.
+            La plataforma busca reducir el tiempo de búsqueda de ayuda académica
+            y facilitar el contacto con tutores disponibles.
           </p>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- SOLUCIÓN -->
-    <section id="solucion" class="section section-dark">
-      <div class="section-title light">
-        <span>Solución propuesta</span>
-        <h2>Una app para encontrar tutorías en pocos minutos</h2>
-      </div>
-
-      <div class="cards">
-        <article class="card">
-          <h3>Rapidez</h3>
-          <p>Conecta al estudiante con un tutor disponible en poco tiempo.</p>
-        </article>
-
-        <article class="card">
-          <h3>Flexibilidad</h3>
-          <p>Permite elegir curso, fecha, hora, duración y modalidad.</p>
-        </article>
-
-        <article class="card">
-          <h3>Accesibilidad</h3>
+      <section id="usuario" class="tf-section tf-user-section">
+        <div class="tf-section-header">
+          <span>Usuario objetivo</span>
+          <h2>¿Para quién está dirigido?</h2>
           <p>
-            Facilita recibir apoyo académico desde el celular y sin procesos
-            largos.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <!-- CÓMO FUNCIONA -->
-   <!-- CÓMO FUNCIONA -->
-<section id="funciona" class="section">
-  <div class="section-title">
-    <span>Proceso de uso</span>
-    <h2>¿Cómo funciona TutorFlash?</h2>
-  </div>
-
-  <div class="process-flow">
-    <div class="flow-step step-1">
-      <div class="step-badge">Paso 1</div>
-      <div class="step-icon">🔎</div>
-      <h3>Buscar curso</h3>
-      <p>El estudiante escribe el curso o tema que necesita reforzar.</p>
-    </div>
-
-    <div class="flow-arrow">→</div>
-
-    <div class="flow-step step-2">
-      <div class="step-badge">Paso 2</div>
-      <div class="step-icon">👩‍🏫</div>
-      <h3>Elegir tutor</h3>
-      <p>La app muestra tutores disponibles con precio, curso y calificación.</p>
-    </div>
-
-    <div class="flow-arrow">→</div>
-
-    <div class="flow-step step-3">
-      <div class="step-badge">Paso 3</div>
-      <div class="step-icon">📅</div>
-      <h3>Reservar sesión</h3>
-      <p>El estudiante selecciona fecha, hora, modalidad y duración.</p>
-    </div>
-
-    <div class="flow-arrow">→</div>
-
-    <div class="flow-step step-4">
-      <div class="step-badge">Paso 4</div>
-      <div class="step-icon">✅</div>
-      <h3>Pagar y aprender</h3>
-      <p>Confirma la reserva y recibe la tutoría en el horario elegido.</p>
-    </div>
-  </div>
-</section>
-
-    <!-- MVP -->
-    <section id="mvp" class="section section-soft">
-      <div class="section-title">
-        <span>Producto Mínimo Viable</span>
-        <h2>MVP de TutorFlash</h2>
-      </div>
-
-      <div class="grid-2">
-        <div class="text-box">
-          <p>
-            El MVP de TutorFlash es una versión básica de la aplicación,
-            diseñada para validar la idea con usuarios reales antes de
-            desarrollar la app completa.
-          </p>
-
-          <h3>Funciones clave del MVP</h3>
-          <ul>
-            <li>Buscar tutores disponibles por curso.</li>
-            <li>Reservar una tutoría rápida.</li>
-            <li>Confirmar la sesión.</li>
-          </ul>
-        </div>
-
-        <div class="highlight-box">
-          <h3>Objetivo</h3>
-          <p>
-            Comprobar si los estudiantes usarían la aplicación y si el proceso
-            es fácil de entender.
+            TutorFlash está pensado para estudiantes escolares, técnicos o
+            universitarios que necesitan apoyo rápido y personalizado.
           </p>
         </div>
-      </div>
-    </section>
 
-    <!-- USUARIO OBJETIVO -->
-   <!-- USUARIO OBJETIVO -->
-<section id="usuario" class="section">
-  <div class="section-title">
-    <span>Usuario objetivo</span>
-    <h2>¿Para quién está pensado TutorFlash?</h2>
-  </div>
+        <div class="tf-user-grid">
+          <div>
+            <h3>Estudiantes</h3>
+            <p>Buscan reforzar cursos antes de evaluaciones importantes.</p>
+          </div>
 
-  <div class="user-grid">
-    <article class="user-card">
-      <div class="user-icon">🎓</div>
-      <h3>Edad</h3>
-      <p>Estudiantes de 15 a 25 años aproximadamente.</p>
-    </article>
+          <div>
+            <h3>Tutores</h3>
+            <p>Ofrecen sesiones según su disponibilidad y especialidad.</p>
+          </div>
 
-    <article class="user-card">
-      <div class="user-icon">🏫</div>
-      <h3>Nivel educativo</h3>
-      <p>Secundaria, instituto o universidad.</p>
-    </article>
+          <div>
+            <h3>Instituciones</h3>
+            <p>
+              Pueden usar la plataforma como apoyo académico complementario.
+            </p>
+          </div>
+        </div>
+      </section>
 
-    <article class="user-card">
-      <div class="user-icon">📚</div>
-      <h3>Necesidad</h3>
-      <p>Resolver dudas antes de exámenes, prácticas o entregas.</p>
-    </article>
+      <section id="contacto" class="tf-contact-section">
+        <h2>Aprende justo cuando más lo necesitas</h2>
+        <p>
+          TutorFlash convierte la búsqueda de ayuda académica en un proceso
+          rápido, simple y accesible.
+        </p>
 
-    <article class="user-card">
-      <div class="user-icon">📱</div>
-      <h3>Tecnología</h3>
-      <p>Uso frecuente de celular, apps y herramientas digitales.</p>
-    </article>
-  </div>
+        <a href="#inicio" class="tf-primary-btn">Volver al inicio</a>
+      </section>
+    </main>
 
-  <div class="example-user">
-    <h3>Ejemplo de usuario</h3>
-    <p>
-      Ana tiene una práctica al día siguiente y no entiende algunos ejercicios.
-      En TutorFlash busca el curso, elige un tutor disponible y reserva una
-      sesión corta para resolver sus dudas.
-    </p>
-  </div>
-</section>
+    <footer class="tf-footer">
+      <p>© 2026 TutorFlash. Proyecto Sprint MVP.</p>
+    </footer>
 
-    <!-- MODELO DE INGRESOS -->
-    <section class="section section-dark">
-      <div class="section-title light">
-        <span>Modelo de ingresos</span>
-        <h2>¿Cómo podría generar ingresos?</h2>
-      </div>
-
-      <div class="cards">
-        <article class="card">
-          <h3>Comisión por tutoría</h3>
-          <p>
-            La plataforma retiene un porcentaje por cada reserva confirmada.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Plan premium</h3>
-          <p>
-            Los tutores pueden pagar por mayor visibilidad en los resultados.
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Publicidad educativa</h3>
-          <p>
-            Cursos, materiales o academias pueden anunciarse en una etapa
-            futura.
-          </p>
-        </article>
-      </div>
-    </section>
-
-
-    <!-- CIERRE -->
-<footer class="footer">
-  <div class="footer-content">
-    <span class="footer-label">Proyecto Sprint MVP</span>
-    <h2>TutorFlash ⚡</h2>
-
-    <p>
-      Una propuesta práctica, rápida y accesible para brindar apoyo académico
-      cuando el estudiante más lo necesita.
-    </p>
-
-    <div class="footer-buttons">
-      <a href="#inicio" class="btn-footer-primary">Volver al inicio</a>
-      <a href="#funciona" class="btn-footer-secondary">Ver funcionamiento</a>
-    </div>
-
-    <p class="copy">Grupo 3 · Tutorías rápidas antes de exámenes</p>
-  </div>
-</footer>
-
-    <!-- Conexión con JavaScript -->
     <script src="js/script.js"></script>
   </body>
 </html>

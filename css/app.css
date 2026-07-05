@@ -1,0 +1,922 @@
+﻿* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f1e8;
+  color: #071b3d;
+}
+
+/* HEADER */
+.tf-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 7%;
+  min-height: 82px;
+  background: rgba(247, 241, 232, 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-logo {
+  width: 300px;
+  height: 78px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+}
+
+.tf-logo img {
+  width: 260px;
+  height: auto;
+  display: block;
+  transform: translateY(8px) scale(1.25);
+  transform-origin: left center;
+}
+
+.tf-menu {
+  display: flex;
+  gap: 22px;
+}
+
+.tf-menu a {
+  color: #071b3d;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.tf-menu a:hover {
+  color: #f7a600;
+}
+
+.tf-menu-toggle {
+  display: none;
+  border: none;
+  background: #071b3c;
+  color: #fff8e8;
+  font-size: 26px;
+  font-weight: 900;
+  width: 46px;
+  height: 42px;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(7, 27, 60, 0.18);
+}
+
+/* HERO */
+
+.tf-hero {
+  min-height: calc(100vh - 78px);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 45px;
+  padding: 48px 7%;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 198, 41, 0.22),
+      transparent 24%
+    ),
+    radial-gradient(circle at 85% 30%, rgba(7, 27, 61, 0.12), transparent 26%),
+    linear-gradient(135deg, #fff8ea 0%, #edf6ef 100%);
+}
+
+.tf-label {
+  display: inline-block;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255, 198, 41, 0.25);
+  color: #071b3d;
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+.tf-hero h1 {
+  max-width: 680px;
+  margin: 0;
+  font-size: clamp(2.2rem, 4.4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -1.5px;
+}
+
+.tf-hero p {
+  max-width: 580px;
+  margin: 22px 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: #41506a;
+}
+
+.tf-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.tf-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.tf-btn-primary {
+  background: #071b3d;
+  color: white;
+  box-shadow: 0 14px 26px rgba(7, 27, 61, 0.22);
+}
+
+.tf-btn-secondary {
+  background: white;
+  color: #071b3d;
+  border: 1px solid rgba(7, 27, 61, 0.14);
+}
+
+/* TARJETA HERO */
+
+.tf-resume-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(7, 27, 61, 0.1);
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 22px 55px rgba(7, 27, 61, 0.14);
+}
+
+.tf-resume-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.55rem;
+}
+
+.tf-resume-card p {
+  margin: 0 0 22px;
+  font-size: 1rem;
+}
+
+.tf-step-mini {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  margin-top: 12px;
+  background: #f7f1e8;
+  border-radius: 18px;
+}
+
+.tf-step-mini strong {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffc629;
+  color: #071b3d;
+}
+
+/* SECCIONES */
+
+section {
+  scroll-margin-top: 90px;
+}
+
+.tf-section {
+  padding: 75px 7%;
+}
+
+.tf-title {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.tf-title span {
+  color: #f7a600;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tf-title h2 {
+  margin: 8px 0 0;
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+}
+
+/* BUSCADOR */
+
+.tf-search {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: white;
+  border-radius: 999px;
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.1);
+}
+
+.tf-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0 18px;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.tf-search button,
+.tf-tutor-card button {
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 13px 22px;
+  background: #071b3d;
+  color: white;
+  font-weight: 900;
+}
+
+/* CURSOS */
+
+.tf-courses {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.tf-courses button {
+  border: 1px solid rgba(7, 27, 61, 0.1);
+  background: white;
+  color: #071b3d;
+  padding: 18px 12px;
+  border-radius: 20px;
+  font-weight: 900;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 12px 25px rgba(7, 27, 61, 0.07);
+  transition: 0.25s ease;
+}
+
+.tf-courses button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 32px rgba(7, 27, 61, 0.12);
+}
+
+/* TUTORES */
+
+.tf-tutors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.tf-tutor-card {
+  background: white;
+  border-radius: 26px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 18px 42px rgba(7, 27, 61, 0.1);
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-avatar {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffc629;
+  color: #071b3d;
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.tf-tutor-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.tf-tutor-card p {
+  margin: 7px 0;
+  color: #41506a;
+}
+
+.tf-tutor-card span {
+  display: block;
+  margin: 12px 0;
+  color: #16834a;
+  font-weight: 800;
+}
+
+.tf-tutor-card strong {
+  display: block;
+  margin: 14px 0 18px;
+}
+
+/* CÃ“MO FUNCIONA */
+
+.tf-how {
+  background: #071b3d;
+  color: white;
+}
+
+.tf-how .tf-title span {
+  color: #ffc629;
+}
+
+.tf-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.tf-steps div {
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tf-steps strong {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffc629;
+  color: #071b3d;
+  margin-bottom: 16px;
+}
+
+.tf-steps h3 {
+  margin: 0 0 8px;
+}
+
+.tf-steps p {
+  margin: 0;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* CONTACTO */
+
+.tf-contact {
+  text-align: center;
+}
+
+.tf-contact h2 {
+  margin: 0 0 10px;
+  font-size: 2.3rem;
+}
+
+.tf-contact p {
+  margin: 0 0 24px;
+  color: #41506a;
+}
+
+.tf-search-message {
+  max-width: 720px;
+  margin: -10px auto 26px;
+  text-align: center;
+  color: #41506a;
+  font-weight: 700;
+}
+
+.tf-tutor-card.is-hidden {
+  display: none;
+}
+
+/* MODAL RESERVA */
+
+body.tf-modal-open {
+  overflow: hidden;
+}
+
+.tf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+.tf-modal.is-open {
+  display: flex;
+}
+
+.tf-modal-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 27, 61, 0.62);
+  backdrop-filter: blur(6px);
+}
+
+.tf-modal-box {
+  position: relative;
+  z-index: 2;
+  width: min(520px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #fffaf0;
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(7, 27, 61, 0.32);
+}
+
+.tf-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: none;
+  background: #071b3d;
+  color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.tf-modal-label {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 198, 41, 0.28);
+  color: #071b3d;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.tf-modal-box h2 {
+  margin: 8px 0 14px;
+  color: #071b3d;
+  font-size: 1.5rem;
+}
+
+.tf-selected-tutor {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 20px;
+  background: white;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  margin-bottom: 16px;
+}
+
+.tf-selected-tutor h3 {
+  margin: 0 0 4px;
+}
+
+.tf-selected-tutor p {
+  margin: 0 0 4px;
+  color: #41506a;
+}
+
+.tf-selected-tutor span {
+  color: #16834a;
+  font-weight: 800;
+}
+
+.tf-form {
+  display: grid;
+  gap: 11px;
+}
+
+.tf-form label {
+  display: grid;
+  gap: 7px;
+  color: #071b3d;
+  font-weight: 800;
+}
+
+.tf-form input,
+.tf-form select {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(7, 27, 61, 0.16);
+  background: white;
+  color: #071b3d;
+  font-size: 1rem;
+  outline: none;
+}
+
+.tf-form input:focus,
+.tf-form select:focus {
+  border-color: #ffc629;
+  box-shadow: 0 0 0 4px rgba(255, 198, 41, 0.22);
+}
+
+.tf-reserva-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #071b3d;
+  color: white;
+  border-radius: 18px;
+  margin: 6px 0;
+}
+
+.tf-reserva-total strong {
+  color: #ffc629;
+  font-size: 1.25rem;
+}
+
+.tf-confirmation {
+  text-align: center;
+}
+
+.tf-check {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #22c55e;
+  color: white;
+  font-size: 2.6rem;
+  font-weight: 900;
+}
+
+.tf-confirmation h2 {
+  margin-bottom: 8px;
+}
+
+.tf-confirmation > p {
+  color: #41506a;
+  margin-bottom: 18px;
+}
+
+.tf-confirm-detail {
+  text-align: left;
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin: 18px 0 22px;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-confirm-detail p {
+  margin: 8px 0;
+  color: #071b3d;
+}
+
+/* MODAL MÃS COMPACTO */
+
+.tf-modal-box {
+  width: min(640px, 100%);
+  max-height: 88vh;
+  padding: 22px 24px;
+  border-radius: 26px;
+}
+
+.tf-modal-label {
+  padding: 7px 14px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.tf-modal-box h2 {
+  margin: 6px 0 12px;
+  font-size: 1.45rem;
+}
+
+/* Tutor seleccionado mÃ¡s compacto */
+
+.tf-selected-tutor {
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  gap: 14px;
+}
+
+.tf-selected-tutor .tf-avatar {
+  width: 64px;
+  height: 64px;
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.tf-selected-tutor h3 {
+  margin: 0 0 2px;
+  font-size: 1.15rem;
+}
+
+.tf-selected-tutor p {
+  margin: 0 0 2px;
+}
+
+.tf-selected-tutor span {
+  font-size: 0.95rem;
+}
+
+/* Formulario en 2 columnas */
+
+.tf-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 12px;
+}
+
+.tf-form label {
+  gap: 5px;
+  font-size: 0.95rem;
+}
+
+.tf-form input,
+.tf-form select {
+  padding: 10px 13px;
+  border-radius: 13px;
+  font-size: 0.95rem;
+}
+
+/* Total y botÃ³n ocupan todo el ancho */
+
+.tf-reserva-total {
+  grid-column: 1 / -1;
+  padding: 13px 15px;
+  margin: 2px 0;
+  border-radius: 16px;
+}
+
+.tf-reserva-total strong {
+  font-size: 1.15rem;
+}
+
+.tf-form .tf-btn {
+  grid-column: 1 / -1;
+  padding: 13px 20px;
+}
+
+/* BotÃ³n cerrar */
+
+.tf-modal-close {
+  top: 12px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+}
+
+/* ConfirmaciÃ³n mÃ¡s compacta */
+
+.tf-confirmation h2 {
+  font-size: 1.5rem;
+}
+
+.tf-check {
+  width: 68px;
+  height: 68px;
+  font-size: 2.3rem;
+}
+
+.tf-confirm-detail {
+  padding: 14px;
+  margin: 14px 0 18px;
+}
+
+.tf-confirm-detail p {
+  margin: 6px 0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .tf-header {
+    padding: 8px 5%;
+  }
+
+  .tf-menu {
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .tf-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 45px;
+  }
+
+  .tf-hero p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tf-actions {
+    justify-content: center;
+  }
+
+  .tf-courses {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tf-tutors,
+  .tf-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  section {
+    scroll-margin-top: 86px;
+  }
+
+  .tf-header {
+    min-height: 76px;
+    padding: 10px 18px;
+  }
+
+  .tf-logo {
+    width: 170px;
+    height: 54px;
+  }
+
+  .tf-logo img {
+    width: 155px;
+    transform: translateY(2px) scale(1.05);
+  }
+
+  .tf-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 30;
+    flex-shrink: 0;
+  }
+
+  .tf-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 18px;
+    right: 18px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: #fff8e8;
+    border: 1px solid rgba(7, 27, 60, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(7, 27, 60, 0.15);
+    z-index: 20;
+  }
+
+  .tf-menu.is-open {
+    display: flex;
+  }
+
+  .tf-menu a {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .tf-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 42px 22px 50px;
+  }
+
+  .tf-hero h1 {
+    font-size: 34px;
+    line-height: 1.08;
+    margin-top: 18px;
+  }
+
+  .tf-hero p {
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .tf-actions {
+    justify-content: center;
+  }
+
+  .tf-courses {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-tutors,
+  .tf-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-footer {
+    padding: 34px 22px;
+  }
+
+  .tf-footer-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .tf-modal-box {
+    padding: 20px;
+    max-height: 90vh;
+  }
+
+  .tf-form {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-selected-tutor {
+    align-items: center;
+  }
+
+  .tf-selected-tutor .tf-avatar {
+    width: 58px;
+    height: 58px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tf-logo img {
+    width: 145px;
+  }
+
+  .tf-search {
+    border-radius: 24px;
+    flex-direction: column;
+  }
+
+  .tf-search input {
+    padding: 14px;
+  }
+
+  .tf-courses {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .tf-modal-box {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .tf-selected-tutor {
+    align-items: flex-start;
+  }
+}
+/* FOOTER */
+
+.tf-footer {
+  padding: 38px 7%;
+  background: #071b3d;
+  color: #fff8e8;
+  text-align: center;
+}
+
+.tf-footer h3 {
+  margin: 0 0 8px;
+  font-size: 1.7rem;
+}
+
+.tf-footer p {
+  margin: 0;
+  color: rgba(255, 248, 232, 0.78);
+}
+
+.tf-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+
+.tf-footer-links a {
+  color: #ffc629;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.tf-footer-links a:hover {
+  color: white;
+}
+
+.tf-footer-copy {
+  font-size: 0.9rem;
+}
