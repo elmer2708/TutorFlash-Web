@@ -1,18 +1,33 @@
 import {
   observarUsuario,
+  cerrarSesion,
   obtenerPostulacionTutorPorUid,
   guardarPostulacionTutor,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const btnPostularTutor = document.getElementById("btnPostularTutor");
-  const modalPostulacionTutor = document.getElementById(
-    "modalPostulacionTutor",
-  );
-  const cerrarModalTutor = document.getElementById("cerrarModalTutor");
-  const cancelarTutor = document.getElementById("cancelarTutor");
   const formPostulacionTutor = document.getElementById("formPostulacionTutor");
   const mensajeTutor = document.getElementById("mensajeTutor");
+
+  const estadoEtiqueta = document.getElementById("estadoEtiqueta");
+  const estadoTitulo = document.getElementById("estadoTitulo");
+  const estadoDescripcion = document.getElementById("estadoDescripcion");
+
+  const enlaceCuentaTutor = document.getElementById("enlaceCuentaTutor");
+  const enlacePanelTutor = document.getElementById("enlacePanelTutor");
+
+  const btnCerrarSesionTutor = document.getElementById("btnCerrarSesionTutor");
+  const btnEnviarPostulacion = document.getElementById("btnEnviarPostulacion");
+
+  const inputNombreTutor = document.getElementById("nombreTutor");
+  const inputCorreoTutor = document.getElementById("correoTutor");
+  const inputTelefonoTutor = document.getElementById("telefonoTutor");
+  const inputCursosTutor = document.getElementById("cursosTutor");
+  const inputNivelTutor = document.getElementById("nivelTutor");
+  const inputDisponibilidadTutor = document.getElementById(
+    "disponibilidadTutor",
+  );
+  const inputExperienciaTutor = document.getElementById("experienciaTutor");
 
   let usuarioActual = null;
   let postulacionExistente = null;
@@ -70,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const corregirCurso = (curso) => {
     const clave = normalizar(curso);
-
     return cursosCorregidos[clave] || capitalizarTexto(curso);
   };
 
@@ -82,106 +96,240 @@ document.addEventListener("DOMContentLoaded", () => {
       .join(", ");
   };
 
-  observarUsuario(async (usuario) => {
-    usuarioActual = usuario;
-
-    if (!usuarioActual) {
-      postulacionExistente = null;
-      return;
-    }
-
-    try {
-      postulacionExistente = await obtenerPostulacionTutorPorUid(
-        usuarioActual.uid,
-      );
-    } catch (error) {
-      console.error("Error al revisar la postulación del tutor:", error);
-    }
-  });
-
-  function abrirModalTutor() {
-    if (!usuarioActual) {
-      alert("Para postular como tutor, primero debes iniciar sesión.");
-      window.location.href = "cuenta.html";
-      return;
-    }
-
-    if (postulacionExistente) {
-      if (postulacionExistente.estado === "aprobado") {
-        alert(
-          "Tu postulación ya fue aprobada. Ahora formas parte de TutorFlash como tutor.",
-        );
-        return;
-      }
-
-      if (postulacionExistente.estado === "pendiente") {
-        alert(
-          "Ya tienes una postulación pendiente. TutorFlash está revisando tu información.",
-        );
-        return;
-      }
-
-      if (postulacionExistente.estado === "rechazado") {
-        alert(
-          "Tu postulación fue revisada. Más adelante podrás volver a postular.",
-        );
-        return;
-      }
-
-      alert(
-        `Ya tienes una postulación registrada con estado: ${postulacionExistente.estado}.`,
-      );
-      return;
-    }
-
-    if (!modalPostulacionTutor) return;
-
-    modalPostulacionTutor.classList.add("activo");
-    document.body.style.overflow = "hidden";
-  }
-
-  function cerrarModalPostulacion() {
-    if (!modalPostulacionTutor) return;
-
-    modalPostulacionTutor.classList.remove("activo");
-    document.body.style.overflow = "";
-
-    if (mensajeTutor) {
-      mensajeTutor.textContent = "";
-      mensajeTutor.className = "mensaje-tutor";
-    }
-  }
-
-  function mostrarMensajeTutor(texto, tipo) {
+  function mostrarMensajeTutor(texto, tipo = "info") {
     if (!mensajeTutor) return;
 
     mensajeTutor.textContent = texto;
     mensajeTutor.className = `mensaje-tutor ${tipo}`;
   }
 
-  if (btnPostularTutor) {
-    btnPostularTutor.addEventListener("click", abrirModalTutor);
+  function limpiarMensajeTutor() {
+    if (!mensajeTutor) return;
+
+    mensajeTutor.textContent = "";
+    mensajeTutor.className = "mensaje-tutor";
   }
 
-  if (cerrarModalTutor) {
-    cerrarModalTutor.addEventListener("click", cerrarModalPostulacion);
+  function mostrarEstado(tipo, titulo, descripcion) {
+    if (estadoEtiqueta) {
+      estadoEtiqueta.textContent = tipo;
+      estadoEtiqueta.className = `estado-badge estado-${normalizar(tipo)}`;
+    }
+
+    if (estadoTitulo) {
+      estadoTitulo.textContent = titulo;
+    }
+
+    if (estadoDescripcion) {
+      estadoDescripcion.textContent = descripcion;
+    }
   }
 
-  if (cancelarTutor) {
-    cancelarTutor.addEventListener("click", cerrarModalPostulacion);
-  }
+  function bloquearFormulario(bloquear) {
+    const campos = [
+      inputNombreTutor,
+      inputTelefonoTutor,
+      inputCursosTutor,
+      inputNivelTutor,
+      inputDisponibilidadTutor,
+      inputExperienciaTutor,
+      btnEnviarPostulacion,
+    ];
 
-  if (modalPostulacionTutor) {
-    modalPostulacionTutor.addEventListener("click", (event) => {
-      if (event.target === modalPostulacionTutor) {
-        cerrarModalPostulacion();
+    campos.forEach((campo) => {
+      if (campo) {
+        campo.disabled = bloquear;
       }
     });
+
+    if (inputCorreoTutor) {
+      inputCorreoTutor.readOnly = true;
+      inputCorreoTutor.disabled = false;
+    }
   }
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      cerrarModalPostulacion();
+  function completarFormulario(postulacion) {
+    if (!postulacion) return;
+
+    if (inputNombreTutor) inputNombreTutor.value = postulacion.nombre || "";
+    if (inputCorreoTutor) {
+      inputCorreoTutor.value =
+        postulacion.correo ||
+        postulacion.correoUsuario ||
+        usuarioActual?.email ||
+        "";
+    }
+    if (inputTelefonoTutor)
+      inputTelefonoTutor.value = postulacion.telefono || "";
+    if (inputCursosTutor) inputCursosTutor.value = postulacion.cursos || "";
+    if (inputNivelTutor) inputNivelTutor.value = postulacion.nivel || "";
+    if (inputDisponibilidadTutor) {
+      inputDisponibilidadTutor.value = postulacion.disponibilidad || "";
+    }
+    if (inputExperienciaTutor) {
+      inputExperienciaTutor.value =
+        postulacion.experiencia || postulacion.descripcion || "";
+    }
+  }
+
+  function prepararVistaSinSesion() {
+    usuarioActual = null;
+    postulacionExistente = null;
+
+    mostrarEstado(
+      "neutro",
+      "Inicia sesión para postular",
+      "Para enviar una postulación como tutor, primero debes crear una cuenta o iniciar sesión.",
+    );
+
+    if (inputCorreoTutor) {
+      inputCorreoTutor.value = "";
+    }
+
+    if (enlaceCuentaTutor) enlaceCuentaTutor.classList.remove("oculto");
+    if (enlacePanelTutor) enlacePanelTutor.classList.add("oculto");
+
+    bloquearFormulario(true);
+    mostrarMensajeTutor(
+      "Primero inicia sesión para completar tu postulación.",
+      "info",
+    );
+  }
+
+  function prepararVistaNuevaPostulacion(usuario) {
+    mostrarEstado(
+      "nueva",
+      "Puedes enviar tu postulación",
+      "Completa el formulario. El administrador revisará tus datos antes de aprobar tu perfil como tutor.",
+    );
+
+    if (inputCorreoTutor) {
+      inputCorreoTutor.value = usuario.email || "";
+    }
+
+    if (enlaceCuentaTutor) enlaceCuentaTutor.classList.add("oculto");
+    if (enlacePanelTutor) enlacePanelTutor.classList.add("oculto");
+
+    bloquearFormulario(false);
+    limpiarMensajeTutor();
+  }
+
+  function prepararVistaPostulacionPendiente(postulacion) {
+    completarFormulario(postulacion);
+
+    mostrarEstado(
+      "pendiente",
+      "Tu postulación está pendiente",
+      "TutorFlash ya recibió tu solicitud. El administrador revisará tu información y actualizará tu estado.",
+    );
+
+    if (enlaceCuentaTutor) enlaceCuentaTutor.classList.add("oculto");
+    if (enlacePanelTutor) enlacePanelTutor.classList.add("oculto");
+
+    bloquearFormulario(true);
+    mostrarMensajeTutor(
+      "Ya tienes una postulación pendiente. Espera la revisión del administrador.",
+      "info",
+    );
+  }
+
+  function prepararVistaPostulacionAprobada(postulacion) {
+    completarFormulario(postulacion);
+
+    mostrarEstado(
+      "aprobado",
+      "Tu postulación fue aprobada",
+      "Ya formas parte de TutorFlash como tutor. Puedes entrar a tu panel para revisar tus reservas.",
+    );
+
+    if (enlaceCuentaTutor) enlaceCuentaTutor.classList.add("oculto");
+    if (enlacePanelTutor) enlacePanelTutor.classList.remove("oculto");
+
+    bloquearFormulario(true);
+    mostrarMensajeTutor(
+      "Tu perfil ya fue aprobado. Ingresa al panel tutor para continuar.",
+      "exito",
+    );
+  }
+
+  function prepararVistaPostulacionRechazada(postulacion) {
+    completarFormulario(postulacion);
+
+    mostrarEstado(
+      "rechazado",
+      "Tu postulación fue rechazada",
+      "Tu solicitud ya fue revisada. Por ahora no puedes enviar otra postulación desde esta pantalla.",
+    );
+
+    if (enlaceCuentaTutor) enlaceCuentaTutor.classList.add("oculto");
+    if (enlacePanelTutor) enlacePanelTutor.classList.add("oculto");
+
+    bloquearFormulario(true);
+    mostrarMensajeTutor(
+      "Tu postulación fue rechazada. Más adelante se puede agregar una opción para volver a postular.",
+      "error",
+    );
+  }
+
+  observarUsuario(async (usuario) => {
+    if (!usuario) {
+      prepararVistaSinSesion();
+      return;
+    }
+
+    usuarioActual = usuario;
+
+    try {
+      mostrarEstado(
+        "neutro",
+        "Revisando tu postulación",
+        "Estamos verificando si ya tienes una solicitud registrada.",
+      );
+
+      postulacionExistente = await obtenerPostulacionTutorPorUid(usuario.uid);
+
+      if (!postulacionExistente) {
+        prepararVistaNuevaPostulacion(usuario);
+        return;
+      }
+
+      if (postulacionExistente.estado === "pendiente") {
+        prepararVistaPostulacionPendiente(postulacionExistente);
+        return;
+      }
+
+      if (postulacionExistente.estado === "aprobado") {
+        prepararVistaPostulacionAprobada(postulacionExistente);
+        return;
+      }
+
+      if (postulacionExistente.estado === "rechazado") {
+        prepararVistaPostulacionRechazada(postulacionExistente);
+        return;
+      }
+
+      completarFormulario(postulacionExistente);
+      bloquearFormulario(true);
+
+      mostrarEstado(
+        "neutro",
+        "Postulación registrada",
+        `Tu postulación tiene el estado: ${postulacionExistente.estado}.`,
+      );
+    } catch (error) {
+      console.error("Error al revisar la postulación del tutor:", error);
+
+      mostrarEstado(
+        "error",
+        "No se pudo revisar tu estado",
+        "Ocurrió un problema al consultar tu postulación. Intenta nuevamente.",
+      );
+
+      bloquearFormulario(true);
+      mostrarMensajeTutor(
+        "No se pudo cargar tu información de tutor.",
+        "error",
+      );
     }
   });
 
@@ -197,30 +345,22 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const nombreTutor = capitalizarTexto(
-        document.getElementById("nombreTutor").value,
-      );
+      if (postulacionExistente) {
+        mostrarMensajeTutor("Ya tienes una postulación registrada.", "error");
+        return;
+      }
 
-      const correoTutor = document
-        .getElementById("correoTutor")
-        .value.trim()
+      const nombreTutor = capitalizarTexto(inputNombreTutor?.value || "");
+      const correoTutor = String(inputCorreoTutor?.value || "")
+        .trim()
         .toLowerCase();
-
-      const telefonoTutor = document
-        .getElementById("telefonoTutor")
-        .value.trim();
-
-      const cursosTutor = corregirCursosTexto(
-        document.getElementById("cursosTutor").value,
-      );
-
-      const nivelTutor = document.getElementById("nivelTutor").value;
-      const disponibilidadTutor = document.getElementById(
-        "disponibilidadTutor",
-      ).value;
-      const experienciaTutor = document
-        .getElementById("experienciaTutor")
-        .value.trim();
+      const telefonoTutor = String(inputTelefonoTutor?.value || "").trim();
+      const cursosTutor = corregirCursosTexto(inputCursosTutor?.value || "");
+      const nivelTutor = inputNivelTutor?.value || "";
+      const disponibilidadTutor = inputDisponibilidadTutor?.value || "";
+      const experienciaTutor = String(
+        inputExperienciaTutor?.value || "",
+      ).trim();
 
       if (
         !nombreTutor ||
@@ -232,13 +372,23 @@ document.addEventListener("DOMContentLoaded", () => {
         !experienciaTutor
       ) {
         mostrarMensajeTutor(
-          "Por favor completa todos los campos antes de enviar tu postulación.",
+          "Completa todos los campos antes de enviar tu postulación.",
           "error",
         );
         return;
       }
 
+      if (telefonoTutor.length < 7) {
+        mostrarMensajeTutor("Ingresa un teléfono o WhatsApp válido.", "error");
+        return;
+      }
+
       try {
+        if (btnEnviarPostulacion) {
+          btnEnviarPostulacion.disabled = true;
+          btnEnviarPostulacion.textContent = "Enviando postulación...";
+        }
+
         await guardarPostulacionTutor({
           nombre: nombreTutor,
           correo: correoTutor,
@@ -251,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         postulacionExistente = {
           uid: usuarioActual.uid,
+          correoUsuario: usuarioActual.email,
           nombre: nombreTutor,
           correo: correoTutor,
           telefono: telefonoTutor,
@@ -261,15 +412,13 @@ document.addEventListener("DOMContentLoaded", () => {
           estado: "pendiente",
         };
 
+        completarFormulario(postulacionExistente);
+        prepararVistaPostulacionPendiente(postulacionExistente);
+
         mostrarMensajeTutor(
           "Tu postulación fue enviada correctamente. TutorFlash revisará tu información.",
           "exito",
         );
-
-        setTimeout(() => {
-          formPostulacionTutor.reset();
-          cerrarModalPostulacion();
-        }, 1800);
       } catch (error) {
         console.error("Error al guardar la postulación:", error);
 
@@ -277,12 +426,14 @@ document.addEventListener("DOMContentLoaded", () => {
           error.message || "Ocurrió un error al enviar tu postulación.",
           "error",
         );
+
+        if (btnEnviarPostulacion) {
+          btnEnviarPostulacion.disabled = false;
+          btnEnviarPostulacion.textContent = "Enviar postulación";
+        }
       }
     });
   }
-
-  const inputNombreTutor = document.getElementById("nombreTutor");
-  const inputCursosTutor = document.getElementById("cursosTutor");
 
   inputNombreTutor?.addEventListener("blur", () => {
     inputNombreTutor.value = capitalizarTexto(inputNombreTutor.value);
@@ -291,4 +442,16 @@ document.addEventListener("DOMContentLoaded", () => {
   inputCursosTutor?.addEventListener("blur", () => {
     inputCursosTutor.value = corregirCursosTexto(inputCursosTutor.value);
   });
+
+  if (btnCerrarSesionTutor) {
+    btnCerrarSesionTutor.addEventListener("click", async () => {
+      try {
+        await cerrarSesion();
+        window.location.href = "cuenta.html";
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        mostrarMensajeTutor("No se pudo cerrar sesión.", "error");
+      }
+    });
+  }
 });

@@ -397,3 +397,342 @@ para hacer la redirección automática según el tipo de usuario:
 
 - Tutor aprobado → `panel-tutor.html`
 - Estudiante → `app.html`
+
+---
+
+---
+
+---
+
+# TutorFlash-Web - Organización de plataformas por rol
+
+Este documento resume el flujo que se debe implementar en TutorFlash-Web para separar correctamente las plataformas según el tipo de usuario: estudiante, tutor y administrador.
+
+## Objetivo
+
+El objetivo es que TutorFlash-Web tenga un solo inicio de sesión desde `cuenta.html`, pero que después redirija automáticamente al usuario según su rol o estado.
+
+La idea es evitar que todos los usuarios entren a la misma plataforma.
+
+## Flujo correcto de acceso
+
+Desde:
+
+```text
+pages/cuenta.html
+```
+
+El sistema debe decidir lo siguiente:
+
+```text
+Admin → admin.html
+Tutor aprobado → panel-tutor.html
+Tutor nuevo o pendiente → tutor.html
+Estudiante → app.html
+```
+
+## Tipos de usuario
+
+### 1. Estudiante
+
+El estudiante podrá:
+
+- Crear cuenta.
+- Iniciar sesión.
+- Buscar tutores.
+- Filtrar por cursos.
+- Reservar tutorías.
+- Ver sus sesiones.
+- Acceder a su cuenta.
+- Postular como tutor si desea.
+
+Ruta principal:
+
+```text
+pages/app.html
+```
+
+Menú recomendado:
+
+```text
+Buscar
+Tutores
+Mis sesiones
+Quiero ser tutor
+Mi cuenta
+Salir
+```
+
+## 2. Tutor nuevo
+
+Un tutor nuevo no debe entrar directamente al panel de tutor.
+
+Primero debe:
+
+```text
+Crear cuenta como tutor
+↓
+Ir a tutor.html
+↓
+Completar formulario de postulación
+↓
+Esperar revisión del administrador
+```
+
+Ruta principal:
+
+```text
+pages/tutor.html
+```
+
+Esta página debe funcionar como plataforma de postulación.
+
+Más adelante debe mostrar:
+
+- Estado de postulación.
+- Formulario de datos personales.
+- Cursos que domina.
+- Disponibilidad.
+- Experiencia.
+- Botón para enviar postulación.
+
+Estados posibles:
+
+```text
+Pendiente
+Aprobado
+Rechazado
+```
+
+## 3. Tutor aprobado
+
+Un tutor aprobado debe tener acceso al panel de tutor.
+
+Ruta principal:
+
+```text
+pages/panel-tutor.html
+```
+
+El panel tutor debe mostrar:
+
+- Reservas recibidas.
+- Datos del estudiante.
+- Curso reservado.
+- Fecha.
+- Hora.
+- Modalidad.
+- Duración.
+- Total.
+- Estado de la reserva.
+
+Menú recomendado:
+
+```text
+Mis reservas
+Mi perfil tutor
+Ver plataforma
+Salir
+```
+
+Importante:
+
+```text
+Solo un tutor aprobado debe poder entrar a panel-tutor.html.
+```
+
+Si un estudiante o tutor no aprobado intenta entrar por link directo, debe ser redirigido.
+
+## 4. Administrador
+
+El administrador debe acceder solo por link directo.
+
+Ruta principal:
+
+```text
+pages/admin.html
+```
+
+El panel administrador debe permitir:
+
+- Ver postulaciones de tutores.
+- Aprobar postulaciones.
+- Rechazar postulaciones.
+- Crear tutores reales en Firestore cuando se aprueba una postulación.
+
+Importante:
+
+```text
+admin.html no debe aparecer en el menú público.
+```
+
+El correo administrador debe estar definido en:
+
+```text
+js/cuenta.js
+js/admin.js
+```
+
+Ejemplo:
+
+```js
+const ADMIN_EMAILS = ["correo-admin@gmail.com"];
+```
+
+El correo debe existir en Firebase Authentication.
+
+## Lógica de redirección desde cuenta.js
+
+La lógica esperada es:
+
+```text
+Si el correo es admin:
+  redirigir a admin.html
+
+Si el usuario es tutor aprobado:
+  redirigir a panel-tutor.html
+
+Si el usuario tiene rol tutor, pero aún no está aprobado:
+  redirigir a tutor.html
+
+Si el usuario es estudiante:
+  redirigir a app.html
+```
+
+## Colecciones de Firebase usadas
+
+Actualmente se usan estas colecciones:
+
+```text
+usuarios
+reservas
+postulacionesTutores
+tutores
+```
+
+## Funciones importantes
+
+En `firebase-service.js` se deben mantener centralizadas las funciones de Firebase.
+
+Funciones importantes para este flujo:
+
+```text
+observarUsuario()
+registrarUsuario()
+iniciarSesion()
+cerrarSesion()
+obtenerUsuarioActual()
+obtenerPerfilUsuarioActual()
+obtenerTutorActivoActual()
+```
+
+No tocar:
+
+```text
+js/firebase-config.js
+```
+
+## Pendientes para más adelante
+
+### Crear perfil de estudiante
+
+Archivos futuros:
+
+```text
+pages/perfil-estudiante.html
+css/perfil-estudiante.css
+js/perfil-estudiante.js
+```
+
+Debe mostrar:
+
+- Nombre del estudiante.
+- Correo.
+- Reservas realizadas.
+- Historial de tutorías.
+- Datos editables de cuenta.
+
+### Crear perfil de tutor
+
+Archivos futuros:
+
+```text
+pages/perfil-tutor.html
+css/perfil-tutor.css
+js/perfil-tutor.js
+```
+
+Debe mostrar:
+
+- Nombre del tutor.
+- Cursos que enseña.
+- Disponibilidad.
+- Experiencia.
+- Estado del perfil.
+- Reservas recibidas.
+
+### Mejorar tutor.html
+
+La página `tutor.html` debe dejar de verse como una página suelta y convertirse en una plataforma clara para el tutor nuevo.
+
+Debe explicar:
+
+```text
+Primero debes postular.
+Luego el administrador revisará tu solicitud.
+Si eres aprobado, tendrás acceso al panel tutor.
+```
+
+### Proteger páginas por rol
+
+Páginas que deben protegerse:
+
+```text
+panel-tutor.html
+admin.html
+```
+
+Reglas recomendadas:
+
+```text
+panel-tutor.html:
+Solo tutor aprobado.
+
+admin.html:
+Solo correo administrador.
+
+app.html:
+Estudiantes, tutores no aprobados y usuarios normales.
+
+tutor.html:
+Tutores nuevos, tutores pendientes o estudiantes que quieran postular.
+```
+
+## Flujo final esperado
+
+```text
+Usuario entra a cuenta.html
+        ↓
+Inicia sesión o crea cuenta
+        ↓
+El sistema revisa su rol
+        ↓
+Admin → admin.html
+Tutor aprobado → panel-tutor.html
+Tutor pendiente → tutor.html
+Estudiante → app.html
+```
+
+## Prioridad de trabajo
+
+Orden recomendado:
+
+```text
+1. Terminar redirección automática desde cuenta.js.
+2. Proteger panel-tutor.html.
+3. Proteger admin.html.
+4. Mejorar tutor.html como plataforma de postulación.
+5. Crear perfil-estudiante.html.
+6. Crear perfil-tutor.html.
+7. Mejorar reglas de seguridad de Firestore.
+```
