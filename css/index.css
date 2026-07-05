@@ -217,6 +217,10 @@ body {
   .tf-welcome-actions a {
     width: 100%;
   }
+
+  .tf-welcome {
+    transform: translateY(4dvh);
+  }
 }
 
 /* CELULAR PEQUEÑO */
@@ -263,18 +267,15 @@ body {
     min-height: 48px;
     font-size: 15px;
   }
+  .tf-welcome {
+    transform: translateY(6dvh);
+  }
 }
 
 /* AJUSTE VISUAL FINAL EN CELULAR */
 
 @media (max-width: 760px) {
-  .tf-welcome {
-    transform: translateY(4dvh);
-  }
 }
 
 @media (max-width: 520px) {
-  .tf-welcome {
-    transform: translateY(6dvh);
-  }
 }
