@@ -4,6 +4,8 @@ import {
   obtenerUsuarioActual,
   guardarReserva,
   obtenerTutoresActivos,
+  obtenerDisponibilidadPorTutorId,
+  obtenerReservasOcupadasPorTutorFecha,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const reservaFormulario = document.querySelector("#reservaFormulario");
   const reservaConfirmacion = document.querySelector("#reservaConfirmacion");
   const formReserva = document.querySelector("#formReserva");
+  const btnConfirmarReserva = formReserva?.querySelector(
+    'button[type="submit"]',
+  );
 
   const modalAvatar = document.querySelector("#modalAvatar");
   const modalTutor = document.querySelector("#modalTutor");
@@ -32,6 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const fechaReserva = document.querySelector("#fechaReserva");
   const horaReserva = document.querySelector("#horaReserva");
+  const horasBaseReserva = horaReserva
+    ? Array.from(horaReserva.options)
+        .filter((option) => option.value)
+        .map((option) => option.value)
+    : [];
   const modalidadReserva = document.querySelector("#modalidadReserva");
   const duracionReserva = document.querySelector("#duracionReserva");
   const metodoPago = document.querySelector("#metodoPago");
@@ -57,6 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
     price: "",
     availability: "",
   };
+
+  let disponibilidadTutorSeleccionado = null;
+  let reservasOcupadasTutor = [];
+  let hayHorasDisponiblesEnFecha = true;
 
   const obtenerFechaLocal = () => {
     const hoy = new Date();
@@ -113,6 +127,125 @@ document.addEventListener("DOMContentLoaded", () => {
     return ahora > fechaHoraOpcion;
   };
 
+  const diasSemana = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+  ];
+
+  const normalizarDia = (dia) => {
+    return String(dia || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  };
+
+  const obtenerDiaPorFecha = (fecha) => {
+    if (!fecha) return "";
+
+    const [year, month, day] = fecha.split("-").map(Number);
+    const fechaLocal = new Date(year, month - 1, day);
+
+    return diasSemana[fechaLocal.getDay()];
+  };
+
+  const convertirHoraAMinutos = (textoHora) => {
+    const texto = String(textoHora || "")
+      .toLowerCase()
+      .trim();
+    const numeros = texto.match(/\d+/g) || [];
+
+    let horas = Number(numeros[0] || 0);
+    const minutos = Number(numeros[1] || 0);
+
+    if (texto.includes("p.m.") && horas !== 12) {
+      horas += 12;
+    }
+
+    if (texto.includes("a.m.") && horas === 12) {
+      horas = 0;
+    }
+
+    return horas * 60 + minutos;
+  };
+
+  const obtenerBloquesActivosDelDia = (fecha) => {
+    const bloques = disponibilidadTutorSeleccionado?.bloques || [];
+    const diaSeleccionado = normalizarDia(obtenerDiaPorFecha(fecha));
+
+    return bloques.filter((bloque) => {
+      return bloque.activo && normalizarDia(bloque.dia) === diaSeleccionado;
+    });
+  };
+
+  const horaEstaEnBloques = (hora, bloques) => {
+    const minutosHora = convertirHoraAMinutos(hora);
+
+    return bloques.some((bloque) => {
+      const inicio = convertirHoraAMinutos(bloque.horaInicio);
+      const fin = convertirHoraAMinutos(bloque.horaFin);
+
+      return minutosHora >= inicio && minutosHora < fin;
+    });
+  };
+
+  const tutorTieneDisponibilidadConfigurada = () => {
+    return Array.isArray(disponibilidadTutorSeleccionado?.bloques);
+  };
+
+  const obtenerMinutosDuracion = (duracion) => {
+    return Number(String(duracion || "").replace(/\D/g, "")) || 30;
+  };
+
+  const hayCruceDeHorario = (
+    horaNueva,
+    duracionNueva,
+    horaReservada,
+    duracionReservada,
+  ) => {
+    const inicioNuevo = convertirHoraAMinutos(horaNueva);
+    const finNuevo = inicioNuevo + obtenerMinutosDuracion(duracionNueva);
+
+    const inicioReservado = convertirHoraAMinutos(horaReservada);
+    const finReservado =
+      inicioReservado + obtenerMinutosDuracion(duracionReservada);
+
+    return inicioNuevo < finReservado && finNuevo > inicioReservado;
+  };
+
+  const cargarReservasOcupadasTutor = async () => {
+    if (!tutorSeleccionado.tutorId || !fechaReserva?.value) {
+      reservasOcupadasTutor = [];
+      return;
+    }
+
+    try {
+      reservasOcupadasTutor = await obtenerReservasOcupadasPorTutorFecha(
+        tutorSeleccionado.tutorId,
+        fechaReserva.value,
+      );
+    } catch (error) {
+      console.error("Error al cargar reservas ocupadas:", error);
+      reservasOcupadasTutor = [];
+    }
+  };
+
+  const horaChocaConReserva = (hora) => {
+    return reservasOcupadasTutor.some((reserva) => {
+      return hayCruceDeHorario(
+        hora,
+        duracionReserva.value,
+        reserva.hora,
+        reserva.duracion,
+      );
+    });
+  };
+
   const hayHorarioDisponibleHoy = () => {
     if (!horaReserva) return false;
 
@@ -141,57 +274,90 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Disponible hoy";
   };
 
-  const actualizarHorasDisponibles = () => {
+  const actualizarHorasDisponibles = async () => {
     if (!fechaReserva || !horaReserva) return;
 
+    await cargarReservasOcupadasTutor();
+
     const esHoy = fechaEsHoy(fechaReserva.value);
-    const opcionesHora = Array.from(horaReserva.options);
-    const opcionesValidas = opcionesHora.filter((option) => option.value);
+    const opcionesOriginales = horasBaseReserva;
 
-    let primeraDisponible = "";
+    const bloquesDelDia = obtenerBloquesActivosDelDia(fechaReserva.value);
+    const tieneDisponibilidadReal = tutorTieneDisponibilidadConfigurada();
 
-    opcionesHora.forEach((option) => {
-      if (!option.value) {
-        option.disabled = false;
-        return;
-      }
+    const horasDisponibles = opcionesOriginales.filter((hora) => {
+      const fueraDeHorarioTutor =
+        tieneDisponibilidadReal && !horaEstaEnBloques(hora, bloquesDelDia);
 
-      const debeBloquear = esHoy && horaYaPaso(option.value);
+      const horaPasada = esHoy && horaYaPaso(hora);
+      const horaOcupada = horaChocaConReserva(hora);
 
-      option.disabled = debeBloquear;
-
-      if (!debeBloquear && !primeraDisponible) {
-        primeraDisponible = option.value;
-      }
+      return !fueraDeHorarioTutor && !horaPasada && !horaOcupada;
     });
 
-    if (!primeraDisponible) {
-      fechaReserva.value = obtenerFechaManana();
+    horaReserva.innerHTML = "";
 
-      opcionesHora.forEach((option) => {
-        option.disabled = false;
-      });
+    if (!horasDisponibles.length) {
+      hayHorasDisponiblesEnFecha = false;
 
-      if (opcionesValidas[0]) {
-        horaReserva.value = opcionesValidas[0].value;
-      }
+      const opcionSinHorario = document.createElement("option");
+      opcionSinHorario.value = "";
+      opcionSinHorario.textContent = "No hay horarios disponibles";
+      opcionSinHorario.selected = true;
+
+      horaReserva.appendChild(opcionSinHorario);
+      horaReserva.disabled = true;
 
       actualizarDisponibilidadModal();
       return;
     }
 
-    if (!horaReserva.value || horaReserva.selectedOptions[0]?.disabled) {
-      horaReserva.value = primeraDisponible;
-    }
-  };
+    hayHorasDisponiblesEnFecha = true;
 
+    const opcionInicial = document.createElement("option");
+    opcionInicial.value = "";
+    opcionInicial.textContent = "Selecciona una hora";
+
+    horaReserva.appendChild(opcionInicial);
+
+    horasDisponibles.forEach((hora) => {
+      const opcion = document.createElement("option");
+      opcion.value = hora;
+      opcion.textContent = hora;
+
+      horaReserva.appendChild(opcion);
+    });
+
+    horaReserva.disabled = false;
+    horaReserva.value = horasDisponibles[0];
+
+    actualizarDisponibilidadModal();
+  };
   const actualizarDisponibilidadModal = () => {
     if (!modalInfo) return;
 
-    const disponibilidad =
-      fechaReserva.value === obtenerFechaManana()
-        ? "Disponible mañana"
-        : obtenerDisponibilidadReal(tutorSeleccionado.availability);
+    const bloquesDelDia = obtenerBloquesActivosDelDia(fechaReserva.value);
+    const tieneDisponibilidadReal = tutorTieneDisponibilidadConfigurada();
+
+    let disponibilidad = "Disponible según horario del tutor";
+
+    if (tieneDisponibilidadReal && bloquesDelDia.length === 0) {
+      disponibilidad = "Sin horario disponible para esta fecha";
+    }
+
+    if (
+      tieneDisponibilidadReal &&
+      bloquesDelDia.length > 0 &&
+      !hayHorasDisponiblesEnFecha
+    ) {
+      disponibilidad = "Horario ocupado para esta fecha";
+    }
+
+    if (!tieneDisponibilidadReal) {
+      disponibilidad = obtenerDisponibilidadReal(
+        tutorSeleccionado.availability,
+      );
+    }
 
     modalInfo.textContent = `⭐ ${tutorSeleccionado.rating} · ${disponibilidad}`;
   };
@@ -402,7 +568,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const activarBotonesReserva = () => {
     document.querySelectorAll(".tf-card-btn").forEach((boton) => {
-      boton.addEventListener("click", () => {
+      boton.addEventListener("click", async () => {
         const tarjeta = boton.closest(".tf-tutor-card");
 
         tutorSeleccionado = {
@@ -415,7 +581,16 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         actualizarModal();
-        abrirModal();
+
+        try {
+          disponibilidadTutorSeleccionado =
+            await obtenerDisponibilidadPorTutorId(tutorSeleccionado.tutorId);
+        } catch (error) {
+          console.error("Error al cargar disponibilidad del tutor:", error);
+          disponibilidadTutorSeleccionado = null;
+        }
+
+        await abrirModal();
       });
     });
   };
@@ -518,7 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const abrirModal = () => {
+  const abrirModal = async () => {
     if (!modal) return;
 
     formReserva?.reset();
@@ -541,8 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    actualizarHorasDisponibles();
-    actualizarDisponibilidadModal();
+    await actualizarHorasDisponibles();
     actualizarTotal();
 
     reservaFormulario.hidden = false;
@@ -568,7 +742,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     actualizarTotal();
   };
-  duracionReserva?.addEventListener("change", actualizarTotal);
+  duracionReserva?.addEventListener("change", async () => {
+    actualizarTotal();
+    await actualizarHorasDisponibles();
+  });
 
   if (fechaReserva) {
     const hoy = obtenerFechaLocal();
@@ -578,7 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaReserva.min = hoy;
     fechaReserva.max = fechaMaxima;
 
-    fechaReserva.addEventListener("input", () => {
+    fechaReserva.addEventListener("input", async () => {
       fechaReserva.setCustomValidity("");
 
       if (!fechaReserva.value) return;
@@ -597,12 +774,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      actualizarHorasDisponibles();
-      actualizarDisponibilidadModal();
+      await actualizarHorasDisponibles();
     });
   }
   formReserva?.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (btnConfirmarReserva?.disabled) {
+      return;
+    }
 
     const usuario = obtenerUsuarioActual();
 
@@ -635,6 +815,31 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    await cargarReservasOcupadasTutor();
+
+    if (horaChocaConReserva(horaReserva.value)) {
+      alert(
+        "Ese horario acaba de ser reservado por otra persona. Elige otro horario.",
+      );
+      await actualizarHorasDisponibles();
+      return;
+    }
+
+    const bloquesDelDia = obtenerBloquesActivosDelDia(fechaReserva.value);
+
+    if (
+      tutorTieneDisponibilidadConfigurada() &&
+      !horaEstaEnBloques(horaReserva.value, bloquesDelDia)
+    ) {
+      alert("Ese horario no está dentro de la disponibilidad del tutor.");
+      return;
+    }
+
+    if (fechaEsHoy(fechaReserva.value) && horaYaPaso(horaReserva.value)) {
+      alert("Esa hora ya pasó. Elige otro horario disponible.");
+      return;
+    }
+
     fechaReserva.setCustomValidity("");
 
     const totalCalculado = calcularTotal();
@@ -652,6 +857,11 @@ document.addEventListener("DOMContentLoaded", () => {
       metodoPago: metodoPago?.value || "Pago simulado",
     };
 
+    if (btnConfirmarReserva) {
+      btnConfirmarReserva.disabled = true;
+      btnConfirmarReserva.textContent = "Guardando reserva...";
+    }
+
     try {
       await guardarReserva(reserva);
 
@@ -668,6 +878,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error(error);
       alert("No se pudo guardar la reserva. Inténtalo otra vez.");
+
+      if (btnConfirmarReserva) {
+        btnConfirmarReserva.disabled = false;
+        btnConfirmarReserva.textContent = "Confirmar reserva";
+      }
     }
   });
 

@@ -464,3 +464,51 @@ export async function guardarDisponibilidadTutorActual(bloques) {
     ...datosDisponibilidad,
   };
 }
+export async function obtenerDisponibilidadPorTutorId(tutorId) {
+  if (!tutorId) {
+    return null;
+  }
+
+  const consulta = query(
+    collection(db, "disponibilidadTutores"),
+    where("tutorId", "==", tutorId),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  if (resultado.empty) {
+    return null;
+  }
+
+  const documento = resultado.docs[0];
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
+}
+export async function obtenerReservasOcupadasPorTutorFecha(tutorId, fecha) {
+  if (!tutorId || !fecha) {
+    return [];
+  }
+
+  const consulta = query(
+    collection(db, "reservas"),
+    where("tutorId", "==", tutorId),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  const estadosQueOcupan = ["pendiente", "aceptada", "confirmada"];
+
+  return resultado.docs
+    .map((documento) => ({
+      id: documento.id,
+      ...documento.data(),
+    }))
+    .filter((reserva) => {
+      const estado = String(reserva.estado || "").toLowerCase();
+
+      return reserva.fecha === fecha && estadosQueOcupan.includes(estado);
+    });
+}

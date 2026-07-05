@@ -88,7 +88,7 @@ body {
 
 #listaMisSesiones {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .sesion-card {
@@ -103,8 +103,26 @@ body {
   box-shadow: 0 10px 25px rgba(12, 35, 64, 0.08);
 }
 
+.sesion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.sesion-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .sesion-card h3 {
-  margin: 0 0 14px;
+  margin: 0;
   color: #0c2340;
   font-size: 22px;
 }
@@ -118,6 +136,72 @@ body {
 
 .sesion-card strong {
   color: #0c2340;
+}
+
+.sesion-mensaje {
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+}
+
+.sesion-detalles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+}
+
+.sesion-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 105px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.estado-pendiente {
+  background: #fff7d6;
+  color: #8a5a00;
+  border: 1px solid #f5b700;
+}
+
+.estado-aceptada {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.estado-rechazada {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.estado-realizada {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.estado-cancelada {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.sesion-vacia {
+  text-align: center;
+}
+
+.sesion-vacia h3 {
+  margin-bottom: 10px;
 }
 
 .acciones-sesiones {
@@ -159,5 +243,17 @@ body {
 
   .sesiones-hero h1 {
     font-size: 34px;
+  }
+
+  .sesion-card-header {
+    flex-direction: column;
+  }
+
+  .sesion-estado {
+    align-self: flex-start;
+  }
+
+  .sesion-detalles {
+    grid-template-columns: 1fr;
   }
 }

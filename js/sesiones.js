@@ -10,46 +10,157 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function limpiarTexto(valor) {
+    const texto = String(valor ?? "");
+
+    return texto
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatearFecha(fecha) {
+    if (!fecha) return "No registrada";
+
+    if (typeof fecha === "string" && fecha.includes("-")) {
+      const [year, mes, dia] = fecha.split("-");
+      return `${dia}/${mes}/${year}`;
+    }
+
+    return fecha;
+  }
+
+  function formatearMonto(total) {
+    const monto = Number(total) || 0;
+    return monto.toFixed(2);
+  }
+
+  function normalizarEstado(estado) {
+    const estadoNormalizado = String(estado || "pendiente").toLowerCase();
+
+    if (estadoNormalizado === "confirmada") return "aceptada";
+
+    return estadoNormalizado;
+  }
+
+  function obtenerTextoEstado(estado) {
+    const estados = {
+      pendiente: "Pendiente",
+      aceptada: "Aceptada",
+      rechazada: "Rechazada",
+      realizada: "Realizada",
+      cancelada: "Cancelada",
+    };
+
+    return estados[estado] || "Pendiente";
+  }
+
+  function obtenerMensajeEstado(estado) {
+    const mensajes = {
+      pendiente: "Tu solicitud fue enviada. Espera la respuesta del tutor.",
+      aceptada: "El tutor aceptó tu reserva. Revisa la fecha y hora.",
+      rechazada:
+        "El tutor rechazó esta solicitud. Puedes reservar con otro tutor.",
+      realizada: "Esta sesión ya fue marcada como realizada.",
+      cancelada: "Esta sesión fue cancelada.",
+    };
+
+    return mensajes[estado] || "Tu solicitud está pendiente.";
+  }
+
+  function obtenerClaseEstado(estado) {
+    return `estado-${estado}`;
+  }
+
+  function ordenarSesiones(sesiones) {
+    return [...sesiones].sort((a, b) => {
+      const fechaA = `${a.fecha || ""} ${a.hora || ""}`;
+      const fechaB = `${b.fecha || ""} ${b.hora || ""}`;
+
+      return fechaB.localeCompare(fechaA);
+    });
+  }
+
   function mostrarSesiones(sesiones) {
     if (!listaMisSesiones) return;
 
     if (!sesiones.length) {
       listaMisSesiones.innerHTML = `
-        <div class="sesion-card">
+        <div class="sesion-card sesion-vacia">
           <h3>Aún no tienes sesiones reservadas</h3>
           <p>Cuando reserves una tutoría, aparecerá en esta sección.</p>
+          <a href="app.html" class="btn-volver">Buscar tutor</a>
         </div>
       `;
       return;
     }
 
-    listaMisSesiones.innerHTML = sesiones
-      .map(
-        (sesion) => `
+    const sesionesOrdenadas = ordenarSesiones(sesiones);
+
+    listaMisSesiones.innerHTML = sesionesOrdenadas
+      .map((sesion) => {
+        const estado = normalizarEstado(sesion.estado);
+        const textoEstado = obtenerTextoEstado(estado);
+        const mensajeEstado = obtenerMensajeEstado(estado);
+        const claseEstado = obtenerClaseEstado(estado);
+
+        return `
           <article class="sesion-card">
-            <h3>${sesion.curso || "Tutoría"}</h3>
-            <p><strong>Tutor:</strong> ${sesion.tutor || "No registrado"}</p>
-            <p><strong>Fecha:</strong> ${sesion.fecha || "No registrada"}</p>
-            <p><strong>Hora:</strong> ${sesion.hora || "No registrada"}</p>
-            <p><strong>Duración:</strong> ${sesion.duracion || "No registrada"}</p>
-            <p><strong>Modalidad:</strong> ${sesion.modalidad || "No registrada"}</p>
-            <p><strong>Total:</strong> S/ ${sesion.total || "0"}</p>
-            <p><strong>Pago:</strong> ${sesion.metodoPago || "Simulado"}</p>
-            <p><strong>Estado:</strong> ${sesion.estado || "Confirmada"}</p>
+            <div class="sesion-card-header">
+              <div>
+                <span class="sesion-label">Tutoría reservada</span>
+                <h3>${limpiarTexto(sesion.curso || "Tutoría")}</h3>
+              </div>
+
+              <span class="sesion-estado ${claseEstado}">
+                ${textoEstado}
+              </span>
+            </div>
+
+            <p class="sesion-mensaje">${mensajeEstado}</p>
+
+            <div class="sesion-detalles">
+              <p><strong>Tutor:</strong> ${limpiarTexto(sesion.tutor || "No registrado")}</p>
+              <p><strong>Fecha:</strong> ${limpiarTexto(formatearFecha(sesion.fecha))}</p>
+              <p><strong>Hora:</strong> ${limpiarTexto(sesion.hora || "No registrada")}</p>
+              <p><strong>Duración:</strong> ${limpiarTexto(sesion.duracion || "No registrada")}</p>
+              <p><strong>Modalidad:</strong> ${limpiarTexto(sesion.modalidad || "No registrada")}</p>
+              <p><strong>Total:</strong> S/ ${formatearMonto(sesion.total)}</p>
+              <p><strong>Pago:</strong> ${limpiarTexto(sesion.metodoPago || "Simulado")}</p>
+            </div>
           </article>
-        `,
-      )
+        `;
+      })
       .join("");
   }
 
   async function cargarSesiones() {
     try {
+      mostrarEstado("Cargando tus sesiones...");
+
       const sesiones = await obtenerMisSesiones();
-      mostrarEstado("Sesiones reservadas");
+
+      if (!sesiones.length) {
+        mostrarEstado("Mis sesiones");
+      } else {
+        mostrarEstado("Sesiones reservadas");
+      }
+
       mostrarSesiones(sesiones);
     } catch (error) {
       console.error(error);
       mostrarEstado("No se pudieron cargar tus sesiones.");
+
+      if (listaMisSesiones) {
+        listaMisSesiones.innerHTML = `
+          <div class="sesion-card">
+            <h3>Ocurrió un problema</h3>
+            <p>No pudimos cargar tus reservas. Intenta nuevamente en unos segundos.</p>
+          </div>
+        `;
+      }
     }
   }
 
@@ -57,13 +168,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!usuario) {
       mostrarEstado("Debes iniciar sesión para ver tus reservas.");
 
-      listaMisSesiones.innerHTML = `
-        <div class="sesion-card">
-          <h3>Inicia sesión</h3>
-          <p>Para ver tus sesiones reservadas, primero debes iniciar sesión.</p>
-          <a href="cuenta.html" class="btn-volver">Iniciar sesión</a>
-        </div>
-      `;
+      if (listaMisSesiones) {
+        listaMisSesiones.innerHTML = `
+          <div class="sesion-card">
+            <h3>Inicia sesión</h3>
+            <p>Para ver tus sesiones reservadas, primero debes iniciar sesión.</p>
+            <a href="cuenta.html" class="btn-volver">Iniciar sesión</a>
+          </div>
+        `;
+      }
 
       return;
     }
