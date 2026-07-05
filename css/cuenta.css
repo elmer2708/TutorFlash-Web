@@ -1,0 +1,181 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fbff;
+  color: #0c2340;
+}
+
+.cuenta-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 8%;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(12, 35, 64, 0.08);
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0c2340;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.logo-link img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.cuenta-header nav {
+  display: flex;
+  gap: 22px;
+}
+
+.cuenta-header nav a {
+  color: #0c2340;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cuenta-header nav a:hover {
+  color: #f5b700;
+}
+
+.cuenta-main {
+  min-height: calc(100vh - 80px);
+  padding: 45px 8% 60px;
+}
+
+.cuenta-hero {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 30px;
+}
+
+.cuenta-hero h1 {
+  margin: 0 0 10px;
+  font-size: 42px;
+}
+
+.cuenta-hero p {
+  color: #475569;
+  font-size: 18px;
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border: 1px solid rgba(12, 35, 64, 0.12);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(12, 35, 64, 0.08);
+}
+
+.auth-card h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.auth-card input,
+.auth-card select {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 13px 14px;
+  border: 1px solid rgba(12, 35, 64, 0.22);
+  border-radius: 12px;
+  font-size: 15px;
+  background: #ffffff;
+}
+
+.auth-card button {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 15px;
+  background: #0c2340;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background: #143c6d;
+}
+
+.auth-cambio {
+  margin: 18px 0 0;
+  text-align: center;
+  color: #475569;
+  font-weight: 600;
+}
+
+.auth-cambio button {
+  width: auto;
+  padding: 0;
+  background: none;
+  color: #0c2340;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.auth-cambio button:hover {
+  background: none;
+  color: #f5b700;
+}
+
+.cuenta-activa {
+  padding: 10px 0;
+  border-color: rgba(245, 183, 0, 0.55);
+  background: #fffaf0;
+}
+
+.auth-mensaje {
+  min-height: 24px;
+  text-align: center;
+  font-weight: 800;
+  color: #0c2340;
+}
+
+.oculto {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .cuenta-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 6%;
+  }
+
+  .cuenta-header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .cuenta-main {
+    padding: 45px 6%;
+  }
+
+  .cuenta-hero h1 {
+    font-size: 34px;
+  }
+}

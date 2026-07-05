@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fbff;
+  color: #0c2340;
+}
+
+.sesiones-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 8%;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(12, 35, 64, 0.08);
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0c2340;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.logo-link img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.sesiones-header nav {
+  display: flex;
+  gap: 22px;
+}
+
+.sesiones-header nav a {
+  color: #0c2340;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.sesiones-header nav a:hover {
+  color: #f5b700;
+}
+
+.sesiones-main {
+  min-height: calc(100vh - 80px);
+  padding: 45px 8% 60px;
+}
+
+.sesiones-hero {
+  max-width: 780px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.sesiones-hero h1 {
+  margin: 0 0 10px;
+  font-size: 42px;
+}
+
+.sesiones-hero p {
+  color: #475569;
+  font-size: 18px;
+}
+
+.mis-sesiones {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.auth-mensaje {
+  min-height: 24px;
+  margin-bottom: 22px;
+  text-align: center;
+  font-weight: 800;
+  color: #0c2340;
+}
+
+#listaMisSesiones {
+  display: grid;
+  gap: 16px;
+}
+
+.sesion-card {
+  max-width: 850px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(12, 35, 64, 0.12);
+  border-left: 6px solid #f5b700;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(12, 35, 64, 0.08);
+}
+
+.sesion-card h3 {
+  margin: 0 0 14px;
+  color: #0c2340;
+  font-size: 22px;
+}
+
+.sesion-card p {
+  margin: 6px 0;
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.sesion-card strong {
+  color: #0c2340;
+}
+
+.acciones-sesiones {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.btn-volver {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: #f5b700;
+  color: #0c2340;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.btn-volver:hover {
+  background: #ffd45a;
+}
+
+@media (max-width: 900px) {
+  .sesiones-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 6%;
+  }
+
+  .sesiones-header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .sesiones-main {
+    padding: 45px 6%;
+  }
+
+  .sesiones-hero h1 {
+    font-size: 34px;
+  }
+}

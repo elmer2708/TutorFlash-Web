@@ -31,8 +31,21 @@
         <a href="#tutores">Tutores</a>
         <a href="#como">Cómo funciona</a>
         <a href="#contacto">Contacto</a>
+        <a href="sesiones.html">Mis sesiones</a>
+        <a href="cuenta.html">Mi cuenta</a>
+        <span class="tf-session-status" id="textoSesionApp"
+          >Verificando...</span
+        >
+        <button
+          type="button"
+          class="tf-session-logout oculto"
+          id="btnCerrarSesionApp"
+        >
+          Salir
+        </button>
       </nav>
     </header>
+
     <main>
       <section class="tf-hero" id="inicio">
         <div class="tf-hero-text">
@@ -343,6 +356,13 @@
               <strong id="modalTotal">S/ 35</strong>
             </div>
 
+            <label for="metodoPago">Método de pago</label>
+            <select id="metodoPago">
+              <option value="Yape simulado">Yape simulado</option>
+              <option value="Plin simulado">Plin simulado</option>
+              <option value="Tarjeta simulada">Tarjeta simulada</option>
+            </select>
+
             <button type="submit" class="tf-btn tf-btn-primary">
               Confirmar solicitud
             </button>
@@ -385,12 +405,12 @@
       <div class="tf-footer-links">
         <a href="#buscar">Buscar tutor</a>
         <a href="#tutores">Tutores</a>
-        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#como">Cómo funciona</a>
         <a href="index.html">Inicio</a>
       </div>
 
       <p class="tf-footer-copy">© 2026 TutorFlash. Proyecto académico web.</p>
     </footer>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>

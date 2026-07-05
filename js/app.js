@@ -1,3 +1,10 @@
+import {
+  observarUsuario,
+  cerrarSesion,
+  obtenerUsuarioActual,
+  guardarReserva,
+} from "./firebase-service.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const inputBuscar = document.querySelector("#buscarCurso");
   const btnBuscar = document.querySelector("#btnBuscar");
@@ -24,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const horaReserva = document.querySelector("#horaReserva");
   const modalidadReserva = document.querySelector("#modalidadReserva");
   const duracionReserva = document.querySelector("#duracionReserva");
+  const metodoPago = document.querySelector("#metodoPago");
 
   const finalTutor = document.querySelector("#finalTutor");
   const finalCurso = document.querySelector("#finalCurso");
@@ -36,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnNuevaReserva = document.querySelector("#btnNuevaReserva");
   const btnMenu = document.querySelector("#btnMenu");
   const menuPrincipal = document.querySelector("#menuPrincipal");
+  const textoSesionApp = document.querySelector("#textoSesionApp");
+  const btnCerrarSesionApp = document.querySelector("#btnCerrarSesionApp");
 
   let tutorSeleccionado = {
     tutor: "",
@@ -384,14 +394,23 @@ document.addEventListener("DOMContentLoaded", () => {
       actualizarDisponibilidadModal();
     });
   }
-  formReserva?.addEventListener("submit", (event) => {
+  formReserva?.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const usuario = obtenerUsuarioActual();
+
+    if (!usuario) {
+      alert("Primero debes iniciar sesión para reservar una tutoría.");
+      window.location.href = "cuenta.html";
+      return;
+    }
 
     const hoy = obtenerFechaLocal();
     const fechaMaxima = obtenerFechaMaxima();
 
     const yearActual = new Date().getFullYear();
     const yearElegido = Number(fechaReserva.value.split("-")[0]);
+
     if (
       fechaReserva.value < hoy ||
       fechaReserva.value > fechaMaxima ||
@@ -404,19 +423,46 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (!fechaReserva.value || !horaReserva.value) {
+      alert("Completa la fecha y la hora de la reserva.");
+      return;
+    }
+
     fechaReserva.setCustomValidity("");
 
-    finalTutor.textContent = tutorSeleccionado.tutor;
-    finalCurso.textContent = tutorSeleccionado.curso;
-    finalFecha.textContent = formatearFecha(fechaReserva.value);
-    finalHora.textContent = horaReserva.value;
-    finalModalidad.textContent = modalidadReserva.value;
-    finalDuracion.textContent = duracionReserva.value;
-    finalTotal.textContent = formatearSoles(calcularTotal());
+    const totalCalculado = calcularTotal();
+    const totalFormateado = formatearSoles(totalCalculado);
 
-    reservaFormulario.hidden = true;
-    reservaConfirmacion.hidden = false;
+    const reserva = {
+      tutor: tutorSeleccionado.tutor,
+      curso: tutorSeleccionado.curso,
+      fecha: formatearFecha(fechaReserva.value),
+      hora: horaReserva.value,
+      modalidad: modalidadReserva.value,
+      duracion: duracionReserva.value,
+      total: totalCalculado,
+      metodoPago: metodoPago?.value || "Pago simulado",
+    };
+
+    try {
+      await guardarReserva(reserva);
+
+      finalTutor.textContent = reserva.tutor;
+      finalCurso.textContent = reserva.curso;
+      finalFecha.textContent = reserva.fecha;
+      finalHora.textContent = reserva.hora;
+      finalModalidad.textContent = reserva.modalidad;
+      finalDuracion.textContent = reserva.duracion;
+      finalTotal.textContent = totalFormateado;
+
+      reservaFormulario.hidden = true;
+      reservaConfirmacion.hidden = false;
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo guardar la reserva. Inténtalo otra vez.");
+    }
   });
+
   cerrarModal?.addEventListener("click", cerrarModalReserva);
   btnCerrarModal?.addEventListener("click", cerrarModalReserva);
 
@@ -445,5 +491,36 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", () => {
       menuPrincipal.classList.remove("is-open");
     });
+  });
+  observarUsuario((usuario) => {
+    if (usuario) {
+      if (textoSesionApp) {
+        textoSesionApp.textContent = "Sesión iniciada";
+        textoSesionApp.title = usuario.email;
+      }
+
+      if (btnCerrarSesionApp) {
+        btnCerrarSesionApp.classList.remove("oculto");
+      }
+    } else {
+      if (textoSesionApp) {
+        textoSesionApp.textContent = "Sin sesión";
+        textoSesionApp.title = "No has iniciado sesión";
+      }
+
+      if (btnCerrarSesionApp) {
+        btnCerrarSesionApp.classList.add("oculto");
+      }
+    }
+  });
+
+  btnCerrarSesionApp?.addEventListener("click", async () => {
+    try {
+      await cerrarSesion();
+      alert("Sesión cerrada correctamente.");
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo cerrar sesión.");
+    }
   });
 });

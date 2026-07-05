@@ -920,3 +920,41 @@ body.tf-modal-open {
 .tf-footer-copy {
   font-size: 0.9rem;
 }
+.tf-session-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #f5b700;
+  color: #0c2340;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tf-session-logout {
+  border: none;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #0c2340;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tf-session-logout:hover {
+  background: #143c6d;
+}
+
+.oculto {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .tf-session-status,
+  .tf-session-logout {
+    width: 100%;
+    justify-content: center;
+  }
+}

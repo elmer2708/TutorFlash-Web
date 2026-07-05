@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mis sesiones | TutorFlash</title>
+
+    <link rel="stylesheet" href="css/sesiones.css" />
+  </head>
+  <body>
+    <header class="sesiones-header">
+      <a href="app.html" class="logo-link">
+        <img
+          src="assets/img/logo-tutorflash-transparente.png"
+          alt="TutorFlash"
+        />
+        <span>TutorFlash</span>
+      </a>
+
+      <nav>
+        <a href="app.html">Inicio</a>
+        <a href="app.html#buscar">Buscar tutor</a>
+        <a href="sesiones.html">Mis sesiones</a>
+        <a href="cuenta.html">Mi cuenta</a>
+      </nav>
+    </header>
+
+    <main class="sesiones-main">
+      <section class="sesiones-hero">
+        <h1>Mis sesiones</h1>
+        <p>Aquí podrás ver todas las tutorías que reservaste.</p>
+      </section>
+
+      <section class="mis-sesiones">
+        <div id="estadoSesiones" class="auth-mensaje">
+          Verificando sesión...
+        </div>
+
+        <div id="listaMisSesiones">
+          <p>Cargando sesiones...</p>
+        </div>
+
+        <div class="acciones-sesiones">
+          <a href="app.html#tutores" class="btn-volver"
+            >Reservar otra tutoría</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="js/sesiones.js"></script>
+  </body>
+</html>
