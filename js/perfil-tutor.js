@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCerrarSesionTutor.addEventListener("click", async () => {
       try {
         await cerrarSesion();
-        window.location.href = "cuenta.html";
+        window.location.href = "../index.html";
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
         mostrarMensaje("No se pudo cerrar sesión.", "error");

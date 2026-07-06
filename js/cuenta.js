@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Acceso validado. Redirigiendo a la plataforma...",
         "exito",
       );
-      window.location.href = "app.html";
+      window.location.href = "estudiante.html";
     } catch (error) {
       console.error("Error al redirigir según rol:", error);
       redireccionando = false;

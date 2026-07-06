@@ -447,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCerrarSesionPortal.addEventListener("click", async () => {
       try {
         await cerrarSesion();
-        window.location.href = "cuenta.html";
+        window.location.href = "../index.html";
       } catch (error) {
         console.error(error);
         alert("No se pudo cerrar sesión.");
