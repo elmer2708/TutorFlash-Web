@@ -1,0 +1,175 @@
+/* ==============================
+   TUTORFLASH - PERFIL ESTUDIANTE
+================================= */
+
+.tf-profile-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.35fr) minmax(0, 0.65fr);
+  gap: 14px;
+}
+
+.tf-profile-card {
+  background: #ffffff;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.tf-profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.tf-profile-avatar {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+  border-radius: 28px;
+  background: #ffc629;
+  color: #071b3d;
+  font-size: 2rem;
+  font-weight: 900;
+  box-shadow: 0 14px 26px rgba(255, 198, 41, 0.28);
+}
+
+.tf-profile-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #f0a400;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.tf-profile-summary h2 {
+  margin: 0 0 6px;
+  color: #071b3d;
+  font-size: 1.45rem;
+}
+
+.tf-profile-summary p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+  word-break: break-word;
+}
+
+.tf-profile-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.tf-profile-badges span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: #123b5d;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.tf-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.tf-profile-header h2 {
+  margin: 4px 0 0;
+  color: #071b3d;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.tf-profile-status {
+  margin: 0 0 16px;
+  color: #64748b;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.tf-profile-status.is-success {
+  color: #16834a;
+}
+
+.tf-profile-status.is-error {
+  color: #b91c1c;
+}
+
+.tf-profile-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tf-profile-form label {
+  display: grid;
+  gap: 7px;
+  color: #071b3d;
+  font-weight: 900;
+}
+
+.tf-profile-form input,
+.tf-profile-form select {
+  width: 100%;
+  border: 1px solid rgba(7, 27, 61, 0.14);
+  border-radius: 16px;
+  padding: 12px 13px;
+  background: white;
+  color: #071b3d;
+  outline: none;
+  font-size: 0.96rem;
+}
+
+.tf-profile-form input:focus,
+.tf-profile-form select:focus {
+  border-color: #ffc629;
+  box-shadow: 0 0 0 4px rgba(255, 198, 41, 0.24);
+}
+
+.tf-profile-form input:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.tf-profile-full {
+  grid-column: 1 / -1;
+}
+
+.tf-profile-form .tf-btn {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+@media (max-width: 980px) {
+  .tf-profile-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .tf-profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-profile-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .tf-profile-header h2 {
+    font-size: 1.45rem;
+  }
+}

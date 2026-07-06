@@ -1006,3 +1006,23 @@ export async function eliminarTutorFavorito(tutorId) {
 
   return true;
 }
+export async function actualizarPerfilUsuarioActual(datosPerfil) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para actualizar tu perfil.");
+  }
+
+  const perfilActualizado = {
+    ...datosPerfil,
+    uid: usuario.uid,
+    correo: usuario.email || datosPerfil.correo || "",
+    actualizadoEn: serverTimestamp(),
+  };
+
+  await setDoc(doc(db, "usuarios", usuario.uid), perfilActualizado, {
+    merge: true,
+  });
+
+  return perfilActualizado;
+}

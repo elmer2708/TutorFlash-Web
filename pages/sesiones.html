@@ -5,46 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mis sesiones | TutorFlash</title>
 
+    <link rel="stylesheet" href="../css/estudiante.css" />
     <link rel="stylesheet" href="../css/sesiones.css" />
   </head>
+
   <body>
-    <header class="sesiones-header">
-      <a href="../index.html" class="logo-link">
-        <img
-          src="../assets/img/logo-tutorflash-transparente.png"
-          alt="TutorFlash"
-        />
-        <span>TutorFlash</span>
-      </a>
-
-      <nav>
-        <a href="../index.html">Inicio</a>
-        <a href="app.html#buscar">Buscar tutor</a>
-        <a href="sesiones.html">Mis sesiones</a>
-        <a href="cuenta.html">Mi cuenta</a>
-      </nav>
-    </header>
-
-    <main class="sesiones-main">
-      <section class="sesiones-hero">
-        <h1>Mis sesiones</h1>
-        <p>Aquí podrás ver todas las tutorías que reservaste.</p>
-      </section>
-
-      <section class="mis-sesiones">
-        <div id="estadoSesiones" class="auth-mensaje">
-          Verificando sesión...
+    <main class="tf-student-layout">
+      <aside class="tf-sidebar">
+        <div class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
         </div>
 
-        <div id="listaMisSesiones">
-          <p>Cargando sesiones...</p>
-        </div>
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html">🗓️ Mi agenda</a>
+          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
+          <a href="tutores.html">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html">🔔 Notificaciones</a>
+          <a href="sesiones.html" class="is-active">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+        </nav>
 
-        <div class="acciones-sesiones">
-          <a href="app.html#tutores" class="btn-volver"
-            >Reservar otra tutoría</a
-          >
+        <div class="tf-sidebar-card">
+          <span>Consejo rápido</span>
+          <p>
+            Revisa el estado de tus tutorías, pagos y enlaces virtuales antes de
+            cada clase.
+          </p>
         </div>
+      </aside>
+
+      <section class="tf-student-main">
+        <header class="tf-topbar">
+          <div>
+            <span class="tf-page-label">Mis sesiones</span>
+            <h1>Mis tutorías reservadas</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <a
+              href="notificaciones.html"
+              class="tf-notification-btn"
+              title="Notificaciones"
+            >
+              🔔
+              <span class="tf-notification-dot">3</span>
+            </a>
+          </div>
+        </header>
+
+        <section class="tf-sessions-hero">
+          <div>
+            <span class="tf-hero-pill">Panel de seguimiento</span>
+            <h2>Controla tus clases desde un solo lugar</h2>
+            <p>
+              Aquí puedes revisar tus reservas, el estado de pago, la modalidad
+              de clase y el enlace virtual cuando el tutor lo asigne.
+            </p>
+          </div>
+
+          <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
+            Reservar nueva tutoría
+          </a>
+        </section>
+
+        <section class="tf-session-stats">
+          <article class="tf-session-stat-card">
+            <span>Total</span>
+            <strong id="statTotalSesiones">0</strong>
+            <p>Sesiones registradas</p>
+          </article>
+
+          <article class="tf-session-stat-card">
+            <span>Pendientes</span>
+            <strong id="statPendientes">0</strong>
+            <p>Esperando respuesta</p>
+          </article>
+
+          <article class="tf-session-stat-card">
+            <span>Aceptadas</span>
+            <strong id="statAceptadas">0</strong>
+            <p>Listas para realizar</p>
+          </article>
+
+          <article class="tf-session-stat-card">
+            <span>Realizadas</span>
+            <strong id="statRealizadas">0</strong>
+            <p>Clases completadas</p>
+          </article>
+        </section>
+
+        <section class="tf-panel-section tf-sessions-panel">
+          <div class="tf-section-header">
+            <div>
+              <span>Historial de tutorías</span>
+              <h2>Mis sesiones</h2>
+            </div>
+
+            <a href="buscar-tutor.html" class="tf-link-action">
+              Buscar otro tutor
+            </a>
+          </div>
+
+          <div class="tf-session-toolbar">
+            <p id="estadoSesiones" class="auth-mensaje">
+              Verificando sesión...
+            </p>
+
+            <div class="tf-session-filters" aria-label="Filtros de sesiones">
+              <button type="button" class="is-active" data-filtro="todas">
+                Todas
+              </button>
+              <button type="button" data-filtro="pendiente">Pendientes</button>
+              <button type="button" data-filtro="aceptada">Aceptadas</button>
+              <button type="button" data-filtro="realizada">Realizadas</button>
+              <button type="button" data-filtro="cancelada">Canceladas</button>
+            </div>
+          </div>
+
+          <div id="listaMisSesiones" class="tf-sessions-list">
+            <div class="tf-session-loading">
+              <p>Cargando sesiones...</p>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
 

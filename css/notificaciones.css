@@ -1,0 +1,379 @@
+/* ==============================
+   TUTORFLASH - NOTIFICACIONES
+   Compatible con estudiante.css
+================================= */
+
+/* Evita que la página se salga del ancho */
+.tf-student-main {
+  min-width: 0;
+  padding: 12px 18px;
+}
+
+/* ==============================
+   SIDEBAR - COMPATIBILIDAD
+   Por si el HTML usa active o sidebar-tip
+================================= */
+
+.tf-sidebar-menu a.active {
+  background: #ffc629;
+  color: #071b3d;
+  transform: translateX(3px);
+}
+
+.tf-sidebar-tip {
+  margin-top: auto;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tf-sidebar-tip strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #ffc629;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.tf-sidebar-tip p {
+  margin: 0;
+  color: rgba(255, 248, 232, 0.78);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+/* ==============================
+   TOPBAR DE NOTIFICACIONES
+   Igual estilo que las otras páginas
+================================= */
+
+.tf-student-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.08);
+}
+
+.tf-section-label {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: #f0a400;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+}
+
+.tf-student-topbar h1 {
+  margin: 0;
+  color: #071b3d;
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+
+.tf-topbar-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botón campana y avatar */
+.tf-icon-btn,
+.tf-user-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background: #fff8e8;
+  color: #071b3d;
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 10px 22px rgba(7, 27, 61, 0.08);
+}
+
+.tf-user-btn span {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ffc629;
+  color: #071b3d;
+  display: grid;
+  place-items: center;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+/* ==============================
+   MENÚ DE USUARIO
+================================= */
+
+.tf-user-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 80;
+  width: min(330px, calc(100vw - 36px));
+  padding: 20px 16px 16px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 27, 61, 0.1);
+  box-shadow: 0 24px 70px rgba(7, 27, 61, 0.22);
+  text-align: center;
+}
+
+.tf-user-menu-header {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.tf-user-menu-avatar {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #243f8f 0%, #152c68 100%);
+  color: white;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.tf-user-menu strong {
+  display: block;
+  color: #071b3d;
+  font-size: 1.1rem;
+}
+
+.tf-user-menu p {
+  margin: 4px 0 0;
+  color: #334155;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+.tf-user-menu button {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 11px 15px;
+  border-radius: 999px;
+  background: #071b3d;
+  color: white;
+  font-weight: 900;
+}
+
+.tf-user-menu button:hover {
+  background: #123b5d;
+}
+
+/* ==============================
+   TARJETA PRINCIPAL
+   Igual estilo que panel-section
+================================= */
+
+.tf-content-card {
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 22px;
+  margin-bottom: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+}
+
+.tf-content-card h2 {
+  margin: 5px 0 6px;
+  color: #071b3d;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.tf-section-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+/* ==============================
+   LISTA DE NOTIFICACIONES
+================================= */
+
+.tf-notifications-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.tf-notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 10px 24px rgba(7, 27, 61, 0.06);
+}
+
+.tf-notification-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #fff3c4;
+  color: #071b3d;
+  font-size: 1.25rem;
+}
+
+.tf-notification-card h3 {
+  margin: 0 0 5px;
+  color: #071b3d;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.tf-notification-card p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* Colores por tipo */
+.tf-notification-pendiente {
+  border-left: 5px solid #fbbf24;
+}
+
+.tf-notification-pago {
+  border-left: 5px solid #ef4444;
+}
+
+.tf-notification-clase {
+  border-left: 5px solid #3b82f6;
+}
+
+.tf-notification-hoy {
+  border-left: 5px solid #22c55e;
+}
+
+.tf-notification-confirmada {
+  border-left: 5px solid #16a34a;
+}
+
+/* ==============================
+   ESTADO VACÍO
+================================= */
+
+.tf-empty-state {
+  padding: 24px;
+  border-radius: 22px;
+  background: #f8fafc;
+  text-align: center;
+  border: 1px dashed rgba(7, 27, 61, 0.18);
+}
+
+.tf-empty-state h3 {
+  margin: 0 0 8px;
+  color: #071b3d;
+  font-size: 1.1rem;
+}
+
+.tf-empty-state p {
+  margin: 0;
+  color: #64748b;
+}
+
+/* ==============================
+   RESPONSIVE
+================================= */
+
+@media (max-height: 720px) {
+  .tf-student-topbar {
+    padding: 10px 16px;
+  }
+
+  .tf-content-card {
+    padding: 16px 18px;
+  }
+
+  .tf-notification-card {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .tf-student-main {
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 980px) {
+  .tf-student-main {
+    padding: 16px;
+  }
+
+  .tf-student-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tf-topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 720px) {
+  .tf-content-card h2 {
+    font-size: 1.45rem;
+  }
+
+  .tf-notification-card {
+    gap: 12px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .tf-notification-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .tf-student-main {
+    padding: 12px;
+  }
+
+  .tf-student-topbar,
+  .tf-content-card {
+    border-radius: 18px;
+  }
+
+  .tf-notification-card {
+    align-items: flex-start;
+  }
+}

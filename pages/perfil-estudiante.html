@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi perfil | TutorFlash</title>
+
+    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/perfil-estudiante.css" />
+  </head>
+  <body>
+    <main class="tf-student-layout">
+      <aside class="tf-sidebar">
+        <div class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
+        </div>
+
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html">🗓️ Mi agenda</a>
+          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
+          <a href="tutores.html">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html">🔔 Notificaciones</a>
+          <a href="sesiones.html">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html" class="is-active">👤 Mi perfil</a>
+        </nav>
+
+        <div class="tf-sidebar-card">
+          <span>Consejo rápido</span>
+          <p>
+            Completa tu perfil para que TutorFlash pueda recomendarte mejores
+            tutores.
+          </p>
+        </div>
+      </aside>
+
+      <section class="tf-student-main">
+        <header class="tf-topbar">
+          <div>
+            <span class="tf-page-label">Perfil del estudiante</span>
+            <h1 id="tituloBienvenida">Mi perfil</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <a
+              href="notificaciones.html"
+              class="tf-notification-btn"
+              title="Notificaciones"
+            >
+              🔔
+              <span class="tf-notification-dot">3</span>
+            </a>
+
+            <div class="tf-user-area">
+              <button type="button" id="btnUsuario" class="tf-user-chip">
+                <span id="avatarIniciales" class="tf-user-avatar">E</span>
+                <span class="tf-user-meta">
+                  <strong id="nombreUsuarioTop">Estudiante</strong>
+                  <small>Mi cuenta</small>
+                </span>
+              </button>
+
+              <div id="menuUsuario" class="tf-user-dropdown oculto">
+                <button
+                  type="button"
+                  id="cerrarMenuUsuario"
+                  class="tf-user-dropdown-close"
+                >
+                  ×
+                </button>
+
+                <div id="avatarInicialesMenu" class="tf-user-dropdown-avatar">
+                  E
+                </div>
+
+                <h3 id="saludoUsuarioMenu">¡Hola!</h3>
+                <p id="correoUsuarioMenu" class="tf-user-email">
+                  correo@ejemplo.com
+                </p>
+
+                <a href="perfil-estudiante.html" class="tf-user-dropdown-btn">
+                  Ver mi perfil
+                </a>
+
+                <button
+                  type="button"
+                  id="btnCerrarSesionPortal"
+                  class="tf-user-dropdown-logout"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="tf-profile-layout">
+          <article class="tf-profile-card tf-profile-summary">
+            <div id="perfilAvatarGrande" class="tf-profile-avatar">E</div>
+
+            <span class="tf-profile-label">Cuenta del estudiante</span>
+            <h2 id="perfilNombreResumen">Estudiante</h2>
+            <p id="perfilCorreoResumen">correo@ejemplo.com</p>
+
+            <div class="tf-profile-badges">
+              <span id="perfilNivelResumen">Nivel no registrado</span>
+              <span id="perfilDistritoResumen">Distrito no registrado</span>
+            </div>
+          </article>
+
+          <article class="tf-profile-card">
+            <div class="tf-profile-header">
+              <div>
+                <span class="tf-page-label">Datos personales</span>
+                <h2>Editar mi perfil</h2>
+              </div>
+            </div>
+
+            <p id="estadoPerfil" class="tf-profile-status">
+              Completa tus datos y guarda los cambios.
+            </p>
+
+            <form id="formularioPerfil" class="tf-profile-form">
+              <label>
+                Nombre completo
+                <input
+                  type="text"
+                  id="nombrePerfil"
+                  placeholder="Ejemplo: Dani Flores"
+                  required
+                />
+              </label>
+
+              <label>
+                Correo electrónico
+                <input type="email" id="correoPerfil" disabled />
+              </label>
+
+              <label>
+                Teléfono
+                <input
+                  type="tel"
+                  id="telefonoPerfil"
+                  placeholder="Ejemplo: 987654321"
+                />
+              </label>
+
+              <label>
+                Nivel académico
+                <select id="nivelPerfil">
+                  <option value="">Selecciona tu nivel</option>
+                  <option value="Primaria">Primaria</option>
+                  <option value="Secundaria">Secundaria</option>
+                  <option value="Preuniversitario">Preuniversitario</option>
+                  <option value="Universitario">Universitario</option>
+                  <option value="Técnico">Técnico</option>
+                </select>
+              </label>
+
+              <label>
+                Distrito
+                <input
+                  type="text"
+                  id="distritoPerfil"
+                  placeholder="Ejemplo: San Juan de Lurigancho"
+                />
+              </label>
+
+              <label class="tf-profile-full">
+                Cursos de interés
+                <input
+                  type="text"
+                  id="cursosPerfil"
+                  placeholder="Ejemplo: Matemática, Física, Inglés"
+                />
+              </label>
+
+              <button
+                type="submit"
+                id="btnGuardarPerfil"
+                class="tf-btn tf-btn-primary"
+              >
+                Guardar cambios
+              </button>
+            </form>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="../js/perfil-estudiante.js"></script>
+  </body>
+</html>

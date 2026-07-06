@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const estadoSesiones = document.querySelector("#estadoSesiones");
   const listaMisSesiones = document.querySelector("#listaMisSesiones");
 
+  const statTotalSesiones = document.querySelector("#statTotalSesiones");
+  const statPendientes = document.querySelector("#statPendientes");
+  const statAceptadas = document.querySelector("#statAceptadas");
+  const statRealizadas = document.querySelector("#statRealizadas");
+
+  const botonesFiltro = document.querySelectorAll("[data-filtro]");
+
+  let sesionesGlobales = [];
+  let filtroActivo = "todas";
+
   function mostrarEstado(mensaje) {
     if (estadoSesiones) {
       estadoSesiones.textContent = mensaje;
@@ -146,21 +156,96 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function obtenerEstadoPago(sesion) {
+    return String(sesion.estadoPago || "pendiente")
+      .toLowerCase()
+      .trim();
+  }
+
+  function obtenerTextoPago(sesion) {
+    const estadoPago = obtenerEstadoPago(sesion);
+
+    if (estadoPago === "pagado" || estadoPago === "completado") {
+      return "Pago registrado";
+    }
+
+    return "Pago pendiente";
+  }
+
+  function obtenerEstadoClase(sesion) {
+    return String(sesion.estadoClase || "pendiente")
+      .toLowerCase()
+      .trim();
+  }
+
+  function obtenerTextoClase(sesion) {
+    const enlace = sesion.enlaceClase || "";
+    const estadoClase = obtenerEstadoClase(sesion);
+
+    if (enlace || estadoClase === "lista" || estadoClase === "programada") {
+      return "Clase virtual lista";
+    }
+
+    return "Enlace pendiente";
+  }
+
+  function actualizarEstadisticas(sesiones) {
+    const total = sesiones.length;
+    const pendientes = sesiones.filter((sesion) => {
+      return normalizarEstado(sesion.estado) === "pendiente";
+    }).length;
+
+    const aceptadas = sesiones.filter((sesion) => {
+      return normalizarEstado(sesion.estado) === "aceptada";
+    }).length;
+
+    const realizadas = sesiones.filter((sesion) => {
+      return normalizarEstado(sesion.estado) === "realizada";
+    }).length;
+
+    if (statTotalSesiones) statTotalSesiones.textContent = total;
+    if (statPendientes) statPendientes.textContent = pendientes;
+    if (statAceptadas) statAceptadas.textContent = aceptadas;
+    if (statRealizadas) statRealizadas.textContent = realizadas;
+  }
+
+  function filtrarSesiones(sesiones) {
+    if (filtroActivo === "todas") {
+      return sesiones;
+    }
+
+    return sesiones.filter((sesion) => {
+      return normalizarEstado(sesion.estado) === filtroActivo;
+    });
+  }
+
   function mostrarSesiones(sesiones) {
     if (!listaMisSesiones) return;
+
+    const sesionesFiltradas = filtrarSesiones(sesiones);
 
     if (!sesiones.length) {
       listaMisSesiones.innerHTML = `
         <div class="sesion-card sesion-vacia">
           <h3>Aún no tienes sesiones reservadas</h3>
           <p>Cuando reserves una tutoría, aparecerá en esta sección.</p>
-          <a href="app.html" class="btn-volver">Buscar tutor</a>
+          <a href="buscar-tutor.html" class="btn-volver">Buscar tutor</a>
         </div>
       `;
       return;
     }
 
-    const sesionesOrdenadas = ordenarSesiones(sesiones);
+    if (!sesionesFiltradas.length) {
+      listaMisSesiones.innerHTML = `
+        <div class="sesion-card sesion-vacia">
+          <h3>No hay sesiones en este filtro</h3>
+          <p>Prueba con otro estado para ver más tutorías.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const sesionesOrdenadas = ordenarSesiones(sesionesFiltradas);
 
     listaMisSesiones.innerHTML = sesionesOrdenadas
       .map((sesion) => {
@@ -168,6 +253,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const textoEstado = obtenerTextoEstado(estado);
         const mensajeEstado = obtenerMensajeEstado(estado);
         const claseEstado = obtenerClaseEstado(estado);
+
+        const pagoTexto = obtenerTextoPago(sesion);
+        const estadoPago = obtenerEstadoPago(sesion);
+        const pagoClase =
+          estadoPago === "pagado" || estadoPago === "completado"
+            ? "pago-ok"
+            : "pago-pendiente";
+
+        const claseTexto = obtenerTextoClase(sesion);
+        const enlaceClase = sesion.enlaceClase || "";
+        const claseBadge = enlaceClase ? "clase-ok" : "clase-pendiente";
 
         return `
           <article class="sesion-card">
@@ -178,20 +274,81 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
 
               <span class="sesion-estado ${claseEstado}">
-                ${textoEstado}
+                ${limpiarTexto(textoEstado)}
               </span>
             </div>
 
-            <p class="sesion-mensaje">${mensajeEstado}</p>
+            <p class="sesion-mensaje">${limpiarTexto(mensajeEstado)}</p>
 
             <div class="sesion-detalles">
-              <p><strong>Tutor:</strong> ${limpiarTexto(sesion.tutor || "No registrado")}</p>
-              <p><strong>Fecha:</strong> ${limpiarTexto(formatearFecha(sesion.fecha))}</p>
-              <p><strong>Hora:</strong> ${limpiarTexto(sesion.hora || "No registrada")}</p>
-              <p><strong>Duración:</strong> ${limpiarTexto(sesion.duracion || "No registrada")}</p>
-              <p><strong>Modalidad:</strong> ${limpiarTexto(sesion.modalidad || "No registrada")}</p>
-              <p><strong>Total:</strong> S/ ${formatearMonto(sesion.total)}</p>
-              <p><strong>Pago:</strong> ${limpiarTexto(sesion.metodoPago || "Simulado")}</p>
+              <div class="sesion-info-item">
+                <span>Tutor</span>
+                <strong>${limpiarTexto(sesion.tutor || "No registrado")}</strong>
+              </div>
+
+              <div class="sesion-info-item">
+                <span>Fecha</span>
+                <strong>${limpiarTexto(formatearFecha(sesion.fecha))}</strong>
+              </div>
+
+              <div class="sesion-info-item">
+                <span>Hora</span>
+                <strong>${limpiarTexto(sesion.hora || "No registrada")}</strong>
+              </div>
+
+              <div class="sesion-info-item">
+                <span>Duración</span>
+                <strong>${limpiarTexto(sesion.duracion || "No registrada")}</strong>
+              </div>
+
+              <div class="sesion-info-item">
+                <span>Modalidad</span>
+                <strong>${limpiarTexto(sesion.modalidad || "No registrada")}</strong>
+              </div>
+
+              <div class="sesion-info-item">
+                <span>Total</span>
+                <strong>S/ ${formatearMonto(sesion.total)}</strong>
+              </div>
+            </div>
+
+            <div class="sesion-extra-row">
+              <span class="sesion-badge ${pagoClase}">
+                💳 ${limpiarTexto(pagoTexto)}
+              </span>
+
+              <span class="sesion-badge ${claseBadge}">
+                💻 ${limpiarTexto(claseTexto)}
+              </span>
+
+              <span class="sesion-badge">
+                📌 ${limpiarTexto(sesion.metodoPago || "Pago pendiente")}
+              </span>
+            </div>
+
+            <div class="sesion-actions">
+              ${
+                enlaceClase
+                  ? `
+                    <a
+                      href="${limpiarTexto(enlaceClase)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="sesion-action-btn"
+                    >
+                      Entrar a clase
+                    </a>
+                  `
+                  : `
+                    <span class="sesion-action-btn secondary">
+                      Enlace pendiente
+                    </span>
+                  `
+              }
+
+              <a href="buscar-tutor.html" class="sesion-action-btn secondary">
+                Reservar otra tutoría
+              </a>
             </div>
           </article>
         `;
@@ -204,14 +361,17 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarEstado("Cargando tus sesiones...");
 
       const sesiones = await obtenerMisSesiones();
+      sesionesGlobales = sesiones;
+
+      actualizarEstadisticas(sesiones);
 
       if (!sesiones.length) {
-        mostrarEstado("Mis sesiones");
+        mostrarEstado("Aún no tienes sesiones reservadas.");
       } else {
-        mostrarEstado("Sesiones reservadas");
+        mostrarEstado(`${sesiones.length} sesión(es) encontrada(s).`);
       }
 
-      mostrarSesiones(sesiones);
+      mostrarSesiones(sesionesGlobales);
     } catch (error) {
       console.error(error);
       mostrarEstado("No se pudieron cargar tus sesiones.");
@@ -220,12 +380,25 @@ document.addEventListener("DOMContentLoaded", () => {
         listaMisSesiones.innerHTML = `
           <div class="sesion-card">
             <h3>Ocurrió un problema</h3>
-            <p>No pudimos cargar tus reservas. Intenta nuevamente en unos segundos.</p>
+            <p class="sesion-mensaje">
+              No pudimos cargar tus reservas. Intenta nuevamente en unos segundos.
+            </p>
           </div>
         `;
       }
     }
   }
+
+  botonesFiltro.forEach((boton) => {
+    boton.addEventListener("click", () => {
+      botonesFiltro.forEach((item) => item.classList.remove("is-active"));
+      boton.classList.add("is-active");
+
+      filtroActivo = boton.dataset.filtro || "todas";
+
+      mostrarSesiones(sesionesGlobales);
+    });
+  });
 
   observarUsuario((usuario) => {
     if (!usuario) {
@@ -233,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (listaMisSesiones) {
         listaMisSesiones.innerHTML = `
-          <div class="sesion-card">
+          <div class="sesion-card sesion-vacia">
             <h3>Inicia sesión</h3>
             <p>Para ver tus sesiones reservadas, primero debes iniciar sesión.</p>
             <a href="cuenta.html" class="btn-volver">Iniciar sesión</a>
@@ -241,6 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
       }
 
+      actualizarEstadisticas([]);
       return;
     }
 

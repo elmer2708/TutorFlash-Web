@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notificaciones | TutorFlash</title>
+    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/notificaciones.css" />
+  </head>
+  <body>
+    <main class="tf-student-layout">
+      <aside class="tf-sidebar">
+        <div class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
+        </div>
+
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html">🗓️ Mi agenda</a>
+          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
+          <a href="tutores.html">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html" class="is-active">🔔 Notificaciones</a>
+          <a href="sesiones.html">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+        </nav>
+
+        <div class="tf-sidebar-tip">
+          <strong>Consejo rápido</strong>
+          <p>
+            Revisa tus avisos antes de cada clase para no perder horarios
+            importantes.
+          </p>
+        </div>
+      </aside>
+
+      <section class="tf-student-main">
+        <header class="tf-student-topbar">
+          <div>
+            <span class="tf-section-label">Notificaciones</span>
+            <h1 id="tituloBienvenida">Tus avisos importantes</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <a
+              href="notificaciones.html"
+              class="tf-icon-btn"
+              title="Notificaciones"
+            >
+              🔔
+            </a>
+
+            <button type="button" id="btnUsuario" class="tf-user-btn">
+              <span id="avatarIniciales">E</span>
+            </button>
+
+            <div id="menuUsuario" class="tf-user-menu oculto">
+              <div class="tf-user-menu-header">
+                <div id="avatarInicialesMenu" class="tf-user-menu-avatar">
+                  E
+                </div>
+                <div>
+                  <strong id="saludoUsuarioMenu">¡Hola!</strong>
+                  <p id="correoUsuarioMenu">correo@ejemplo.com</p>
+                </div>
+              </div>
+
+              <button type="button" id="btnCerrarSesionPortal">
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <section class="tf-content-card">
+          <span class="tf-section-label">Centro de avisos</span>
+          <h2>Mis notificaciones</h2>
+
+          <p id="estadoNotificaciones" class="tf-section-subtitle">
+            Cargando notificaciones...
+          </p>
+
+          <div id="listaNotificaciones" class="tf-notifications-list">
+            <!-- Aquí se cargan las notificaciones reales -->
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="../js/notificaciones.js"></script>
+  </body>
+</html>
