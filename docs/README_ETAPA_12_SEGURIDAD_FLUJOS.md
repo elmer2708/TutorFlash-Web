@@ -908,7 +908,7 @@ Rechazadas
 Las funciones del admin ahora usan:
 
 ```js
-asegurarAdmin()
+asegurarAdmin();
 ```
 
 Esto evita que un usuario normal ejecute acciones administrativas desde el frontend.
@@ -1384,4 +1384,17 @@ TutorFlash-Web pasó de maqueta a MVP avanzado.
 Ahora tiene login, roles, reservas, tutores, admin, disponibilidad real y seguridad básica.
 La Etapa 12 refuerza Firebase, validaciones, permisos y errores.
 El siguiente paso será probar todo el flujo completo y preparar la Etapa 13.
+
+Algunas mejoras futuras podrían ser:
+
+Notificaciones visuales dentro de la plataforma.
+Simulación de pagos más ordenada.
+Calificación del tutor después de una sesión realizada.
+Mejorar la landing principal de TutorFlash.
+Mejorar el panel del administrador.
+Agregar historial más completo de sesiones.
+Agregar filtros avanzados por curso, modalidad, precio o distrito.
+Mejorar la vista responsive en algunos detalles visuales.
+Agregar dashboard con estadísticas básicas.
+Reforzar reglas de seguridad en Firebase.
 ```
