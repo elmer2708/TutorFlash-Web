@@ -3,44 +3,161 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Admin | TutorFlash</title>
+    <title>Panel Admin | TutorFlash</title>
 
     <link rel="stylesheet" href="../css/admin.css" />
   </head>
+
   <body>
-    <header class="admin-header">
-      <nav class="admin-nav">
-        <a href="app.html" class="admin-logo">TutorFlash Admin</a>
+    <div class="admin-layout">
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <a href="../index.html" class="admin-brand">
+          <span class="admin-brand-icon">TF</span>
+          <span>TutorFlash</span>
+        </a>
 
-        <div class="admin-links">
-          <a href="app.html">Plataforma</a>
-          <a href="tutor.html">Quiero ser tutor</a>
-          <button id="btnCerrarSesionAdmin" type="button">Cerrar sesión</button>
+        <nav class="admin-menu" aria-label="Menú administrador">
+          <a href="admin.html" class="admin-menu-link activo">
+            <span>📊</span>
+            Dashboard
+          </a>
+
+          <a href="app.html" class="admin-menu-link">
+            <span>🔎</span>
+            Ver plataforma
+          </a>
+
+          <a href="cuenta.html" class="admin-menu-link">
+            <span>👤</span>
+            Mi cuenta
+          </a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+          <p>Administrador</p>
+          <button type="button" id="btnCerrarSesionAdmin">Cerrar sesión</button>
         </div>
-      </nav>
-    </header>
+      </aside>
 
-    <main class="admin-main">
-      <section class="admin-hero">
-        <span>Panel interno</span>
-        <h1>Postulaciones de tutores</h1>
-        <p>
-          Revisa las postulaciones enviadas por futuros tutores. Puedes
-          aprobarlas para crear un tutor real o rechazarlas si no cumplen con el
-          perfil.
-        </p>
-      </section>
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="admin-content">
+        <!-- TOPBAR -->
+        <header class="admin-topbar">
+          <div>
+            <p class="admin-kicker">Panel administrador</p>
+            <h1>Gestión de tutores</h1>
+          </div>
 
-      <section id="adminMensaje" class="admin-mensaje">
-        Cargando postulaciones...
-      </section>
+          <div class="admin-topbar-info">
+            <span id="estadoPanelBadge" class="panel-badge"> Cargando... </span>
+            <small id="ultimaActualizacion"> Sin actualización </small>
+          </div>
+        </header>
 
-      <section
-        id="contenedorPostulaciones"
-        class="postulaciones-grid"
-      ></section>
-    </main>
+        <!-- RESUMEN -->
+        <section class="admin-stats" aria-label="Resumen de postulaciones">
+          <article class="stat-card">
+            <p>Total</p>
+            <strong id="resumenTotal">0</strong>
+            <span>Postulaciones</span>
+          </article>
+
+          <article class="stat-card stat-pendiente">
+            <p>Pendientes</p>
+            <strong id="resumenPendientes">0</strong>
+            <span>Por revisar</span>
+          </article>
+
+          <article class="stat-card stat-aprobado">
+            <p>Aprobadas</p>
+            <strong id="resumenAprobadas">0</strong>
+            <span>Tutores aceptados</span>
+          </article>
+
+          <article class="stat-card stat-rechazado">
+            <p>Rechazadas</p>
+            <strong id="resumenRechazadas">0</strong>
+            <span>No aceptadas</span>
+          </article>
+        </section>
+
+        <!-- PANEL DE POSTULACIONES -->
+        <section class="admin-section">
+          <div class="admin-section-header">
+            <div>
+              <p class="admin-kicker">Centro de revisión</p>
+              <h2>Postulaciones de tutores</h2>
+              <p>
+                Revisa los datos enviados por cada postulante antes de aprobarlo
+                como tutor activo dentro de TutorFlash.
+              </p>
+            </div>
+
+            <div class="admin-section-actions">
+              <button
+                type="button"
+                class="btn-admin-secundario activo"
+                data-filtro-admin="todos"
+              >
+                Todos
+              </button>
+
+              <button
+                type="button"
+                class="btn-admin-secundario"
+                data-filtro-admin="pendiente"
+              >
+                Pendientes
+              </button>
+
+              <button
+                type="button"
+                class="btn-admin-secundario"
+                data-filtro-admin="aprobado"
+              >
+                Aprobadas
+              </button>
+
+              <button
+                type="button"
+                class="btn-admin-secundario"
+                data-filtro-admin="rechazado"
+              >
+                Rechazadas
+              </button>
+            </div>
+          </div>
+
+          <section
+            id="adminMensaje"
+            class="admin-mensaje oculto"
+            aria-live="polite"
+          ></section>
+
+          <section
+            id="estadoVacio"
+            class="estado-vacio oculto"
+            aria-label="Sin postulaciones"
+          >
+            <div class="estado-vacio-icono">📋</div>
+
+            <h3 id="estadoVacioTitulo">No hay postulaciones todavía</h3>
+
+            <p id="estadoVacioTexto">
+              Cuando un usuario se postule como tutor, su solicitud aparecerá en
+              esta sección para ser revisada.
+            </p>
+          </section>
+
+          <section
+            id="contenedorPostulaciones"
+            class="postulaciones-grid"
+            aria-label="Lista de postulaciones de tutores"
+          ></section>
+        </section>
+      </main>
+    </div>
 
     <script type="module" src="../js/admin.js"></script>
   </body>

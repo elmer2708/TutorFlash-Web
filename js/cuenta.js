@@ -6,6 +6,7 @@ import {
   obtenerUsuarioActual,
   obtenerPerfilUsuarioActual,
   obtenerTutorActivoActual,
+  obtenerPostulacionTutorPorUid,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,15 +31,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuarioActualTexto = document.querySelector("#usuarioActualTexto");
   const authMensaje = document.querySelector("#authMensaje");
 
-  const ADMIN_EMAILS = ["admin@gmail.com"];
+  const ADMIN_EMAILS = ["admin@gmail.com"].map((correo) =>
+    correo.toLowerCase().trim(),
+  );
 
   let accionAuthEnProceso = false;
   let redireccionando = false;
 
-  function mostrarMensaje(mensaje) {
-    if (authMensaje) {
-      authMensaje.textContent = mensaje;
-    }
+  function normalizarCorreo(correo) {
+    return String(correo || "")
+      .trim()
+      .toLowerCase();
+  }
+
+  function esAdmin(correo) {
+    return ADMIN_EMAILS.includes(normalizarCorreo(correo));
+  }
+
+  function mostrarMensaje(mensaje, tipo = "info") {
+    if (!authMensaje) return;
+
+    authMensaje.textContent = mensaje;
+    authMensaje.className = `auth-mensaje ${tipo}`;
+  }
+
+  function limpiarMensaje() {
+    if (!authMensaje) return;
+
+    authMensaje.textContent = "";
+    authMensaje.className = "auth-mensaje oculto";
   }
 
   function limpiarCampos() {
@@ -49,26 +70,68 @@ document.addEventListener("DOMContentLoaded", () => {
     if (loginPassword) loginPassword.value = "";
   }
 
+  function cambiarTextoBoton(boton, texto, deshabilitado = true) {
+    if (!boton) return;
+
+    if (!boton.dataset.textoOriginal) {
+      boton.dataset.textoOriginal = boton.textContent;
+    }
+
+    boton.textContent = texto;
+    boton.disabled = deshabilitado;
+  }
+
+  function restaurarBoton(boton) {
+    if (!boton) return;
+
+    boton.textContent = boton.dataset.textoOriginal || boton.textContent;
+    boton.disabled = false;
+  }
+
   function mostrarVistaLogin() {
     if (loginForm) loginForm.classList.remove("oculto");
     if (registroForm) registroForm.classList.add("oculto");
+    if (cuentaActiva) cuentaActiva.classList.add("oculto");
 
-    mostrarMensaje("Inicia sesión para continuar.");
+    mostrarMensaje("Inicia sesión para continuar en TutorFlash.", "info");
   }
 
   function mostrarVistaRegistro() {
     if (loginForm) loginForm.classList.add("oculto");
     if (registroForm) registroForm.classList.remove("oculto");
+    if (cuentaActiva) cuentaActiva.classList.add("oculto");
 
-    mostrarMensaje("Crea una cuenta para continuar en TutorFlash.");
+    mostrarMensaje("Crea tu cuenta para acceder a TutorFlash.", "info");
   }
 
-  function normalizarCorreo(correo) {
-    return correo.trim().toLowerCase();
-  }
+  function obtenerMensajeError(error) {
+    const codigo = error?.code || "";
 
-  function esAdmin(correo) {
-    return ADMIN_EMAILS.includes(normalizarCorreo(correo));
+    if (codigo.includes("auth/invalid-email")) {
+      return "El correo ingresado no tiene un formato válido.";
+    }
+
+    if (codigo.includes("auth/email-already-in-use")) {
+      return "Este correo ya está registrado. Inicia sesión o usa otro correo.";
+    }
+
+    if (
+      codigo.includes("auth/invalid-credential") ||
+      codigo.includes("auth/wrong-password") ||
+      codigo.includes("auth/user-not-found")
+    ) {
+      return "Correo o contraseña incorrectos.";
+    }
+
+    if (codigo.includes("auth/weak-password")) {
+      return "La contraseña debe tener mínimo 6 caracteres.";
+    }
+
+    if (codigo.includes("auth/network-request-failed")) {
+      return "Hay un problema de conexión. Revisa tu internet e intenta otra vez.";
+    }
+
+    return "Ocurrió un error. Intenta nuevamente.";
   }
 
   async function redirigirSegunRol(rolRegistro = null) {
@@ -81,10 +144,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     redireccionando = true;
-    mostrarMensaje("Revisando tu tipo de usuario...");
+    mostrarMensaje("Revisando tu tipo de usuario...", "info");
 
     try {
-      if (esAdmin(usuario.email)) {
+      const correoUsuario = normalizarCorreo(usuario.email);
+
+      if (esAdmin(correoUsuario)) {
+        mostrarMensaje(
+          "Acceso administrador validado. Redirigiendo...",
+          "exito",
+        );
         window.location.href = "admin.html";
         return;
       }
@@ -92,7 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const tutorActivo = await obtenerTutorActivoActual();
 
       if (tutorActivo) {
+        mostrarMensaje("Tutor aprobado. Redirigiendo a tu panel...", "exito");
         window.location.href = "panel-tutor.html";
+        return;
+      }
+
+      const postulacionTutor = await obtenerPostulacionTutorPorUid(usuario.uid);
+
+      if (postulacionTutor) {
+        mostrarMensaje("Redirigiendo a tu postulación de tutor...", "info");
+        window.location.href = "tutor.html";
         return;
       }
 
@@ -100,15 +178,115 @@ document.addEventListener("DOMContentLoaded", () => {
       const rol = rolRegistro || perfilUsuario?.rol || "estudiante";
 
       if (rol === "tutor") {
+        mostrarMensaje("Redirigiendo a la página de tutor...", "info");
         window.location.href = "tutor.html";
         return;
       }
 
+      mostrarMensaje(
+        "Acceso validado. Redirigiendo a la plataforma...",
+        "exito",
+      );
       window.location.href = "app.html";
     } catch (error) {
-      console.error(error);
+      console.error("Error al redirigir según rol:", error);
       redireccionando = false;
-      mostrarMensaje("No se pudo validar el acceso. Intenta nuevamente.");
+      mostrarMensaje(
+        "No se pudo validar tu acceso. Intenta nuevamente.",
+        "error",
+      );
+    }
+  }
+
+  async function manejarRegistro(event) {
+    if (event) event.preventDefault();
+
+    if (accionAuthEnProceso) return;
+
+    const nombre = registroNombre?.value.trim() || "";
+    const correo = registroCorreo?.value.trim() || "";
+    const password = registroPassword?.value.trim() || "";
+
+    let rol = registroRol ? registroRol.value : "estudiante";
+
+    if (rol === "admin") {
+      rol = "estudiante";
+    }
+
+    if (!nombre || !correo || !password) {
+      mostrarMensaje(
+        "Completa todos los campos para crear tu cuenta.",
+        "error",
+      );
+      return;
+    }
+
+    if (!correo.includes("@") || !correo.includes(".")) {
+      mostrarMensaje("Ingresa un correo válido.", "error");
+      return;
+    }
+
+    if (password.length < 6) {
+      mostrarMensaje("La contraseña debe tener mínimo 6 caracteres.", "error");
+      return;
+    }
+
+    try {
+      accionAuthEnProceso = true;
+      cambiarTextoBoton(btnRegistro, "Creando cuenta...");
+
+      await registrarUsuario(nombre, correo, password, rol);
+
+      limpiarCampos();
+
+      if (rol === "tutor") {
+        mostrarMensaje(
+          "Cuenta creada. Ahora completa tu postulación como tutor.",
+          "exito",
+        );
+      } else {
+        mostrarMensaje("Cuenta creada correctamente. Redirigiendo...", "exito");
+      }
+
+      await redirigirSegunRol(rol);
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      mostrarMensaje(obtenerMensajeError(error), "error");
+    } finally {
+      accionAuthEnProceso = false;
+      restaurarBoton(btnRegistro);
+    }
+  }
+
+  async function manejarLogin(event) {
+    if (event) event.preventDefault();
+
+    if (accionAuthEnProceso) return;
+
+    const correo = loginCorreo?.value.trim() || "";
+    const password = loginPassword?.value.trim() || "";
+
+    if (!correo || !password) {
+      mostrarMensaje("Ingresa tu correo y contraseña.", "error");
+      return;
+    }
+
+    try {
+      accionAuthEnProceso = true;
+      cambiarTextoBoton(btnLogin, "Iniciando sesión...");
+
+      await iniciarSesion(correo, password);
+
+      limpiarCampos();
+      mostrarMensaje("Inicio de sesión correcto. Redirigiendo...", "exito");
+
+      await redirigirSegunRol();
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      mostrarMensaje(obtenerMensajeError(error), "error");
+    } finally {
+      accionAuthEnProceso = false;
+      restaurarBoton(btnLogin);
     }
   }
 
@@ -120,6 +298,42 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarLogin.addEventListener("click", mostrarVistaLogin);
   }
 
+  if (loginForm) {
+    loginForm.addEventListener("submit", manejarLogin);
+  }
+
+  if (registroForm) {
+    registroForm.addEventListener("submit", manejarRegistro);
+  }
+
+  if (btnLogin && btnLogin.type !== "submit") {
+    btnLogin.addEventListener("click", manejarLogin);
+  }
+
+  if (btnRegistro && btnRegistro.type !== "submit") {
+    btnRegistro.addEventListener("click", manejarRegistro);
+  }
+
+  if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener("click", async () => {
+      try {
+        cambiarTextoBoton(btnCerrarSesion, "Cerrando sesión...");
+
+        await cerrarSesion();
+
+        limpiarCampos();
+        limpiarMensaje();
+        mostrarVistaLogin();
+        mostrarMensaje("Sesión cerrada correctamente.", "exito");
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        mostrarMensaje("No se pudo cerrar sesión.", "error");
+      } finally {
+        restaurarBoton(btnCerrarSesion);
+      }
+    });
+  }
+
   observarUsuario((usuario) => {
     if (usuario) {
       if (loginForm) loginForm.classList.add("oculto");
@@ -127,104 +341,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cuentaActiva) cuentaActiva.classList.remove("oculto");
 
       if (usuarioActualTexto) {
-        usuarioActualTexto.textContent = `Conectado como: ${usuario.email}`;
+        usuarioActualTexto.textContent = `Sesión activa: ${usuario.email}`;
       }
 
-      mostrarMensaje("Sesión iniciada correctamente.");
-
-      if (!accionAuthEnProceso) {
+      if (!accionAuthEnProceso && !redireccionando) {
         redirigirSegunRol();
       }
-    } else {
-      redireccionando = false;
 
-      if (cuentaActiva) cuentaActiva.classList.add("oculto");
-
-      mostrarVistaLogin();
+      return;
     }
+
+    redireccionando = false;
+
+    if (cuentaActiva) cuentaActiva.classList.add("oculto");
+
+    mostrarVistaLogin();
   });
-
-  if (btnRegistro) {
-    btnRegistro.addEventListener("click", async () => {
-      const nombre = registroNombre.value.trim();
-      const rol = registroRol ? registroRol.value : "estudiante";
-      const correo = registroCorreo.value.trim();
-      const password = registroPassword.value.trim();
-
-      if (!nombre || !correo || !password) {
-        mostrarMensaje("Completa todos los campos para registrarte.");
-        return;
-      }
-
-      if (password.length < 6) {
-        mostrarMensaje("La contraseña debe tener mínimo 6 caracteres.");
-        return;
-      }
-
-      try {
-        accionAuthEnProceso = true;
-
-        await registrarUsuario(nombre, correo, password, rol);
-
-        limpiarCampos();
-
-        if (rol === "tutor") {
-          mostrarMensaje(
-            "Cuenta creada. Ahora completa tu postulación como tutor.",
-          );
-        } else {
-          mostrarMensaje("Cuenta creada correctamente. Redirigiendo...");
-        }
-
-        await redirigirSegunRol(rol);
-      } catch (error) {
-        console.error(error);
-        mostrarMensaje(
-          "No se pudo crear la cuenta. Revisa el correo o la contraseña.",
-        );
-      } finally {
-        accionAuthEnProceso = false;
-      }
-    });
-  }
-
-  if (btnLogin) {
-    btnLogin.addEventListener("click", async () => {
-      const correo = loginCorreo.value.trim();
-      const password = loginPassword.value.trim();
-
-      if (!correo || !password) {
-        mostrarMensaje("Ingresa tu correo y contraseña.");
-        return;
-      }
-
-      try {
-        accionAuthEnProceso = true;
-
-        await iniciarSesion(correo, password);
-
-        limpiarCampos();
-        mostrarMensaje("Inicio de sesión correcto. Redirigiendo...");
-
-        await redirigirSegunRol();
-      } catch (error) {
-        console.error(error);
-        mostrarMensaje("Correo o contraseña incorrectos.");
-      } finally {
-        accionAuthEnProceso = false;
-      }
-    });
-  }
-
-  if (btnCerrarSesion) {
-    btnCerrarSesion.addEventListener("click", async () => {
-      try {
-        await cerrarSesion();
-        mostrarMensaje("Sesión cerrada.");
-      } catch (error) {
-        console.error(error);
-        mostrarMensaje("No se pudo cerrar sesión.");
-      }
-    });
-  }
 });

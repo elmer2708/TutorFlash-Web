@@ -17,8 +17,8 @@ import {
   where,
   limit,
   doc,
-  setDoc,
   updateDoc,
+  runTransaction,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -174,44 +174,109 @@ export async function obtenerPostulacionesTutores() {
 }
 
 export async function aprobarPostulacionTutor(postulacion) {
-  if (!postulacion.id || !postulacion.uid) {
+  if (!postulacion?.id || !postulacion?.uid) {
     throw new Error(
       "La postulación no tiene datos suficientes para aprobarse.",
     );
   }
 
-  await setDoc(
-    doc(db, "tutores", postulacion.uid),
-    {
-      uid: postulacion.uid,
-      nombre: postulacion.nombre,
-      correo: postulacion.correo,
-      correoUsuario: postulacion.correoUsuario || postulacion.correo,
-      telefono: postulacion.telefono,
-      cursos: postulacion.cursos,
-      nivel: postulacion.nivel,
-      disponibilidad: postulacion.disponibilidad,
-      descripcion: postulacion.experiencia,
-      estado: "activo",
-      fechaAprobacion: serverTimestamp(),
-    },
-    { merge: true },
+  const postulacionRef = doc(db, "postulacionesTutores", postulacion.id);
+  const tutorRef = doc(db, "tutores", postulacion.uid);
+
+  const consultaUsuario = query(
+    collection(db, "usuarios"),
+    where("usuarioId", "==", postulacion.uid),
+    limit(1),
   );
 
-  await updateDoc(doc(db, "postulacionesTutores", postulacion.id), {
-    estado: "aprobado",
-    fechaRevision: serverTimestamp(),
+  const resultadoUsuario = await getDocs(consultaUsuario);
+
+  const usuarioRef = resultadoUsuario.empty
+    ? null
+    : doc(db, "usuarios", resultadoUsuario.docs[0].id);
+
+  await runTransaction(db, async (transaction) => {
+    const postulacionSnap = await transaction.get(postulacionRef);
+
+    if (!postulacionSnap.exists()) {
+      throw new Error("La postulación ya no existe.");
+    }
+
+    const datosPostulacion = postulacionSnap.data();
+
+    const estadoActual = String(datosPostulacion.estado || "pendiente")
+      .toLowerCase()
+      .trim();
+
+    if (estadoActual !== "pendiente") {
+      throw new Error("Esta postulación ya fue revisada.");
+    }
+
+    transaction.set(
+      tutorRef,
+      {
+        uid: datosPostulacion.uid,
+        nombre: datosPostulacion.nombre || "",
+        correo: datosPostulacion.correo || datosPostulacion.correoUsuario || "",
+        correoUsuario:
+          datosPostulacion.correoUsuario || datosPostulacion.correo || "",
+        telefono: datosPostulacion.telefono || "",
+        cursos: datosPostulacion.cursos || "",
+        nivel: datosPostulacion.nivel || "",
+        disponibilidad: datosPostulacion.disponibilidad || "",
+        descripcion: datosPostulacion.experiencia || "",
+        estado: "activo",
+        estadoPublico: "activo",
+        perfilCompleto: false,
+        precio: 25,
+        rating: "4.8",
+        fechaAprobacion: serverTimestamp(),
+        actualizadoEn: serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+    transaction.update(postulacionRef, {
+      estado: "aprobado",
+      fechaRevision: serverTimestamp(),
+    });
+
+    if (usuarioRef) {
+      transaction.update(usuarioRef, {
+        rol: "tutor",
+        actualizadoEn: serverTimestamp(),
+      });
+    }
   });
 }
-
 export async function rechazarPostulacionTutor(postulacionId) {
   if (!postulacionId) {
     throw new Error("No se encontró la postulación para rechazar.");
   }
 
-  await updateDoc(doc(db, "postulacionesTutores", postulacionId), {
-    estado: "rechazado",
-    fechaRevision: serverTimestamp(),
+  const postulacionRef = doc(db, "postulacionesTutores", postulacionId);
+
+  await runTransaction(db, async (transaction) => {
+    const postulacionSnap = await transaction.get(postulacionRef);
+
+    if (!postulacionSnap.exists()) {
+      throw new Error("La postulación ya no existe.");
+    }
+
+    const datosPostulacion = postulacionSnap.data();
+
+    const estadoActual = String(datosPostulacion.estado || "pendiente")
+      .toLowerCase()
+      .trim();
+
+    if (estadoActual !== "pendiente") {
+      throw new Error("Esta postulación ya fue revisada.");
+    }
+
+    transaction.update(postulacionRef, {
+      estado: "rechazado",
+      fechaRevision: serverTimestamp(),
+    });
   });
 }
 

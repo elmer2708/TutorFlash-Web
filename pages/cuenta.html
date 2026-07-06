@@ -7,9 +7,10 @@
 
     <link rel="stylesheet" href="../css/cuenta.css" />
   </head>
+
   <body>
     <header class="cuenta-header">
-      <a href="../index.html" class="logo-link">
+      <a href="../index.html" class="cuenta-logo">
         <img
           src="../assets/img/logo-tutorflash-transparente.png"
           alt="TutorFlash"
@@ -17,88 +18,147 @@
         <span>TutorFlash</span>
       </a>
 
-      <nav>
+      <nav class="cuenta-nav">
         <a href="../index.html">Inicio</a>
         <a href="app.html#buscar">Buscar tutor</a>
         <a href="sesiones.html">Mis sesiones</a>
-        <a href="cuenta.html">Mi cuenta</a>
+        <a href="cuenta.html" class="activo">Mi cuenta</a>
       </nav>
     </header>
 
     <main class="cuenta-main">
-      <section class="cuenta-hero">
-        <h1>Mi cuenta</h1>
-        <p>
-          Regístrate o inicia sesión para guardar tus reservas y ver tus
-          sesiones.
-        </p>
-      </section>
+      <section class="cuenta-layout">
+        <section class="cuenta-info">
+          <div class="cuenta-badge">Acceso TutorFlash</div>
 
-      <section class="auth-wrapper">
-        <div class="auth-card" id="authCard">
-          <form id="loginForm">
-            <h2>Iniciar sesión</h2>
+          <h1>Entra a tu plataforma de tutorías rápidas</h1>
 
-            <input
-              type="email"
-              id="loginCorreo"
-              placeholder="Correo electrónico"
-            />
-            <input
-              type="password"
-              id="loginPassword"
-              placeholder="Contraseña"
-            />
+          <p>
+            Inicia sesión para reservar tutorías, revisar tus sesiones o acceder
+            a tu panel según tu rol dentro de TutorFlash.
+          </p>
 
-            <button type="button" id="btnLogin">Iniciar sesión</button>
+          <div class="cuenta-beneficios">
+            <article>
+              <span>⚡</span>
+              <div>
+                <h3>Reservas rápidas</h3>
+                <p>Encuentra tutores disponibles antes de tus evaluaciones.</p>
+              </div>
+            </article>
 
-            <p class="auth-cambio">
-              ¿No tienes cuenta?
-              <button type="button" id="mostrarRegistro">Crear cuenta</button>
-            </p>
-          </form>
+            <article>
+              <span>📚</span>
+              <div>
+                <h3>Sesiones organizadas</h3>
+                <p>Revisa el estado de tus tutorías desde tu cuenta.</p>
+              </div>
+            </article>
 
-          <form id="registroForm" class="oculto">
-            <h2>Crear cuenta</h2>
-
-            <input
-              type="text"
-              id="registroNombre"
-              placeholder="Nombre completo"
-            />
-
-            <select id="registroRol">
-              <option value="estudiante">Soy estudiante</option>
-              <option value="tutor">Soy tutor</option>
-            </select>
-            <input
-              type="email"
-              id="registroCorreo"
-              placeholder="Correo electrónico"
-            />
-            <input
-              type="password"
-              id="registroPassword"
-              placeholder="Contraseña mínima de 6 caracteres"
-            />
-
-            <button type="button" id="btnRegistro">Registrarme</button>
-
-            <p class="auth-cambio">
-              ¿Ya tienes cuenta?
-              <button type="button" id="mostrarLogin">Iniciar sesión</button>
-            </p>
-          </form>
-
-          <div class="cuenta-activa oculto" id="cuentaActiva">
-            <h2>Sesión iniciada</h2>
-            <p id="usuarioActualTexto"></p>
-            <button type="button" id="btnCerrarSesion">Cerrar sesión</button>
+            <article>
+              <span>👨‍🏫</span>
+              <div>
+                <h3>Acceso para tutores</h3>
+                <p>Postula como tutor y administra tus sesiones aprobadas.</p>
+              </div>
+            </article>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <p class="auth-mensaje" id="authMensaje"></p>
+        <section class="auth-panel">
+          <div class="auth-card" id="authCard">
+            <div class="auth-card-header">
+              <p>Mi cuenta</p>
+              <h2>Bienvenido a TutorFlash</h2>
+              <span>Accede con tu correo y contraseña.</span>
+            </div>
+
+            <p class="auth-mensaje oculto" id="authMensaje"></p>
+
+            <form id="loginForm" class="auth-form">
+              <label for="loginCorreo">Correo electrónico</label>
+              <input
+                type="email"
+                id="loginCorreo"
+                placeholder="ejemplo@correo.com"
+                autocomplete="email"
+              />
+
+              <label for="loginPassword">Contraseña</label>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Ingresa tu contraseña"
+                autocomplete="current-password"
+              />
+
+              <button type="submit" id="btnLogin" class="btn-auth-principal">
+                Iniciar sesión
+              </button>
+
+              <p class="auth-cambio">
+                ¿No tienes cuenta?
+                <button type="button" id="mostrarRegistro">Crear cuenta</button>
+              </p>
+            </form>
+
+            <form id="registroForm" class="auth-form oculto">
+              <label for="registroNombre">Nombre completo</label>
+              <input
+                type="text"
+                id="registroNombre"
+                placeholder="Escribe tu nombre completo"
+                autocomplete="name"
+              />
+
+              <label for="registroRol">Tipo de cuenta</label>
+              <select id="registroRol">
+                <option value="estudiante">Soy estudiante</option>
+                <option value="tutor">Quiero postular como tutor</option>
+              </select>
+
+              <label for="registroCorreo">Correo electrónico</label>
+              <input
+                type="email"
+                id="registroCorreo"
+                placeholder="ejemplo@correo.com"
+                autocomplete="email"
+              />
+
+              <label for="registroPassword">Contraseña</label>
+              <input
+                type="password"
+                id="registroPassword"
+                placeholder="Mínimo 6 caracteres"
+                autocomplete="new-password"
+              />
+
+              <button type="submit" id="btnRegistro" class="btn-auth-principal">
+                Crear cuenta
+              </button>
+
+              <p class="auth-cambio">
+                ¿Ya tienes cuenta?
+                <button type="button" id="mostrarLogin">Iniciar sesión</button>
+              </p>
+            </form>
+
+            <div class="cuenta-activa oculto" id="cuentaActiva">
+              <div class="cuenta-activa-icono">✓</div>
+
+              <h2>Sesión iniciada</h2>
+              <p id="usuarioActualTexto"></p>
+
+              <div class="cuenta-activa-links">
+                <a href="app.html">Ir a la plataforma</a>
+                <a href="sesiones.html">Ver mis sesiones</a>
+              </div>
+
+              <button type="button" id="btnCerrarSesion">Cerrar sesión</button>
+            </div>
+          </div>
+        </section>
+      </section>
     </main>
 
     <script type="module" src="../js/cuenta.js"></script>
