@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observarUsuario(async (usuario) => {
     if (!usuario) {
-      window.location.href = "../login.html";
+      window.location.href = "../cuenta.html";
       return;
     }
 
