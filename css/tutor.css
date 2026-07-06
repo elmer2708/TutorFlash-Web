@@ -569,3 +569,117 @@ body {
     width: 100%;
   }
 }
+
+/* ETAPA 11: pulido responsive y accesibilidad visual */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.tutor-hero > *,
+.form-layout > *,
+.steps-grid article,
+.estado-card,
+.form-tutor,
+.form-grupo,
+.info-box {
+  min-width: 0;
+}
+
+.tutor-hero,
+.estado-card,
+.steps-grid article,
+.form-tutor,
+.mensaje-tutor,
+.info-box {
+  overflow-wrap: anywhere;
+}
+
+.btn-principal,
+.btn-secundario,
+.btn-small,
+.btn-nav-salir,
+.btn-enviar-tutor,
+.tutor-nav a {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-principal:hover,
+.btn-secundario:hover,
+.btn-small:hover,
+.btn-nav-salir:hover {
+  transform: translateY(-2px);
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.tutor-nav a:focus-visible,
+.btn-principal:focus-visible,
+.btn-secundario:focus-visible,
+.btn-small:focus-visible,
+.btn-nav-salir:focus-visible,
+.btn-enviar-tutor:focus-visible,
+.form-grupo input:focus-visible,
+.form-grupo select:focus-visible,
+.form-grupo textarea:focus-visible {
+  outline: 3px solid rgba(245, 183, 0, 0.72);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .tutor-nav {
+    width: 100%;
+  }
+
+  .tutor-nav a,
+  .btn-nav-salir {
+    display: inline-flex;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: #ffffff;
+  }
+
+  .btn-nav-salir {
+    width: auto;
+    background: #0c2340;
+  }
+}
+
+@media (max-width: 520px) {
+  .tutor-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions,
+  .estado-actions {
+    width: 100%;
+  }
+
+  .btn-principal,
+  .btn-secundario,
+  .btn-small,
+  .btn-nav-salir {
+    width: 100%;
+  }
+}

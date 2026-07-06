@@ -2,180 +2,646 @@
   box-sizing: border-box;
 }
 
+:root {
+  --azul-950: #081827;
+  --azul-900: #0f2740;
+  --azul-800: #123b5d;
+  --azul-700: #1d4f7a;
+  --azul-100: #eaf3fb;
+
+  --amarillo: #f4c542;
+  --amarillo-suave: #fff4cf;
+
+  --verde: #157347;
+  --verde-suave: #e8f7ef;
+
+  --rojo: #b42318;
+  --rojo-suave: #fdecec;
+
+  --gris-900: #1d2b3a;
+  --gris-700: #52677d;
+  --gris-500: #8798aa;
+  --gris-300: #dbe4ee;
+  --gris-200: #e8eef5;
+  --gris-100: #f5f8fc;
+
+  --blanco: #ffffff;
+  --sombra-suave: 0 14px 36px rgba(15, 39, 64, 0.1);
+  --sombra-media: 0 24px 60px rgba(15, 39, 64, 0.16);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f8fbff;
-  color: #0c2340;
-}
-
-.cuenta-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 8%;
-  background: #ffffff;
-  box-shadow: 0 4px 18px rgba(12, 35, 64, 0.08);
-}
-
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #0c2340;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 20px;
-}
-
-.logo-link img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-}
-
-.cuenta-header nav {
-  display: flex;
-  gap: 22px;
-}
-
-.cuenta-header nav a {
-  color: #0c2340;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.cuenta-header nav a:hover {
-  color: #f5b700;
-}
-
-.cuenta-main {
-  min-height: calc(100vh - 80px);
-  padding: 45px 8% 60px;
-}
-
-.cuenta-hero {
-  text-align: center;
-  max-width: 780px;
-  margin: 0 auto 30px;
-}
-
-.cuenta-hero h1 {
-  margin: 0 0 10px;
-  font-size: 42px;
-}
-
-.cuenta-hero p {
-  color: #475569;
-  font-size: 18px;
-}
-
-.auth-wrapper {
-  display: flex;
-  justify-content: center;
-  margin: 0 auto 20px;
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 500px;
-  background: #ffffff;
-  border: 1px solid rgba(12, 35, 64, 0.12);
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 10px 25px rgba(12, 35, 64, 0.08);
-}
-
-.auth-card h2 {
-  margin-top: 0;
-  margin-bottom: 18px;
-}
-
-.auth-card input,
-.auth-card select {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 13px 14px;
-  border: 1px solid rgba(12, 35, 64, 0.22);
-  border-radius: 12px;
-  font-size: 15px;
-  background: #ffffff;
-}
-
-.auth-card button {
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 13px 15px;
-  background: #0c2340;
-  color: #ffffff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.auth-card button:hover {
-  background: #143c6d;
-}
-
-.auth-cambio {
-  margin: 18px 0 0;
-  text-align: center;
-  color: #475569;
-  font-weight: 600;
-}
-
-.auth-cambio button {
-  width: auto;
-  padding: 0;
-  background: none;
-  color: #0c2340;
-  font-weight: 800;
-  text-decoration: underline;
-}
-
-.auth-cambio button:hover {
-  background: none;
-  color: #f5b700;
-}
-
-.cuenta-activa {
-  padding: 10px 0;
-  border-color: rgba(245, 183, 0, 0.55);
-  background: #fffaf0;
-}
-
-.auth-mensaje {
-  min-height: 24px;
-  text-align: center;
-  font-weight: 800;
-  color: #0c2340;
+  color: var(--gris-900);
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(244, 197, 66, 0.18),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(29, 79, 122, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #f8fbff 0%, #eef3f8 100%);
 }
 
 .oculto {
   display: none !important;
 }
 
-@media (max-width: 900px) {
-  .cuenta-header {
-    flex-direction: column;
-    gap: 12px;
-    padding: 14px 6%;
+/* HEADER */
+
+.cuenta-header {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.cuenta-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--azul-900);
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+}
+
+.cuenta-logo img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.cuenta-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.cuenta-nav a {
+  color: var(--gris-700);
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 800;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cuenta-nav a:hover,
+.cuenta-nav a.activo {
+  color: var(--azul-800);
+}
+
+.cuenta-nav a:hover {
+  transform: translateY(-1px);
+}
+
+/* MAIN */
+
+.cuenta-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 7% 70px;
+}
+
+.cuenta-layout {
+  min-height: calc(100vh - 150px);
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 44px;
+}
+
+/* LADO IZQUIERDO */
+
+.cuenta-info {
+  position: relative;
+  padding: 34px 0;
+}
+
+.cuenta-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--amarillo-suave);
+  color: #9a6d00;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.cuenta-info h1 {
+  margin: 0 0 18px;
+  color: var(--azul-900);
+  font-size: clamp(2.35rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -1.4px;
+}
+
+.cuenta-info > p {
+  max-width: 620px;
+  margin: 0 0 30px;
+  color: var(--gris-700);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.cuenta-beneficios {
+  display: grid;
+  gap: 16px;
+  max-width: 620px;
+}
+
+.cuenta-beneficios article {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(219, 228, 238, 0.85);
+  box-shadow: 0 10px 26px rgba(15, 39, 64, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.cuenta-beneficios span {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  background: var(--azul-100);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.cuenta-beneficios h3 {
+  margin: 0 0 5px;
+  color: var(--azul-900);
+  font-size: 1.02rem;
+}
+
+.cuenta-beneficios p {
+  margin: 0;
+  color: var(--gris-700);
+  line-height: 1.5;
+  font-size: 0.94rem;
+}
+
+/* PANEL DERECHO */
+
+.auth-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 34px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(219, 228, 238, 0.95);
+  box-shadow: var(--sombra-media);
+  backdrop-filter: blur(12px);
+}
+
+.auth-card-header {
+  margin-bottom: 22px;
+}
+
+.auth-card-header p {
+  margin: 0 0 8px;
+  color: var(--gris-500);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.auth-card-header h2 {
+  margin: 0 0 8px;
+  color: var(--azul-900);
+  font-size: 1.85rem;
+  letter-spacing: -0.5px;
+}
+
+.auth-card-header span {
+  color: var(--gris-700);
+  line-height: 1.5;
+  font-size: 0.96rem;
+}
+
+/* MENSAJES */
+
+.auth-mensaje {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.45;
+  border: 1px solid transparent;
+}
+
+.auth-mensaje.info {
+  background: #eef5ff;
+  color: var(--azul-700);
+  border-color: rgba(29, 79, 122, 0.16);
+}
+
+.auth-mensaje.exito {
+  background: var(--verde-suave);
+  color: var(--verde);
+  border-color: rgba(21, 115, 71, 0.18);
+}
+
+.auth-mensaje.error {
+  background: var(--rojo-suave);
+  color: var(--rojo);
+  border-color: rgba(180, 35, 24, 0.18);
+}
+
+/* FORMULARIOS */
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-form h2 {
+  margin: 0;
+}
+
+.auth-form label {
+  color: var(--azul-900);
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--gris-300);
+  border-radius: 16px;
+  padding: 0 15px;
+  background: var(--gris-100);
+  color: var(--gris-900);
+  font-family: inherit;
+  font-size: 0.96rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: var(--azul-700);
+  background: var(--blanco);
+  box-shadow: 0 0 0 4px rgba(29, 79, 122, 0.12);
+}
+
+.auth-form input::placeholder {
+  color: var(--gris-500);
+}
+
+.btn-auth-principal {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 999px;
+  background: var(--amarillo);
+  color: var(--azul-950);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 26px rgba(244, 197, 66, 0.26);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-auth-principal:hover:not(:disabled) {
+  background: #e9b819;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(244, 197, 66, 0.32);
+}
+
+.btn-auth-principal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.auth-cambio {
+  margin: 14px 0 0;
+  text-align: center;
+  color: var(--gris-700);
+  font-size: 0.94rem;
+}
+
+.auth-cambio button {
+  border: none;
+  background: transparent;
+  color: var(--azul-800);
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-cambio button:hover {
+  text-decoration: underline;
+}
+
+/* CUENTA ACTIVA */
+
+.cuenta-activa {
+  text-align: center;
+}
+
+.cuenta-activa-icono {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 16px;
+  border-radius: 22px;
+  background: var(--verde-suave);
+  color: var(--verde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  font-weight: 900;
+}
+
+.cuenta-activa h2 {
+  margin: 0 0 10px;
+  color: var(--azul-900);
+  font-size: 1.7rem;
+}
+
+.cuenta-activa p {
+  margin: 0 0 18px;
+  color: var(--gris-700);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.cuenta-activa-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.cuenta-activa-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--azul-100);
+  color: var(--azul-800);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 900;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cuenta-activa-links a:hover {
+  background: #dbeaf7;
+  transform: translateY(-2px);
+}
+
+#btnCerrarSesion {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: var(--azul-900);
+  color: var(--blanco);
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+#btnCerrarSesion:hover:not(:disabled) {
+  background: var(--azul-800);
+  transform: translateY(-2px);
+}
+
+#btnCerrarSesion:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ACCESIBILIDAD */
+
+.cuenta-nav a:focus-visible,
+.auth-cambio button:focus-visible,
+.btn-auth-principal:focus-visible,
+#btnCerrarSesion:focus-visible,
+.cuenta-activa-links a:focus-visible {
+  outline: 3px solid rgba(244, 197, 66, 0.75);
+  outline-offset: 3px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 980px) {
+  .cuenta-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
 
-  .cuenta-header nav {
+  .cuenta-info {
+    text-align: center;
+    padding-bottom: 0;
+  }
+
+  .cuenta-info > p,
+  .cuenta-beneficios {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cuenta-beneficios article {
+    text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  .cuenta-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 5%;
+  }
+
+  .cuenta-nav {
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 14px;
+    gap: 12px;
   }
 
   .cuenta-main {
-    padding: 45px 6%;
+    padding: 20px 5% 54px;
   }
 
-  .cuenta-hero h1 {
-    font-size: 34px;
+  .auth-card {
+    max-width: 100%;
+    padding: 26px;
+    border-radius: 26px;
+  }
+
+  .cuenta-info h1 {
+    font-size: 2.35rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .cuenta-logo img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cuenta-logo {
+    font-size: 1.2rem;
+  }
+
+  .cuenta-nav a {
+    font-size: 0.9rem;
+  }
+
+  .cuenta-info {
+    text-align: left;
+  }
+
+  .cuenta-beneficios article {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .auth-card-header h2 {
+    font-size: 1.55rem;
+  }
+
+  .cuenta-activa-links {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ETAPA 11: pulido responsive y consistencia */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select {
+  font-family: inherit;
+}
+
+.cuenta-layout > *,
+.cuenta-beneficios article,
+.auth-card,
+.cuenta-activa-links a {
+  min-width: 0;
+}
+
+.cuenta-info,
+.auth-card,
+.cuenta-beneficios,
+.cuenta-activa {
+  overflow-wrap: anywhere;
+}
+
+.cuenta-nav a,
+.cuenta-activa-links a,
+.auth-cambio button {
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .cuenta-header {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cuenta-nav {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 460px) {
+  .cuenta-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .cuenta-nav a {
+    display: inline-flex;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.68);
+  }
+
+  .cuenta-beneficios article {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 340px) {
+  .cuenta-nav {
+    grid-template-columns: 1fr;
   }
 }

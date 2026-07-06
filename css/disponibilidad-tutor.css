@@ -445,3 +445,103 @@ body {
     width: 100%;
   }
 }
+
+/* ETAPA 11: pulido responsive y estados */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select {
+  font-family: inherit;
+}
+
+.disponibilidad-main,
+.disponibilidad-header > *,
+.disponibilidad-layout > *,
+.info-card,
+.form-card,
+.bloque-card,
+.form-grupo,
+.empty-state {
+  min-width: 0;
+}
+
+.info-card,
+.form-card,
+.estado-card,
+.bloque-card,
+.empty-state {
+  overflow-wrap: anywhere;
+}
+
+.btn-outline,
+.btn-primary,
+.btn-guardar,
+.btn-guardar-final,
+.btn-eliminar,
+.btn-salir,
+.sidebar-nav a {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-outline:hover,
+.btn-primary:hover,
+.btn-guardar:hover:not(:disabled),
+.btn-guardar-final:hover:not(:disabled),
+.btn-eliminar:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.sidebar-nav a:focus-visible,
+.btn-salir:focus-visible,
+.btn-outline:focus-visible,
+.btn-primary:focus-visible,
+.btn-guardar:focus-visible,
+.btn-guardar-final:focus-visible,
+.btn-eliminar:focus-visible,
+.form-grupo input:focus-visible,
+.form-grupo select:focus-visible {
+  outline: 3px solid rgba(245, 183, 0, 0.72);
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .disponibilidad-sidebar {
+    border-radius: 0 0 24px 24px;
+  }
+
+  .sidebar-nav a {
+    text-align: center;
+  }
+
+  .btn-salir {
+    width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 420px) {
+  .form-card,
+  .info-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .btn-eliminar {
+    width: 100%;
+  }
+}

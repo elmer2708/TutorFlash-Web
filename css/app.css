@@ -909,3 +909,139 @@ body.tf-modal-open {
     align-items: flex-start;
   }
 }
+
+/* ETAPA 11: pulido responsive y accesibilidad visual */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.tf-hero > *,
+.tf-section > *,
+.tf-tutor-card,
+.tf-resume-card,
+.tf-step-mini,
+.tf-selected-tutor,
+.tf-confirm-detail {
+  min-width: 0;
+}
+
+.tf-tutor-card,
+.tf-empty-tutors,
+.tf-resume-card,
+.tf-step-mini,
+.tf-selected-tutor,
+.tf-confirm-detail {
+  overflow-wrap: anywhere;
+}
+
+.tf-btn,
+.tf-search button,
+.tf-card-btn,
+.tf-courses button,
+.tf-session-logout,
+.tf-modal-close {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.tf-btn:hover,
+.tf-search button:hover,
+.tf-card-btn:hover,
+.tf-session-logout:hover {
+  transform: translateY(-2px);
+}
+
+button:disabled,
+.tf-btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.tf-menu a:focus-visible,
+.tf-btn:focus-visible,
+.tf-search input:focus-visible,
+.tf-search button:focus-visible,
+.tf-courses button:focus-visible,
+.tf-card-btn:focus-visible,
+.tf-session-logout:focus-visible,
+.tf-modal-close:focus-visible {
+  outline: 3px solid rgba(255, 198, 41, 0.75);
+  outline-offset: 3px;
+}
+
+@media (max-width: 980px) {
+  .tf-header {
+    gap: 18px;
+  }
+
+  .tf-menu {
+    gap: 12px;
+  }
+
+  .tf-menu a {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .tf-menu {
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  .tf-menu a,
+  .tf-session-status,
+  .tf-session-logout {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tf-section {
+    padding: 56px 22px;
+  }
+
+  .tf-search button,
+  .tf-card-btn,
+  .tf-form .tf-btn {
+    width: 100%;
+  }
+
+  .tf-tutor-card {
+    padding: 22px 18px;
+    border-radius: 22px;
+  }
+
+  .tf-selected-tutor {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .tf-hero {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .tf-hero h1 {
+    font-size: 2rem;
+  }
+
+  .tf-modal {
+    padding: 12px;
+  }
+}

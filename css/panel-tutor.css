@@ -553,3 +553,103 @@ a {
     align-items: flex-start;
   }
 }
+
+/* ETAPA 11: pulido responsive y consistencia */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+select {
+  font-family: inherit;
+}
+
+.tutor-main,
+.panel-header > *,
+.perfil-card > *,
+.panel-card,
+.stat-card,
+.reserva-card,
+.reserva-grid > *,
+.quick-action {
+  min-width: 0;
+}
+
+.perfil-card,
+.panel-card,
+.stat-card,
+.reserva-card,
+.quick-action,
+.empty-state,
+.mensaje-panel {
+  overflow-wrap: anywhere;
+}
+
+.btn-outline,
+.btn-primary,
+.quick-action,
+.btn-accion,
+.btn-salir {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-outline:hover,
+.btn-primary:hover,
+.quick-action:hover,
+.btn-accion:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:disabled,
+select:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sidebar-nav a:focus-visible,
+.btn-salir:focus-visible,
+.btn-outline:focus-visible,
+.btn-primary:focus-visible,
+.quick-action:focus-visible,
+.btn-accion:focus-visible,
+#filtroReservas:focus-visible {
+  outline: 3px solid rgba(245, 183, 0, 0.72);
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .tutor-sidebar {
+    border-radius: 0 0 24px 24px;
+  }
+
+  .sidebar-nav a {
+    text-align: center;
+  }
+
+  .btn-salir {
+    width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 620px) {
+  .perfil-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reservas-header select,
+  .btn-accion {
+    width: 100%;
+  }
+
+  .reserva-actions {
+    width: 100%;
+  }
+}

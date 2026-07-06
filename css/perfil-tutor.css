@@ -388,3 +388,96 @@ body {
     width: 100%;
   }
 }
+
+/* ETAPA 11: pulido responsive y estados */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.perfil-main,
+.perfil-header > *,
+.perfil-layout > *,
+.preview-card,
+.form-card,
+.form-grupo,
+.preview-info,
+.preview-tags span {
+  min-width: 0;
+}
+
+.preview-card,
+.form-card,
+.mensaje-perfil,
+.preview-info,
+.preview-tags span {
+  overflow-wrap: anywhere;
+}
+
+.btn-outline,
+.btn-primary,
+.btn-guardar,
+.btn-salir,
+.sidebar-nav a {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-outline:hover,
+.btn-primary:hover,
+.btn-guardar:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.sidebar-nav a:focus-visible,
+.btn-salir:focus-visible,
+.btn-outline:focus-visible,
+.btn-primary:focus-visible,
+.btn-guardar:focus-visible,
+.form-grupo input:focus-visible,
+.form-grupo select:focus-visible,
+.form-grupo textarea:focus-visible {
+  outline: 3px solid rgba(245, 183, 0, 0.72);
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .perfil-sidebar {
+    border-radius: 0 0 24px 24px;
+  }
+
+  .sidebar-nav a {
+    text-align: center;
+  }
+
+  .btn-salir {
+    width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 420px) {
+  .form-card,
+  .preview-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+}

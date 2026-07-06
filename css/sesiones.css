@@ -257,3 +257,90 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ETAPA 11: pulido responsive y consistencia */
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+a {
+  font-family: inherit;
+}
+
+.sesiones-main,
+.mis-sesiones,
+.sesion-card,
+.sesion-card-header,
+.sesion-detalles > *,
+.auth-mensaje {
+  min-width: 0;
+}
+
+.sesion-card,
+.sesion-mensaje,
+.auth-mensaje,
+.sesion-detalles {
+  overflow-wrap: anywhere;
+}
+
+.sesiones-header nav a,
+.btn-volver {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-volver:hover {
+  transform: translateY(-2px);
+}
+
+.sesiones-header nav a:focus-visible,
+.btn-volver:focus-visible {
+  outline: 3px solid rgba(245, 183, 0, 0.72);
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .sesiones-header {
+    align-items: center;
+    text-align: center;
+  }
+
+  .sesiones-header nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .sesiones-header nav a {
+    display: inline-flex;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 999px;
+    background: #ffffff;
+  }
+
+  .sesiones-main {
+    padding: 34px 18px 52px;
+  }
+
+  .sesion-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .sesion-estado,
+  .btn-volver {
+    width: 100%;
+  }
+}
+
+@media (max-width: 340px) {
+  .sesiones-header nav {
+    grid-template-columns: 1fr;
+  }
+}

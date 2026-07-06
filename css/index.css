@@ -356,3 +356,35 @@ body {
     font-size: 12px;
   }
 }
+
+/* ETAPA 11: pulido de entrada responsive */
+
+.tf-welcome,
+.tf-logo-card,
+.tf-welcome-title,
+.tf-welcome-actions {
+  min-width: 0;
+}
+
+.tf-welcome-title,
+.tf-welcome-subtitle,
+.tf-enter-btn,
+.tf-link-btn {
+  overflow-wrap: anywhere;
+}
+
+.tf-enter-btn:focus-visible,
+.tf-link-btn:focus-visible {
+  outline: 3px solid rgba(255, 198, 41, 0.8);
+  outline-offset: 4px;
+}
+
+@media (max-height: 620px) and (min-width: 761px) {
+  .tf-logo-card {
+    margin-top: -40px;
+  }
+
+  .tf-welcome-title {
+    margin-top: -150px;
+  }
+}
