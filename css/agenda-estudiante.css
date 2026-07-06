@@ -1,0 +1,160 @@
+/* ==============================
+   TUTORFLASH - AGENDA ESTUDIANTE
+================================= */
+
+.tf-agenda-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.tf-agenda-intro p {
+  max-width: 680px;
+  margin: 10px 0 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.tf-agenda-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-agenda-card h3 {
+  margin: 0;
+  color: #071b3d;
+  font-size: 1.15rem;
+}
+
+.tf-agenda-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.tf-agenda-card strong {
+  color: #071b3d;
+}
+
+.tf-agenda-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tf-agenda-empty {
+  margin: 0;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px dashed rgba(7, 27, 61, 0.16);
+  font-weight: 800;
+}
+
+.tf-agenda-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tf-agenda-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: #123b5d;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.tf-agenda-badge.is-pending {
+  background: #fff3c4;
+  color: #795600;
+}
+
+.tf-agenda-badge.is-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tf-agenda-badge.is-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tf-agenda-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tf-agenda-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: #071b3d;
+  color: white;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.tf-agenda-link:hover {
+  background: #123b5d;
+}
+
+.tf-agenda-link.is-secondary {
+  background: #fff8e8;
+  color: #071b3d;
+  border: 1px solid rgba(7, 27, 61, 0.12);
+}
+
+.tf-agenda-mini-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-agenda-mini-card h3 {
+  margin: 0 0 8px;
+  color: #071b3d;
+  font-size: 1rem;
+}
+
+.tf-agenda-mini-card p {
+  margin: 4px 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1180px) {
+  .tf-agenda-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .tf-agenda-intro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tf-agenda-intro .tf-btn {
+    width: 100%;
+  }
+
+  .tf-agenda-list {
+    grid-template-columns: 1fr;
+  }
+}

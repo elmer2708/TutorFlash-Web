@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorFlash | Mi agenda</title>
+
+    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/agenda-estudiante.css" />
+  </head>
+
+  <body>
+    <div class="tf-student-layout">
+      <!-- MENÚ LATERAL -->
+      <aside class="tf-sidebar">
+        <a href="../index.html" class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
+        </a>
+
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html" class="is-active">📅 Mi agenda</a>
+          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
+          <a href="tutores.html">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html">🔔 Notificaciones</a>
+          <a href="sesiones.html">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+        </nav>
+
+        <div class="tf-sidebar-card">
+          <span>Consejo rápido</span>
+          <p>Revisa tu agenda antes de reservar una nueva tutoría.</p>
+        </div>
+      </aside>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <div class="tf-student-main">
+        <!-- TOPBAR -->
+        <header class="tf-topbar">
+          <div>
+            <span class="tf-page-label">Agenda del estudiante</span>
+            <h1 id="tituloBienvenida">Mi agenda 📅</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <!-- NOTIFICACIONES -->
+            <div class="tf-notification-area">
+              <button
+                class="tf-notification-btn"
+                id="btnNotificaciones"
+                type="button"
+                aria-label="Abrir notificaciones"
+              >
+                🔔
+                <span class="tf-notification-dot">3</span>
+              </button>
+
+              <div
+                class="tf-notifications-panel oculto"
+                id="panelNotificaciones"
+              >
+                <div class="tf-notifications-header">
+                  <strong>Notificaciones</strong>
+                  <button id="cerrarNotificaciones" type="button">×</button>
+                </div>
+
+                <div class="tf-notification-list">
+                  <article class="tf-notification-item">
+                    <strong>📅 Agenda actualizada</strong>
+                    <p>Revisa tus próximas clases programadas.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>💳 Pago pendiente</strong>
+                    <p>Algunas reservas pueden estar pendientes de pago.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>🎥 Clase virtual</strong>
+                    <p>
+                      Cuando el tutor agregue el enlace, podrás entrar desde
+                      aquí.
+                    </p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <!-- AVATAR -->
+            <div class="tf-user-area">
+              <button class="tf-user-chip" id="btnUsuario" type="button">
+                <span class="tf-user-avatar" id="avatarIniciales">U</span>
+
+                <span class="tf-user-meta">
+                  <strong id="nombreUsuarioTop">Verificando...</strong>
+                  <small>Mi cuenta</small>
+                </span>
+              </button>
+
+              <div class="tf-user-dropdown oculto" id="menuUsuario">
+                <button
+                  class="tf-user-dropdown-close"
+                  id="cerrarMenuUsuario"
+                  type="button"
+                >
+                  ×
+                </button>
+
+                <p class="tf-user-email" id="correoUsuarioMenu">
+                  correo@ejemplo.com
+                </p>
+
+                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">
+                  U
+                </div>
+
+                <h3 id="saludoUsuarioMenu">Hola, estudiante</h3>
+
+                <a class="tf-user-dropdown-btn" href="perfil-estudiante.html">
+                  Ver perfil del estudiante
+                </a>
+
+                <button
+                  class="tf-user-dropdown-logout"
+                  id="btnCerrarSesionPortal"
+                  type="button"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main>
+          <!-- INTRO -->
+          <section class="tf-panel-section">
+            <div class="tf-agenda-intro">
+              <div>
+                <span class="tf-label">Mi agenda</span>
+                <h2>Organiza tus próximas tutorías</h2>
+
+                <p>
+                  Aquí podrás ver tus clases pendientes, aceptadas, realizadas y
+                  el estado del pago.
+                </p>
+              </div>
+
+              <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
+                Reservar nueva clase
+              </a>
+            </div>
+          </section>
+
+          <!-- PRÓXIMA CLASE -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Próxima clase</span>
+                <h2>Tu siguiente tutoría</h2>
+              </div>
+            </div>
+
+            <div id="contenedorProximaClase">
+              <p class="tf-agenda-empty">Cargando próxima clase...</p>
+            </div>
+          </section>
+
+          <!-- CLASES DE HOY -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Hoy</span>
+                <h2>Clases de hoy</h2>
+              </div>
+            </div>
+
+            <div id="contenedorClasesHoy" class="tf-agenda-list">
+              <p class="tf-agenda-empty">Cargando clases de hoy...</p>
+            </div>
+          </section>
+
+          <!-- CLASES DE LA SEMANA -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Semana</span>
+                <h2>Clases de esta semana</h2>
+              </div>
+            </div>
+
+            <div id="contenedorClasesSemana" class="tf-agenda-list">
+              <p class="tf-agenda-empty">Cargando clases de la semana...</p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="../js/agenda-estudiante.js"></script>
+  </body>
+</html>
