@@ -38,9 +38,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function normalizarEstado(estado) {
-    const estadoNormalizado = String(estado || "pendiente").toLowerCase();
+    const estadoNormalizado = String(estado || "pendiente")
+      .toLowerCase()
+      .trim();
 
     if (estadoNormalizado === "confirmada") return "aceptada";
+    if (estadoNormalizado === "confirmado") return "aceptada";
+
+    const estadosPermitidos = [
+      "pendiente",
+      "aceptada",
+      "rechazada",
+      "realizada",
+      "cancelada",
+    ];
+
+    if (!estadosPermitidos.includes(estadoNormalizado)) {
+      return "pendiente";
+    }
 
     return estadoNormalizado;
   }
@@ -74,12 +89,60 @@ document.addEventListener("DOMContentLoaded", () => {
     return `estado-${estado}`;
   }
 
+  function convertirHoraAMinutos(textoHora) {
+    const texto = String(textoHora || "")
+      .toLowerCase()
+      .trim();
+
+    const numeros = texto.match(/\d+/g) || [];
+
+    let horas = Number(numeros[0] || 0);
+    const minutos = Number(numeros[1] || 0);
+
+    if ((texto.includes("p.m") || texto.includes("pm")) && horas !== 12) {
+      horas += 12;
+    }
+
+    if ((texto.includes("a.m") || texto.includes("am")) && horas === 12) {
+      horas = 0;
+    }
+
+    return horas * 60 + minutos;
+  }
+
+  function obtenerFechaHoraSesion(sesion) {
+    const fecha = String(sesion.fecha || "");
+    const partesFecha = fecha.split("-").map(Number);
+
+    if (partesFecha.length !== 3) {
+      return null;
+    }
+
+    const [year, month, day] = partesFecha;
+    const minutosTotales = convertirHoraAMinutos(sesion.hora);
+
+    const horas = Math.floor(minutosTotales / 60);
+    const minutos = minutosTotales % 60;
+
+    const fechaHora = new Date(year, month - 1, day, horas, minutos, 0, 0);
+
+    if (Number.isNaN(fechaHora.getTime())) {
+      return null;
+    }
+
+    return fechaHora;
+  }
+
   function ordenarSesiones(sesiones) {
     return [...sesiones].sort((a, b) => {
-      const fechaA = `${a.fecha || ""} ${a.hora || ""}`;
-      const fechaB = `${b.fecha || ""} ${b.hora || ""}`;
+      const fechaA = obtenerFechaHoraSesion(a);
+      const fechaB = obtenerFechaHoraSesion(b);
 
-      return fechaB.localeCompare(fechaA);
+      if (!fechaA && !fechaB) return 0;
+      if (!fechaA) return 1;
+      if (!fechaB) return -1;
+
+      return fechaB - fechaA;
     });
   }
 

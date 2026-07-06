@@ -455,6 +455,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return cursos.map((curso) => corregirCurso(curso));
   };
 
+  const obtenerPrecioTutor = (tutor) => {
+    const precio = Number(tutor.precioHora || tutor.precio);
+
+    if (Number.isFinite(precio) && precio > 0) {
+      return precio;
+    }
+
+    return 25;
+  };
+
   const obtenerRatingTutor = () => {
     return "4.8";
   };
@@ -503,9 +513,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const cursos = corregirListaCursos(separarCursos(tutor.cursos));
     const cursoPrincipal = cursos[0] || "Curso general";
 
-    const precio = Number(
-      tutor.precioHora || tutor.precio || obtenerPrecioTutor(),
-    );
+    const precio = obtenerPrecioTutor(tutor);
+
     const rating = tutor.rating || obtenerRatingTutor();
     const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
 
@@ -521,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `
     <article
       class="tf-tutor-card"
-      data-id="${tutor.id || tutor.uid || ""}"
+      data-id="${tutor.uid || tutor.id || ""}"
       data-tutor="${nombreTutor}"
       data-course="${cursoPrincipal}"
       data-rating="${rating}"
@@ -697,6 +706,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!modal) return;
 
     formReserva?.reset();
+
+    if (btnConfirmarReserva) {
+      btnConfirmarReserva.disabled = false;
+      btnConfirmarReserva.textContent = "Confirmar reserva";
+    }
 
     if (duracionReserva) {
       duracionReserva.value = "30 min";
@@ -876,8 +890,11 @@ document.addEventListener("DOMContentLoaded", () => {
       reservaFormulario.hidden = true;
       reservaConfirmacion.hidden = false;
     } catch (error) {
-      console.error(error);
-      alert("No se pudo guardar la reserva. Inténtalo otra vez.");
+      console.error("Error al guardar reserva:", error);
+
+      alert(
+        error.message || "No se pudo guardar la reserva. Inténtalo otra vez.",
+      );
 
       if (btnConfirmarReserva) {
         btnConfirmarReserva.disabled = false;

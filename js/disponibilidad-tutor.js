@@ -145,7 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const disponibilidad = await obtenerDisponibilidadTutorActual();
 
       bloquesHorario = Array.isArray(disponibilidad.bloques)
-        ? disponibilidad.bloques
+        ? disponibilidad.bloques.map((bloque) => ({
+            ...bloque,
+            activo: bloque.activo !== false,
+          }))
         : [];
 
       pintarBloques();
@@ -159,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error("Error al cargar disponibilidad:", error);
-      mostrarMensaje("No se pudo cargar tu disponibilidad.");
+      mostrarMensaje(error.message || "No se pudo cargar tu disponibilidad.");
     }
   }
 

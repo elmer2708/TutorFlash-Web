@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let tutorActual = null;
   let reservasActuales = [];
+  let accionReservaEnProceso = false;
 
   function mostrarMensaje(texto, tipo = "info") {
     if (!panelMensaje) return;
@@ -487,10 +488,23 @@ document.addEventListener("DOMContentLoaded", () => {
     listaReservasTutor.addEventListener("click", async (event) => {
       const boton = event.target.closest("[data-id][data-estado]");
 
-      if (!boton) return;
+      if (!boton || accionReservaEnProceso) return;
 
       const reservaId = boton.dataset.id;
-      const nuevoEstado = boton.dataset.estado;
+      const nuevoEstado = normalizarEstado(boton.dataset.estado);
+
+      const estadosPermitidosDesdePanel = [
+        "aceptada",
+        "rechazada",
+        "realizada",
+        "cancelada",
+      ];
+
+      if (!reservaId || !estadosPermitidosDesdePanel.includes(nuevoEstado)) {
+        mostrarMensaje("La acción seleccionada no es válida.", "error");
+        return;
+      }
+
       const mensajesConfirmacion = {
         aceptada: "¿Deseas aceptar esta reserva?",
         rechazada: "¿Deseas rechazar esta reserva?",
@@ -506,10 +520,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      const tarjeta = boton.closest(".reserva-card");
+      const botonesTarjeta = tarjeta
+        ? tarjeta.querySelectorAll("[data-id][data-estado]")
+        : [boton];
+
       const textoOriginalBoton = boton.textContent;
 
       try {
-        boton.disabled = true;
+        accionReservaEnProceso = true;
+
+        botonesTarjeta.forEach((btn) => {
+          btn.disabled = true;
+        });
+
         boton.textContent = "Actualizando...";
 
         await actualizarEstadoReserva(reservaId, nuevoEstado);
@@ -525,13 +549,18 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error("Error al actualizar reserva:", error);
 
-        boton.disabled = false;
+        botonesTarjeta.forEach((btn) => {
+          btn.disabled = false;
+        });
+
         boton.textContent = textoOriginalBoton;
 
         mostrarMensaje(
-          "No se pudo actualizar el estado de la reserva.",
+          error.message || "No se pudo actualizar el estado de la reserva.",
           "error",
         );
+      } finally {
+        accionReservaEnProceso = false;
       }
     });
   }
