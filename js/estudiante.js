@@ -1,193 +1,332 @@
-import { observarUsuario, cerrarSesion } from "./firebase-service.js";
+import {
+  observarUsuario,
+  cerrarSesion,
+  obtenerPerfilUsuarioActual,
+  obtenerMisSesiones,
+} from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const textoSesionApp = document.querySelector("#textoSesionApp");
-  const subtextoSesionApp = document.querySelector("#subtextoSesionApp");
-  const usuarioAvatar = document.querySelector("#usuarioAvatar");
-  const btnUsuarioMenu = document.querySelector("#btnUsuarioMenu");
-  const usuarioMenu = document.querySelector("#usuarioMenu");
-  const btnCerrarUsuarioMenu = document.querySelector("#btnCerrarUsuarioMenu");
-  const usuarioCorreo = document.querySelector("#usuarioCorreo");
-  const usuarioAvatarGrande = document.querySelector("#usuarioAvatarGrande");
-  const usuarioNombreGrande = document.querySelector("#usuarioNombreGrande");
+  const btnUsuario = document.querySelector("#btnUsuario");
+  const menuUsuario = document.querySelector("#menuUsuario");
+  const cerrarMenuUsuario = document.querySelector("#cerrarMenuUsuario");
+  const btnCerrarSesionPortal = document.querySelector(
+    "#btnCerrarSesionPortal",
+  );
+
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
-  const btnCerrarSesionApp = document.querySelector("#btnCerrarSesionApp");
+  const avatarIniciales = document.querySelector("#avatarIniciales");
+  const avatarInicialesMenu = document.querySelector("#avatarInicialesMenu");
+  const nombreUsuarioTop = document.querySelector("#nombreUsuarioTop");
+  const correoUsuarioMenu = document.querySelector("#correoUsuarioMenu");
+  const saludoUsuarioMenu = document.querySelector("#saludoUsuarioMenu");
 
-  const capitalizarPalabra = (texto) => {
-    const valor = String(texto || "").trim();
+  const btnNotificaciones = document.querySelector("#btnNotificaciones");
+  const panelNotificaciones = document.querySelector("#panelNotificaciones");
+  const cerrarNotificaciones = document.querySelector("#cerrarNotificaciones");
 
-    if (!valor) return "";
+  const totalPendientes = document.querySelector("#totalPendientes");
+  const totalAceptadas = document.querySelector("#totalAceptadas");
+  const totalRealizadas = document.querySelector("#totalRealizadas");
+  const totalInvertido = document.querySelector("#totalInvertido");
 
-    return valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
-  };
+  const proximaCurso = document.querySelector("#proximaCurso");
+  const proximaTutor = document.querySelector("#proximaTutor");
+  const proximaFecha = document.querySelector("#proximaFecha");
+  const proximaHora = document.querySelector("#proximaHora");
+  const proximaEstado = document.querySelector("#proximaEstado");
 
-  const obtenerNombreUsuario = (usuario) => {
-    if (!usuario) return "Invitado";
+  function obtenerNombreUsuario(usuario, perfil) {
+    return (
+      perfil?.nombre ||
+      perfil?.nombreCompleto ||
+      perfil?.nombreUsuario ||
+      usuario?.displayName ||
+      "estudiante"
+    );
+  }
 
-    const nombreDirecto = String(usuario.displayName || "").trim();
+  function obtenerIniciales(nombre, correo) {
+    const texto = String(nombre || correo || "Usuario").trim();
 
-    if (nombreDirecto) {
-      return nombreDirecto;
+    const partes = texto.replace("@", " ").split(" ").filter(Boolean);
+
+    const inicial1 = partes[0]?.charAt(0) || "U";
+    const inicial2 = partes[1]?.charAt(0) || "";
+
+    return `${inicial1}${inicial2}`.toUpperCase();
+  }
+
+  function normalizarEstado(estado) {
+    const estadoNormalizado = String(estado || "pendiente")
+      .toLowerCase()
+      .trim();
+
+    if (estadoNormalizado === "confirmada") return "aceptada";
+    if (estadoNormalizado === "confirmado") return "aceptada";
+    if (estadoNormalizado === "aceptado") return "aceptada";
+    if (estadoNormalizado === "completada") return "realizada";
+    if (estadoNormalizado === "completado") return "realizada";
+
+    return estadoNormalizado;
+  }
+
+  function formatearFecha(fecha) {
+    if (!fecha || !String(fecha).includes("-")) return "No registrada";
+
+    const [year, mes, dia] = String(fecha).split("-");
+    return `${dia}/${mes}/${year}`;
+  }
+
+  function convertirHoraAMinutos(textoHora) {
+    const texto = String(textoHora || "")
+      .toLowerCase()
+      .trim();
+
+    const numeros = texto.match(/\d+/g) || [];
+
+    let horas = Number(numeros[0] || 0);
+    const minutos = Number(numeros[1] || 0);
+
+    if ((texto.includes("p.m") || texto.includes("pm")) && horas !== 12) {
+      horas += 12;
     }
 
-    const correo = String(usuario.email || "").trim();
-
-    if (!correo) {
-      return "Usuario";
+    if ((texto.includes("a.m") || texto.includes("am")) && horas === 12) {
+      horas = 0;
     }
 
-    const base = correo.split("@")[0];
+    return horas * 60 + minutos;
+  }
 
-    return base
-      .split(/[.\-_ ]+/)
-      .filter(Boolean)
-      .map((parte) => capitalizarPalabra(parte))
-      .join(" ");
-  };
+  function obtenerFechaHoraSesion(sesion) {
+    const partesFecha = String(sesion.fecha || "")
+      .split("-")
+      .map(Number);
 
-  const obtenerInicialesUsuario = (nombre) => {
-    const partes = String(nombre || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
+    if (partesFecha.length !== 3) return null;
 
-    if (partes.length >= 2) {
-      return `${partes[0][0]}${partes[1][0]}`.toUpperCase();
-    }
+    const [year, month, day] = partesFecha;
 
-    if (partes.length === 1) {
-      return partes[0].slice(0, 2).toUpperCase();
-    }
+    const minutosTotales = convertirHoraAMinutos(sesion.hora);
+    const horas = Math.floor(minutosTotales / 60);
+    const minutos = minutosTotales % 60;
 
-    return "U";
-  };
+    const fechaHora = new Date(year, month - 1, day, horas, minutos, 0, 0);
 
-  const pintarAvatarUsuario = (contenedor, usuario, iniciales) => {
-    if (!contenedor) return;
+    if (Number.isNaN(fechaHora.getTime())) return null;
 
-    if (usuario?.photoURL) {
-      contenedor.innerHTML = `
-        <img src="${usuario.photoURL}" alt="Foto de perfil" />
-      `;
-      return;
-    }
+    return fechaHora;
+  }
 
-    contenedor.textContent = iniciales;
-  };
+  function obtenerTotalSesion(sesion) {
+    return (
+      Number(sesion.total) ||
+      Number(sesion.totalReserva) ||
+      Number(sesion.montoTotal) ||
+      Number(sesion.precioTotal) ||
+      0
+    );
+  }
 
-  const abrirMenuUsuario = () => {
-    if (!usuarioMenu || !btnUsuarioMenu) return;
-
-    usuarioMenu.hidden = false;
-    btnUsuarioMenu.setAttribute("aria-expanded", "true");
-  };
-
-  const cerrarMenuUsuario = () => {
-    if (!usuarioMenu || !btnUsuarioMenu) return;
-
-    usuarioMenu.hidden = true;
-    btnUsuarioMenu.setAttribute("aria-expanded", "false");
-  };
-
-  btnUsuarioMenu?.addEventListener("click", (event) => {
-    event.stopPropagation();
-
-    if (usuarioMenu?.hidden) {
-      abrirMenuUsuario();
-    } else {
-      cerrarMenuUsuario();
-    }
-  });
-
-  btnCerrarUsuarioMenu?.addEventListener("click", cerrarMenuUsuario);
-
-  document.addEventListener("click", (event) => {
-    if (!usuarioMenu || usuarioMenu.hidden) return;
-
-    const hizoClickDentro = usuarioMenu.contains(event.target);
-    const hizoClickEnBoton = btnUsuarioMenu?.contains(event.target);
-
-    if (!hizoClickDentro && !hizoClickEnBoton) {
-      cerrarMenuUsuario();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      cerrarMenuUsuario();
-    }
-  });
-
-  observarUsuario((usuario) => {
-    if (usuario) {
-      const nombreMostrado = obtenerNombreUsuario(usuario);
-      const primerNombre = nombreMostrado.split(" ")[0];
-      const iniciales = obtenerInicialesUsuario(nombreMostrado);
-      const correo = usuario.email || "Correo no disponible";
-
-      if (textoSesionApp) {
-        textoSesionApp.textContent = nombreMostrado;
-        textoSesionApp.title = correo;
-      }
-
-      if (subtextoSesionApp) {
-        subtextoSesionApp.textContent = "Mi cuenta";
-      }
-
-      if (usuarioCorreo) {
-        usuarioCorreo.textContent = correo;
-      }
-
-      if (usuarioNombreGrande) {
-        usuarioNombreGrande.textContent = `¡Hola, ${primerNombre}!`;
-      }
-
-      if (tituloBienvenida) {
-        tituloBienvenida.textContent = `Hola, ${primerNombre} 👋`;
-      }
-
-      pintarAvatarUsuario(usuarioAvatar, usuario, iniciales);
-      pintarAvatarUsuario(usuarioAvatarGrande, usuario, iniciales);
-
-      btnCerrarSesionApp?.classList.remove("oculto");
-      return;
-    }
-
-    if (textoSesionApp) {
-      textoSesionApp.textContent = "Invitado";
-      textoSesionApp.title = "No has iniciado sesión";
-    }
-
-    if (subtextoSesionApp) {
-      subtextoSesionApp.textContent = "Inicia sesión";
-    }
-
-    if (usuarioCorreo) {
-      usuarioCorreo.textContent = "No has iniciado sesión";
-    }
-
-    if (usuarioNombreGrande) {
-      usuarioNombreGrande.textContent = "Hola, invitado";
-    }
+  function mostrarDatosUsuario(usuario, perfil) {
+    const nombre = obtenerNombreUsuario(usuario, perfil);
+    const correo = usuario?.email || perfil?.correo || "correo@ejemplo.com";
+    const iniciales = obtenerIniciales(nombre, correo);
 
     if (tituloBienvenida) {
-      tituloBienvenida.textContent = "Hola, estudiante 👋";
+      tituloBienvenida.textContent = `Hola, ${nombre} 👋`;
     }
 
-    pintarAvatarUsuario(usuarioAvatar, null, "U");
-    pintarAvatarUsuario(usuarioAvatarGrande, null, "U");
+    if (nombreUsuarioTop) {
+      nombreUsuarioTop.textContent = nombre;
+    }
 
-    btnCerrarSesionApp?.classList.add("oculto");
-  });
+    if (correoUsuarioMenu) {
+      correoUsuarioMenu.textContent = correo;
+    }
 
-  btnCerrarSesionApp?.addEventListener("click", async () => {
+    if (saludoUsuarioMenu) {
+      saludoUsuarioMenu.textContent = `¡Hola, ${nombre}!`;
+    }
+
+    if (avatarIniciales) {
+      avatarIniciales.textContent = iniciales;
+    }
+
+    if (avatarInicialesMenu) {
+      avatarInicialesMenu.textContent = iniciales;
+    }
+  }
+
+  function mostrarResumenSesiones(sesiones = []) {
+    const pendientes = sesiones.filter(
+      (sesion) => normalizarEstado(sesion.estado) === "pendiente",
+    ).length;
+
+    const aceptadas = sesiones.filter(
+      (sesion) => normalizarEstado(sesion.estado) === "aceptada",
+    ).length;
+
+    const realizadas = sesiones.filter(
+      (sesion) => normalizarEstado(sesion.estado) === "realizada",
+    ).length;
+
+    const invertido = sesiones.reduce((acumulado, sesion) => {
+      return acumulado + obtenerTotalSesion(sesion);
+    }, 0);
+
+    if (totalPendientes) totalPendientes.textContent = pendientes;
+    if (totalAceptadas) totalAceptadas.textContent = aceptadas;
+    if (totalRealizadas) totalRealizadas.textContent = realizadas;
+    if (totalInvertido) {
+      totalInvertido.textContent = `S/ ${invertido.toFixed(2)}`;
+    }
+  }
+
+  function mostrarProximaSesion(sesiones = []) {
+    const ahora = new Date();
+
+    const proximas = sesiones
+      .map((sesion) => ({
+        ...sesion,
+        fechaHora: obtenerFechaHoraSesion(sesion),
+      }))
+      .filter((sesion) => {
+        const estado = normalizarEstado(sesion.estado);
+
+        return (
+          sesion.fechaHora &&
+          sesion.fechaHora >= ahora &&
+          ["pendiente", "aceptada"].includes(estado)
+        );
+      })
+      .sort((a, b) => a.fechaHora - b.fechaHora);
+
+    const proxima = proximas[0];
+
+    if (!proxima) {
+      if (proximaCurso) proximaCurso.textContent = "Aún no hay próxima sesión";
+      if (proximaTutor) proximaTutor.textContent = "-";
+      if (proximaFecha) proximaFecha.textContent = "-";
+      if (proximaHora) proximaHora.textContent = "-";
+      if (proximaEstado) proximaEstado.textContent = "Pendiente";
+      return;
+    }
+
+    const estado = normalizarEstado(proxima.estado);
+
+    if (proximaCurso) {
+      proximaCurso.textContent = proxima.curso || "Tutoría";
+    }
+
+    if (proximaTutor) {
+      proximaTutor.textContent =
+        proxima.tutor ||
+        proxima.nombreTutor ||
+        proxima.tutorNombre ||
+        "No registrado";
+    }
+
+    if (proximaFecha) {
+      proximaFecha.textContent = formatearFecha(proxima.fecha);
+    }
+
+    if (proximaHora) {
+      proximaHora.textContent = proxima.hora || "No registrada";
+    }
+
+    if (proximaEstado) {
+      proximaEstado.textContent =
+        estado.charAt(0).toUpperCase() + estado.slice(1);
+    }
+  }
+
+  async function cargarPanel(usuario) {
     try {
-      await cerrarSesion();
-      cerrarMenuUsuario();
-      alert("Sesión cerrada correctamente.");
+      const perfil = await obtenerPerfilUsuarioActual();
+      mostrarDatosUsuario(usuario, perfil);
+
+      const sesiones = await obtenerMisSesiones();
+      mostrarResumenSesiones(sesiones);
+      mostrarProximaSesion(sesiones);
     } catch (error) {
       console.error(error);
-      alert("No se pudo cerrar sesión.");
+      mostrarDatosUsuario(usuario, null);
+      mostrarResumenSesiones([]);
+      mostrarProximaSesion([]);
     }
+  }
+
+  if (btnUsuario && menuUsuario) {
+    btnUsuario.addEventListener("click", () => {
+      menuUsuario.classList.toggle("oculto");
+
+      if (panelNotificaciones) {
+        panelNotificaciones.classList.add("oculto");
+      }
+    });
+  }
+
+  if (cerrarMenuUsuario && menuUsuario) {
+    cerrarMenuUsuario.addEventListener("click", () => {
+      menuUsuario.classList.add("oculto");
+    });
+  }
+
+  if (btnNotificaciones && panelNotificaciones) {
+    btnNotificaciones.addEventListener("click", () => {
+      panelNotificaciones.classList.toggle("oculto");
+
+      if (menuUsuario) {
+        menuUsuario.classList.add("oculto");
+      }
+    });
+  }
+
+  if (cerrarNotificaciones && panelNotificaciones) {
+    cerrarNotificaciones.addEventListener("click", () => {
+      panelNotificaciones.classList.add("oculto");
+    });
+  }
+
+  document.addEventListener("click", (evento) => {
+    if (
+      menuUsuario &&
+      btnUsuario &&
+      !menuUsuario.contains(evento.target) &&
+      !btnUsuario.contains(evento.target)
+    ) {
+      menuUsuario.classList.add("oculto");
+    }
+
+    if (
+      panelNotificaciones &&
+      btnNotificaciones &&
+      !panelNotificaciones.contains(evento.target) &&
+      !btnNotificaciones.contains(evento.target)
+    ) {
+      panelNotificaciones.classList.add("oculto");
+    }
+  });
+
+  if (btnCerrarSesionPortal) {
+    btnCerrarSesionPortal.addEventListener("click", async () => {
+      try {
+        await cerrarSesion();
+        window.location.href = "cuenta.html";
+      } catch (error) {
+        console.error(error);
+        alert("No se pudo cerrar sesión.");
+      }
+    });
+  }
+
+  observarUsuario((usuario) => {
+    if (!usuario) {
+      window.location.href = "cuenta.html";
+      return;
+    }
+
+    cargarPanel(usuario);
   });
 });
