@@ -179,10 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const diaSeleccionado = normalizarDia(obtenerDiaPorFecha(fecha));
 
     return bloques.filter((bloque) => {
-      return bloque.activo && normalizarDia(bloque.dia) === diaSeleccionado;
+      return (
+        bloque.activo !== false && normalizarDia(bloque.dia) === diaSeleccionado
+      );
     });
   };
-
   const horaEstaEnBloques = (hora, bloques) => {
     const minutosHora = convertirHoraAMinutos(hora);
 
@@ -191,6 +192,48 @@ document.addEventListener("DOMContentLoaded", () => {
       const fin = convertirHoraAMinutos(bloque.horaFin);
 
       return minutosHora >= inicio && minutosHora < fin;
+    });
+  };
+
+  const formatearMinutosAHora = (minutosTotales) => {
+    const horas = Math.floor(minutosTotales / 60);
+    const minutos = minutosTotales % 60;
+
+    return `${String(horas).padStart(2, "0")}:${String(minutos).padStart(2, "0")}`;
+  };
+
+  const horaCabeEnBloques = (hora, bloques) => {
+    const inicioHora = convertirHoraAMinutos(hora);
+    const finHora = inicioHora + obtenerMinutosDuracion(duracionReserva?.value);
+
+    return bloques.some((bloque) => {
+      const inicio = convertirHoraAMinutos(bloque.horaInicio);
+      const fin = convertirHoraAMinutos(bloque.horaFin);
+
+      return inicioHora >= inicio && finHora <= fin;
+    });
+  };
+
+  const generarHorasDesdeBloques = (bloques) => {
+    const intervalo = 30;
+    const duracion = obtenerMinutosDuracion(duracionReserva?.value);
+    const horas = [];
+
+    bloques.forEach((bloque) => {
+      const inicio = convertirHoraAMinutos(bloque.horaInicio);
+      const fin = convertirHoraAMinutos(bloque.horaFin);
+
+      for (
+        let minutos = inicio;
+        minutos + duracion <= fin;
+        minutos += intervalo
+      ) {
+        horas.push(formatearMinutosAHora(minutos));
+      }
+    });
+
+    return [...new Set(horas)].sort((a, b) => {
+      return convertirHoraAMinutos(a) - convertirHoraAMinutos(b);
     });
   };
 
@@ -280,14 +323,17 @@ document.addEventListener("DOMContentLoaded", () => {
     await cargarReservasOcupadasTutor();
 
     const esHoy = fechaEsHoy(fechaReserva.value);
-    const opcionesOriginales = horasBaseReserva;
 
     const bloquesDelDia = obtenerBloquesActivosDelDia(fechaReserva.value);
     const tieneDisponibilidadReal = tutorTieneDisponibilidadConfigurada();
 
+    const opcionesOriginales = tieneDisponibilidadReal
+      ? generarHorasDesdeBloques(bloquesDelDia)
+      : horasBaseReserva;
+
     const horasDisponibles = opcionesOriginales.filter((hora) => {
       const fueraDeHorarioTutor =
-        tieneDisponibilidadReal && !horaEstaEnBloques(hora, bloquesDelDia);
+        tieneDisponibilidadReal && !horaCabeEnBloques(hora, bloquesDelDia);
 
       const horaPasada = esHoy && horaYaPaso(hora);
       const horaOcupada = horaChocaConReserva(hora);
@@ -843,7 +889,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       tutorTieneDisponibilidadConfigurada() &&
-      !horaEstaEnBloques(horaReserva.value, bloquesDelDia)
+      !horaCabeEnBloques(horaReserva.value, bloquesDelDia)
     ) {
       alert("Ese horario no está dentro de la disponibilidad del tutor.");
       return;
