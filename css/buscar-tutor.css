@@ -1,0 +1,616 @@
+/* ==============================
+   TUTORFLASH - BUSCAR TUTOR
+================================= */
+
+body.tf-modal-open {
+  overflow: hidden;
+}
+
+/* INTRO */
+
+.tf-search-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  margin-bottom: 14px;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 12% 20%,
+      rgba(255, 198, 41, 0.25),
+      transparent 28%
+    ),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+}
+
+.tf-search-hero h2 {
+  margin: 0;
+  color: #071b3d;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  line-height: 1.05;
+}
+
+.tf-search-hero p {
+  max-width: 660px;
+  margin: 10px 0 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* BUSCADOR */
+
+.tf-search-box {
+  display: grid;
+  gap: 16px;
+}
+
+.tf-search-main {
+  display: grid;
+  gap: 8px;
+}
+
+.tf-search-main label,
+.tf-search-filters label {
+  color: #071b3d;
+  font-weight: 900;
+}
+
+.tf-search-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid rgba(7, 27, 61, 0.1);
+}
+
+.tf-search-row input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  padding: 0 14px;
+  background: transparent;
+  color: #071b3d;
+  font-size: 1rem;
+}
+
+.tf-search-row button {
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: #071b3d;
+  color: white;
+  font-weight: 900;
+  transition: 0.2s ease;
+}
+
+.tf-search-row button:hover {
+  transform: translateY(-2px);
+  background: #123b5d;
+}
+
+.tf-search-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tf-search-filters label {
+  display: grid;
+  gap: 8px;
+}
+
+.tf-search-filters select {
+  width: 100%;
+  border: 1px solid rgba(7, 27, 61, 0.12);
+  border-radius: 16px;
+  padding: 13px 14px;
+  background: white;
+  color: #071b3d;
+  outline: none;
+  font-weight: 700;
+}
+
+.tf-search-row input:focus,
+.tf-search-filters select:focus {
+  box-shadow: 0 0 0 4px rgba(255, 198, 41, 0.24);
+}
+
+.tf-search-message {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+/* CURSOS RÁPIDOS */
+
+.tf-courses {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tf-courses button {
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  cursor: pointer;
+  background: white;
+  color: #071b3d;
+  padding: 15px 12px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(7, 27, 61, 0.05);
+  transition: 0.2s ease;
+}
+
+.tf-courses button:hover {
+  transform: translateY(-3px);
+  background: #fffaf0;
+  box-shadow: 0 16px 32px rgba(7, 27, 61, 0.1);
+}
+
+/* LISTA DE TUTORES */
+
+.tf-tutors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tf-tutor-card {
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  border-radius: 22px;
+  background: white;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+  transition: 0.2s ease;
+}
+
+.tf-tutor-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  background: linear-gradient(90deg, #071b3d, #ffc629);
+}
+
+.tf-tutor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(7, 27, 61, 0.12);
+}
+
+.tf-tutor-card.is-hidden {
+  display: none;
+}
+
+.tf-avatar {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #ffc629;
+  color: #071b3d;
+  font-size: 1.45rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.tf-tutor-card h3 {
+  margin: 0 0 8px;
+  color: #071b3d;
+  font-size: 1.22rem;
+}
+
+.tf-tutor-courses {
+  margin: 0 0 9px;
+  color: #123b5d;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.tf-tutor-description {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.tf-tutor-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.tf-tutor-tags span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: #123b5d;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.tf-tutor-meta {
+  display: block;
+  margin-bottom: 8px;
+  color: #16834a;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.tf-tutor-price {
+  display: block;
+  margin-bottom: 14px;
+  color: #071b3d;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.tf-tutor-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.tf-card-btn,
+.tf-favorite-btn {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-weight: 900;
+  transition: 0.2s ease;
+}
+
+.tf-card-btn {
+  background: #071b3d;
+  color: white;
+}
+
+.tf-card-btn:hover {
+  transform: translateY(-2px);
+  background: #123b5d;
+}
+
+.tf-favorite-btn {
+  background: #fff8e8;
+  color: #071b3d;
+  border: 1px solid rgba(7, 27, 61, 0.12);
+}
+
+.tf-favorite-btn:hover {
+  transform: translateY(-2px);
+  background: #fff3c4;
+}
+
+.tf-empty-tutors {
+  grid-column: 1 / -1;
+  padding: 24px;
+  border-radius: 22px;
+  background: #f8fafc;
+  text-align: center;
+  border: 1px dashed rgba(7, 27, 61, 0.18);
+}
+
+.tf-empty-tutors h3 {
+  margin: 0 0 8px;
+  color: #071b3d;
+}
+
+.tf-empty-tutors p {
+  margin: 0;
+  color: #64748b;
+}
+
+/* MODAL */
+
+.tf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.tf-modal.is-open {
+  display: flex;
+}
+
+.tf-modal-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 27, 61, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.tf-modal-box {
+  position: relative;
+  z-index: 2;
+  width: min(680px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 26px;
+  padding: 24px;
+  box-shadow: 0 30px 90px rgba(7, 27, 61, 0.35);
+}
+
+.tf-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #071b3d;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.tf-modal-label {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #fff3c4;
+  color: #071b3d;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.tf-modal-box h2 {
+  margin: 10px 0 14px;
+  color: #071b3d;
+  font-size: 1.45rem;
+}
+
+.tf-selected-tutor {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-selected-tutor .tf-avatar {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.tf-selected-tutor h3 {
+  margin: 0 0 4px;
+  color: #071b3d;
+}
+
+.tf-selected-tutor p {
+  margin: 0 0 4px;
+  color: #64748b;
+}
+
+.tf-selected-tutor span {
+  color: #16834a;
+  font-weight: 900;
+}
+
+/* FORMULARIO DE RESERVA */
+
+.tf-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tf-form label {
+  display: grid;
+  gap: 7px;
+  color: #071b3d;
+  font-weight: 900;
+}
+
+.tf-form input,
+.tf-form select {
+  width: 100%;
+  border: 1px solid rgba(7, 27, 61, 0.14);
+  border-radius: 16px;
+  padding: 12px 13px;
+  background: white;
+  color: #071b3d;
+  outline: none;
+  font-size: 0.96rem;
+}
+
+.tf-form input:focus,
+.tf-form select:focus {
+  border-color: #ffc629;
+  box-shadow: 0 0 0 4px rgba(255, 198, 41, 0.24);
+}
+
+.tf-payment-preview {
+  grid-column: 1 / -1;
+  padding: 14px;
+  border-radius: 18px;
+  background: #fffaf0;
+  border: 1px solid rgba(255, 198, 41, 0.35);
+}
+
+.tf-payment-preview strong {
+  display: block;
+  color: #071b3d;
+  margin-bottom: 5px;
+}
+
+.tf-payment-preview span {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 7px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff3c4;
+  color: #795600;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.tf-payment-preview p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.4;
+  font-size: 0.9rem;
+}
+
+.tf-reserva-total {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #071b3d;
+  color: white;
+}
+
+.tf-reserva-total strong {
+  color: #ffc629;
+  font-size: 1.2rem;
+}
+
+.tf-form .tf-btn {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* CONFIRMACIÓN */
+
+.tf-confirmation {
+  text-align: center;
+}
+
+.tf-check {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #22c55e;
+  color: white;
+  font-size: 2.3rem;
+  font-weight: 900;
+}
+
+.tf-confirmation h2 {
+  margin: 0 0 8px;
+  color: #071b3d;
+}
+
+.tf-confirmation > p {
+  margin: 0 0 16px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.tf-confirm-detail {
+  text-align: left;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+}
+
+.tf-confirm-detail p {
+  margin: 7px 0;
+  color: #475569;
+}
+
+.tf-confirm-detail strong {
+  color: #071b3d;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1180px) {
+  .tf-tutors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tf-courses {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .tf-search-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tf-search-hero .tf-btn {
+    width: 100%;
+  }
+
+  .tf-search-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-tutors,
+  .tf-courses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .tf-search-row {
+    border-radius: 20px;
+    flex-direction: column;
+  }
+
+  .tf-search-row input {
+    padding: 12px;
+  }
+
+  .tf-search-row button {
+    width: 100%;
+  }
+
+  .tf-tutors,
+  .tf-courses {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-form {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-modal {
+    padding: 12px;
+  }
+
+  .tf-modal-box {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .tf-selected-tutor {
+    align-items: flex-start;
+  }
+}

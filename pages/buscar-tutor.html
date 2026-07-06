@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorFlash | Buscar tutor</title>
+
+    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/buscar-tutor.css" />
+  </head>
+
+  <body>
+    <div class="tf-student-layout">
+      <!-- MENÚ LATERAL -->
+      <aside class="tf-sidebar">
+        <a href="../index.html" class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
+        </a>
+
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html">📅 Mi agenda</a>
+          <a href="buscar-tutor.html" class="is-active">🔎 Buscar tutor</a>
+          <a href="tutores.html">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html">🔔 Notificaciones</a>
+          <a href="sesiones.html">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+        </nav>
+
+        <div class="tf-sidebar-card">
+          <span>Consejo rápido</span>
+          <p>Busca por curso y revisa la disponibilidad antes de reservar.</p>
+        </div>
+      </aside>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <div class="tf-student-main">
+        <!-- TOPBAR -->
+        <header class="tf-topbar">
+          <div>
+            <span class="tf-page-label">Buscar tutor</span>
+            <h1 id="tituloBienvenida">Encuentra tu tutor 🔎</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <!-- NOTIFICACIONES -->
+            <div class="tf-notification-area">
+              <button
+                class="tf-notification-btn"
+                id="btnNotificaciones"
+                type="button"
+                aria-label="Abrir notificaciones"
+              >
+                🔔
+                <span class="tf-notification-dot">3</span>
+              </button>
+
+              <div
+                class="tf-notifications-panel oculto"
+                id="panelNotificaciones"
+              >
+                <div class="tf-notifications-header">
+                  <strong>Notificaciones</strong>
+                  <button id="cerrarNotificaciones" type="button">×</button>
+                </div>
+
+                <div class="tf-notification-list">
+                  <article class="tf-notification-item">
+                    <strong>🔎 Búsqueda activa</strong>
+                    <p>Filtra tutores por curso, modalidad y precio.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>📅 Disponibilidad real</strong>
+                    <p>Los horarios se mostrarán según cada tutor.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>💳 Pago pendiente</strong>
+                    <p>La reserva quedará con pago pendiente.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <!-- AVATAR -->
+            <div class="tf-user-area">
+              <button class="tf-user-chip" id="btnUsuario" type="button">
+                <span class="tf-user-avatar" id="avatarIniciales">U</span>
+
+                <span class="tf-user-meta">
+                  <strong id="nombreUsuarioTop">Verificando...</strong>
+                  <small>Mi cuenta</small>
+                </span>
+              </button>
+
+              <div class="tf-user-dropdown oculto" id="menuUsuario">
+                <button
+                  class="tf-user-dropdown-close"
+                  id="cerrarMenuUsuario"
+                  type="button"
+                >
+                  ×
+                </button>
+
+                <p class="tf-user-email" id="correoUsuarioMenu">
+                  correo@ejemplo.com
+                </p>
+
+                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">
+                  U
+                </div>
+
+                <h3 id="saludoUsuarioMenu">Hola, estudiante</h3>
+
+                <a class="tf-user-dropdown-btn" href="perfil-estudiante.html">
+                  Ver perfil del estudiante
+                </a>
+
+                <button
+                  class="tf-user-dropdown-logout"
+                  id="btnCerrarSesionPortal"
+                  type="button"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main>
+          <!-- INTRO -->
+          <section class="tf-search-hero">
+            <div>
+              <span class="tf-label">Buscar tutor</span>
+              <h2>Reserva una tutoría rápida</h2>
+              <p>
+                Encuentra tutores activos, revisa sus cursos, precios y
+                disponibilidad real antes de reservar.
+              </p>
+            </div>
+
+            <a href="agenda-estudiante.html" class="tf-btn tf-btn-secondary">
+              Ver mi agenda
+            </a>
+          </section>
+
+          <!-- BUSCADOR -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Filtros</span>
+                <h2>¿Qué curso necesitas?</h2>
+              </div>
+            </div>
+
+            <div class="tf-search-box">
+              <div class="tf-search-main">
+                <label for="buscarCurso">Curso o tema</label>
+
+                <div class="tf-search-row">
+                  <input
+                    id="buscarCurso"
+                    type="search"
+                    placeholder="Ejemplo: Matemática, Inglés, Contabilidad"
+                  />
+
+                  <button id="btnBuscar" type="button">Buscar</button>
+                </div>
+              </div>
+
+              <div class="tf-search-filters">
+                <label>
+                  Nivel
+                  <select id="filtroNivel">
+                    <option value="">Todos los niveles</option>
+                    <option value="primaria">Primaria</option>
+                    <option value="secundaria">Secundaria</option>
+                    <option value="preuniversitario">Preuniversitario</option>
+                    <option value="universitario">Universitario</option>
+                  </select>
+                </label>
+
+                <label>
+                  Modalidad
+                  <select id="filtroModalidad">
+                    <option value="">Todas las modalidades</option>
+                    <option value="virtual">Virtual</option>
+                    <option value="presencial">Presencial</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- CURSOS RÁPIDOS -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Cursos rápidos</span>
+                <h2>Elige un curso frecuente</h2>
+              </div>
+            </div>
+
+            <div class="tf-courses">
+              <button type="button">Matemática</button>
+              <button type="button">Inglés</button>
+              <button type="button">Contabilidad</button>
+              <button type="button">Comunicación</button>
+              <button type="button">Física</button>
+              <button type="button">Química</button>
+              <button type="button">Programación</button>
+              <button type="button">Economía</button>
+            </div>
+          </section>
+
+          <!-- RESULTADOS -->
+          <section class="tf-panel-section" id="tutores">
+            <div class="tf-section-header">
+              <div>
+                <span>Resultados</span>
+                <h2>Tutores disponibles</h2>
+              </div>
+            </div>
+
+            <p id="mensajeBusqueda" class="tf-search-message">
+              Cargando tutores activos de TutorFlash...
+            </p>
+
+            <div id="listaTutores" class="tf-tutors">
+              <div class="tf-empty-tutors">
+                <h3>Cargando tutores...</h3>
+                <p>Espera un momento mientras buscamos tutores activos.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- MODAL DE RESERVA -->
+    <div class="tf-modal" id="reservaModal" aria-hidden="true">
+      <div class="tf-modal-bg"></div>
+
+      <div class="tf-modal-box">
+        <button
+          class="tf-modal-close"
+          id="cerrarModal"
+          type="button"
+          aria-label="Cerrar modal"
+        >
+          ×
+        </button>
+
+        <!-- FORMULARIO -->
+        <div id="reservaFormulario">
+          <span class="tf-modal-label">Reserva de tutoría</span>
+
+          <h2>Completa los datos de tu clase</h2>
+
+          <div class="tf-selected-tutor">
+            <div class="tf-avatar" id="modalAvatar">T</div>
+
+            <div>
+              <h3 id="modalTutor">Tutor seleccionado</h3>
+              <p id="modalCurso">Curso</p>
+              <span id="modalInfo">⭐ 4.8 · Disponible según horario</span>
+            </div>
+          </div>
+
+          <form id="formReserva" class="tf-form">
+            <label>
+              Fecha
+              <input id="fechaReserva" type="date" required />
+            </label>
+
+            <label>
+              Hora
+              <select id="horaReserva" required>
+                <option value="">Selecciona una hora</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+            </label>
+
+            <label>
+              Modalidad
+              <select id="modalidadReserva" required>
+                <option value="Virtual">Virtual</option>
+                <option value="Presencial">Presencial</option>
+              </select>
+            </label>
+
+            <label>
+              Duración
+              <select id="duracionReserva" required>
+                <option value="30 min">30 min</option>
+                <option value="60 min">60 min</option>
+                <option value="90 min">90 min</option>
+                <option value="120 min">120 min</option>
+              </select>
+            </label>
+
+            <div class="tf-payment-preview">
+              <strong>Estado de pago</strong>
+              <span>Pago pendiente</span>
+              <p>
+                El pago no se marcará como realizado hasta que la reserva sea
+                aceptada o se haga el pago simulado.
+              </p>
+            </div>
+
+            <div class="tf-reserva-total">
+              <span>Total estimado</span>
+              <strong id="modalTotal">S/ 0</strong>
+            </div>
+
+            <button type="submit" class="tf-btn tf-btn-primary">
+              Confirmar reserva
+            </button>
+          </form>
+        </div>
+
+        <!-- CONFIRMACIÓN -->
+        <div id="reservaConfirmacion" class="tf-confirmation" hidden>
+          <div class="tf-check">✓</div>
+
+          <h2>Reserva enviada</h2>
+
+          <p>
+            Tu solicitud fue registrada. El tutor deberá aceptarla y luego se
+            podrá completar el pago pendiente.
+          </p>
+
+          <div class="tf-confirm-detail">
+            <p><strong>Tutor:</strong> <span id="finalTutor">-</span></p>
+            <p><strong>Curso:</strong> <span id="finalCurso">-</span></p>
+            <p><strong>Fecha:</strong> <span id="finalFecha">-</span></p>
+            <p><strong>Hora:</strong> <span id="finalHora">-</span></p>
+            <p>
+              <strong>Modalidad:</strong> <span id="finalModalidad">-</span>
+            </p>
+            <p><strong>Duración:</strong> <span id="finalDuracion">-</span></p>
+            <p><strong>Total:</strong> <span id="finalTotal">S/ 0</span></p>
+            <p><strong>Pago:</strong> Pendiente</p>
+            <p><strong>Clase virtual:</strong> Aún no disponible</p>
+          </div>
+
+          <button
+            id="btnNuevaReserva"
+            type="button"
+            class="tf-btn tf-btn-primary"
+          >
+            Reservar otra tutoría
+          </button>
+
+          <button
+            id="btnCerrarModal"
+            type="button"
+            class="tf-btn tf-btn-secondary"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="../js/buscar-tutor.js"></script>
+  </body>
+</html>

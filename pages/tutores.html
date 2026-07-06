@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorFlash | Tutores</title>
+
+    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/buscar-tutor.css" />
+  </head>
+
+  <body>
+    <div class="tf-student-layout">
+      <!-- MENÚ LATERAL -->
+      <aside class="tf-sidebar">
+        <a href="../index.html" class="tf-sidebar-logo">
+          <img
+            src="../assets/img/logo-tutorflash-transparente.png"
+            alt="TutorFlash"
+          />
+        </a>
+
+        <nav class="tf-sidebar-menu">
+          <a href="estudiante.html">🏠 Panel</a>
+          <a href="agenda-estudiante.html">📅 Mi agenda</a>
+          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
+          <a href="tutores.html" class="is-active">👨‍🏫 Tutores</a>
+          <a href="favoritos.html">⭐ Favoritos</a>
+          <a href="notificaciones.html">🔔 Notificaciones</a>
+          <a href="sesiones.html">📚 Mis sesiones</a>
+          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+        </nav>
+
+        <div class="tf-sidebar-card">
+          <span>Consejo rápido</span>
+          <p>Guarda tus tutores favoritos para reservar más rápido después.</p>
+        </div>
+      </aside>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <div class="tf-student-main">
+        <!-- TOPBAR -->
+        <header class="tf-topbar">
+          <div>
+            <span class="tf-page-label">Tutores</span>
+            <h1 id="tituloBienvenida">Tutores disponibles 👨‍🏫</h1>
+          </div>
+
+          <div class="tf-topbar-actions">
+            <!-- NOTIFICACIONES -->
+            <div class="tf-notification-area">
+              <button
+                class="tf-notification-btn"
+                id="btnNotificaciones"
+                type="button"
+                aria-label="Abrir notificaciones"
+              >
+                🔔
+                <span class="tf-notification-dot">3</span>
+              </button>
+
+              <div
+                class="tf-notifications-panel oculto"
+                id="panelNotificaciones"
+              >
+                <div class="tf-notifications-header">
+                  <strong>Notificaciones</strong>
+                  <button id="cerrarNotificaciones" type="button">×</button>
+                </div>
+
+                <div class="tf-notification-list">
+                  <article class="tf-notification-item">
+                    <strong>👨‍🏫 Tutores activos</strong>
+                    <p>Revisa los tutores disponibles en TutorFlash.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>⭐ Favoritos</strong>
+                    <p>Pronto podrás guardar tus tutores preferidos.</p>
+                  </article>
+
+                  <article class="tf-notification-item">
+                    <strong>📅 Reserva rápida</strong>
+                    <p>Desde esta página podrás reservar una tutoría.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <!-- AVATAR -->
+            <div class="tf-user-area">
+              <button class="tf-user-chip" id="btnUsuario" type="button">
+                <span class="tf-user-avatar" id="avatarIniciales">U</span>
+
+                <span class="tf-user-meta">
+                  <strong id="nombreUsuarioTop">Verificando...</strong>
+                  <small>Mi cuenta</small>
+                </span>
+              </button>
+
+              <div class="tf-user-dropdown oculto" id="menuUsuario">
+                <button
+                  class="tf-user-dropdown-close"
+                  id="cerrarMenuUsuario"
+                  type="button"
+                >
+                  ×
+                </button>
+
+                <p class="tf-user-email" id="correoUsuarioMenu">
+                  correo@ejemplo.com
+                </p>
+
+                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">
+                  U
+                </div>
+
+                <h3 id="saludoUsuarioMenu">Hola, estudiante</h3>
+
+                <a class="tf-user-dropdown-btn" href="perfil-estudiante.html">
+                  Ver perfil del estudiante
+                </a>
+
+                <button
+                  class="tf-user-dropdown-logout"
+                  id="btnCerrarSesionPortal"
+                  type="button"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main>
+          <!-- INTRO -->
+          <section class="tf-search-hero">
+            <div>
+              <span class="tf-label">Catálogo de tutores</span>
+              <h2>Conoce a los tutores activos</h2>
+              <p>
+                Aquí verás los tutores disponibles, sus cursos, modalidad,
+                precio y estado de conexión.
+              </p>
+            </div>
+
+            <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
+              Buscar por curso
+            </a>
+          </section>
+
+          <!-- LISTADO DE TUTORES -->
+          <section class="tf-panel-section">
+            <div class="tf-section-header">
+              <div>
+                <span>Disponibles</span>
+                <h2>Todos los tutores</h2>
+              </div>
+            </div>
+
+            <p id="mensajeTutores" class="tf-search-message">
+              Cargando tutores activos...
+            </p>
+
+            <div id="listaTutores" class="tf-tutors">
+              <div class="tf-empty-tutors">
+                <h3>Cargando tutores...</h3>
+                <p>Espera un momento mientras cargamos la lista.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="../js/tutores.js"></script>
+  </body>
+</html>

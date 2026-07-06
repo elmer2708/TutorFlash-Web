@@ -16,8 +16,11 @@ import {
   query,
   where,
   limit,
+  setDoc,
   doc,
+  orderBy,
   updateDoc,
+  deleteDoc,
   runTransaction,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
@@ -928,4 +931,78 @@ export async function obtenerReservasOcupadasPorTutorFecha(tutorId, fecha) {
 
       return reserva.fecha === fecha && estadosQueOcupan.includes(estado);
     });
+}
+
+export async function guardarTutorFavorito(tutor) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para guardar favoritos.");
+  }
+
+  const tutorId = tutor.id || tutor.uid || tutor.tutorId;
+
+  if (!tutorId) {
+    throw new Error("No se encontró el ID del tutor.");
+  }
+
+  const favoritoId = `${usuario.uid}_${tutorId}`;
+
+  const favorito = {
+    usuarioId: usuario.uid,
+    tutorId,
+    nombre: tutor.nombre || "Tutor",
+    cursos: tutor.cursos || "",
+    nivel: tutor.nivel || "",
+    modalidad: tutor.modalidad || "",
+    distrito: tutor.distrito || tutor.zona || "",
+    precioHora: Number(tutor.precioHora || tutor.precio || 25),
+    descripcion: tutor.descripcion || tutor.presentacion || "",
+    disponibilidad: tutor.disponibilidad || "",
+    rating: tutor.rating || tutor.calificacion || "",
+    estaEnLinea: tutor.estaEnLinea === true,
+    creadoEn: serverTimestamp(),
+  };
+
+  await setDoc(doc(db, "favoritos", favoritoId), favorito, { merge: true });
+
+  return favorito;
+}
+
+export async function obtenerMisFavoritos() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    return [];
+  }
+
+  const consulta = query(
+    collection(db, "favoritos"),
+    where("usuarioId", "==", usuario.uid),
+  );
+
+  const resultado = await getDocs(consulta);
+
+  return resultado.docs.map((documento) => ({
+    id: documento.id,
+    ...documento.data(),
+  }));
+}
+
+export async function eliminarTutorFavorito(tutorId) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para eliminar favoritos.");
+  }
+
+  if (!tutorId) {
+    throw new Error("No se encontró el ID del tutor.");
+  }
+
+  const favoritoId = `${usuario.uid}_${tutorId}`;
+
+  await deleteDoc(doc(db, "favoritos", favoritoId));
+
+  return true;
 }

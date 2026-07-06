@@ -813,3 +813,67 @@ a {
     font-size: 1.45rem;
   }
 }
+.tf-tutor-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.tf-reserve-btn,
+.tf-remove-favorite-btn {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 18px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.tf-reserve-btn {
+  display: inline-block;
+  background: #06162f;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(6, 22, 47, 0.18);
+}
+
+.tf-reserve-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(6, 22, 47, 0.24);
+}
+
+.tf-remove-favorite-btn {
+  background: #fff4f4;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.tf-remove-favorite-btn:hover {
+  background: #fee2e2;
+  transform: translateY(-2px);
+}
+
+.tf-tutor-card__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.tf-tutor-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: #ffc928;
+  color: #06162f;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
