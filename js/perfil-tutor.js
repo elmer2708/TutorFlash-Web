@@ -3,6 +3,8 @@ import {
   cerrarSesion,
   obtenerTutorActivoActual,
   actualizarPerfilTutorActual,
+  actualizarDatosPagoTutor,
+  obtenerMisDatosPagoTutor,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -12,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "btnGuardarPerfilTutor",
   );
   const btnCerrarSesionTutor = document.getElementById("btnCerrarSesionTutor");
+  const btnGuardarDatosPago = document.getElementById("btnGuardarDatosPago");
+  const mensajeDatosPago = document.getElementById("mensajeDatosPago");
 
   const nombreInput = document.getElementById("nombreTutorPerfil");
   const correoInput = document.getElementById("correoTutorPerfil");
@@ -28,6 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const estadoPublicoInput = document.getElementById(
     "estadoPublicoTutorPerfil",
   );
+  const pagoYapeInput = document.getElementById("pagoYape");
+  const pagoPlinInput = document.getElementById("pagoPlin");
+  const pagoBancoInput = document.getElementById("pagoBanco");
+  const pagoCciInput = document.getElementById("pagoCci");
+  const pagoTitularInput = document.getElementById("pagoTitular");
+  const pagoInstruccionesInput = document.getElementById("pagoInstrucciones");
 
   const avatarPreview = document.getElementById("avatarTutorPreview");
   const previewNombre = document.getElementById("previewNombre");
@@ -49,6 +59,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mensajePerfilTutor.textContent = texto;
     mensajePerfilTutor.className = `mensaje-perfil ${tipo}`;
+  }
+
+  function mostrarMensajeDatosPago(texto, tipo = "info") {
+    if (!mensajeDatosPago) return;
+
+    let mensajeTraducido = texto;
+
+    if (
+      String(texto).includes("Missing or insufficient permissions") ||
+      String(texto).includes("permission-denied")
+    ) {
+      mensajeTraducido =
+        "No tienes permisos para guardar tus datos de pago. Revisa las reglas de Firebase o vuelve a iniciar sesión.";
+    }
+
+    mensajeDatosPago.textContent = mensajeTraducido;
+    mensajeDatosPago.className = `mensaje-datos-pago ${tipo}`;
   }
 
   function capitalizarTexto(texto) {
@@ -178,6 +205,45 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarPreview();
   }
 
+  function llenarFormularioDatosPago(datosPago) {
+    if (!datosPago) return;
+
+    if (pagoYapeInput) pagoYapeInput.value = datosPago.yape || "";
+    if (pagoPlinInput) pagoPlinInput.value = datosPago.plin || "";
+    if (pagoBancoInput) pagoBancoInput.value = datosPago.banco || "";
+    if (pagoCciInput) pagoCciInput.value = datosPago.cci || "";
+    if (pagoTitularInput) pagoTitularInput.value = datosPago.titular || "";
+    if (pagoInstruccionesInput) {
+      pagoInstruccionesInput.value = datosPago.instrucciones || "";
+    }
+  }
+
+  async function cargarDatosPagoTutor() {
+    try {
+      const datosPago = await obtenerMisDatosPagoTutor();
+
+      if (datosPago) {
+        llenarFormularioDatosPago(datosPago);
+        mostrarMensajeDatosPago(
+          "Datos de pago cargados correctamente.",
+          "exito",
+        );
+        return;
+      }
+
+      mostrarMensajeDatosPago(
+        "Agrega tus métodos de pago para mostrarlos al estudiante.",
+        "info",
+      );
+    } catch (error) {
+      console.error("Error al cargar datos de pago:", error);
+      mostrarMensajeDatosPago(
+        error.message || "No se pudieron cargar tus datos de pago.",
+        "error",
+      );
+    }
+  }
+
   async function validarAcceso() {
     observarUsuario(async (usuario) => {
       if (!usuario) {
@@ -197,6 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tutorActual = tutorActivo;
         llenarFormulario(tutorActual);
+        await cargarDatosPagoTutor();
 
         mostrarMensaje(
           "Perfil cargado correctamente. Puedes editar tus datos.",
@@ -325,6 +392,62 @@ document.addEventListener("DOMContentLoaded", () => {
           btnGuardarPerfilTutor.disabled = false;
           btnGuardarPerfilTutor.textContent = "Guardar perfil";
         }
+      }
+    });
+  }
+
+  if (btnGuardarDatosPago) {
+    btnGuardarDatosPago.addEventListener("click", async () => {
+      const yape = pagoYapeInput?.value.trim() || "";
+      const plin = pagoPlinInput?.value.trim() || "";
+      const banco = pagoBancoInput?.value.trim() || "";
+      const cci = pagoCciInput?.value.trim() || "";
+      const titular = pagoTitularInput?.value.trim() || "";
+      const instrucciones = pagoInstruccionesInput?.value.trim() || "";
+      const tieneMetodoPago = yape || plin || banco || cci;
+
+      if (!tieneMetodoPago) {
+        mostrarMensajeDatosPago(
+          "Agrega al menos un método de pago: Yape, Plin, banco o CCI.",
+          "error",
+        );
+        return;
+      }
+
+      if (!titular) {
+        mostrarMensajeDatosPago(
+          "Ingresa el nombre del titular del pago.",
+          "error",
+        );
+        return;
+      }
+
+      try {
+        btnGuardarDatosPago.disabled = true;
+        btnGuardarDatosPago.textContent = "Guardando datos...";
+
+        await actualizarDatosPagoTutor({
+          yape,
+          plin,
+          banco,
+          cci,
+          titular,
+          instrucciones,
+        });
+
+        mostrarMensajeDatosPago(
+          "Datos de pago guardados correctamente.",
+          "exito",
+        );
+      } catch (error) {
+        console.error("Error al guardar datos de pago:", error);
+        mostrarMensajeDatosPago(
+          error.message || "No se pudieron guardar tus datos de pago.",
+          "error",
+        );
+      } finally {
+        btnGuardarDatosPago.disabled = false;
+        btnGuardarDatosPago.textContent = "Guardar datos de pago";
       }
     });
   }

@@ -776,3 +776,133 @@ select:disabled {
     width: 100%;
   }
 }
+
+.pago-panel-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(12, 35, 64, 0.1);
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.pago-panel-box p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.pago-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.pago-panel-header strong {
+  color: #0c2340;
+}
+
+.pago-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pago-panel-grid div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(12, 35, 64, 0.08);
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.pago-panel-grid span {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.pago-panel-grid strong {
+  display: block;
+  color: #0c2340;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.pago-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-confirmar-pago,
+.btn-rechazar-pago {
+  border: none;
+  border-radius: 999px;
+  padding: 11px 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.btn-confirmar-pago {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn-rechazar-pago {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-confirmar-pago:hover:not(:disabled),
+.btn-rechazar-pago:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn-confirmar-pago:disabled,
+.btn-rechazar-pago:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.pago-panel-box.estado-pendiente {
+  background: #fffdf4;
+  border-color: rgba(245, 183, 0, 0.36);
+}
+
+.pago-panel-box.estado-en_revision {
+  background: #f0f9ff;
+  border-color: rgba(14, 116, 144, 0.18);
+}
+
+.pago-panel-box.estado-confirmado {
+  background: #f0fdf4;
+  border-color: rgba(22, 101, 52, 0.18);
+}
+
+.pago-panel-box.estado-rechazado {
+  background: #fff8f8;
+  border-color: rgba(153, 27, 27, 0.16);
+}
+
+@media (max-width: 700px) {
+  .pago-panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pago-panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pago-panel-actions,
+  .btn-confirmar-pago,
+  .btn-rechazar-pago {
+    width: 100%;
+  }
+}

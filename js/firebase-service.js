@@ -17,6 +17,7 @@ import {
   where,
   limit,
   setDoc,
+  getDoc,
   doc,
   orderBy,
   updateDoc,
@@ -517,6 +518,11 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
 
   await runTransaction(db, async (transaction) => {
     const reservaSnap = await transaction.get(reservaRef);
+    const datosPagoTutorRef = doc(db, "datosPagoTutores", usuario.uid);
+    const datosPagoTutorSnap =
+      estadoNuevoNormalizado === "aceptada"
+        ? await transaction.get(datosPagoTutorRef)
+        : null;
 
     if (!reservaSnap.exists()) {
       throw new Error("La reserva ya no existe.");
@@ -548,10 +554,114 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
       throw new Error("No se puede cambiar la reserva a ese estado.");
     }
 
-    transaction.update(reservaRef, {
+    const datosActualizados = {
       estado: estadoNuevoNormalizado,
       actualizadoEn: serverTimestamp(),
-    });
+    };
+
+    if (estadoNuevoNormalizado === "aceptada") {
+      if (!datosPagoTutorSnap?.exists()) {
+        throw new Error("Completa tus datos de pago antes de aceptar reservas.");
+      }
+
+      const datosPagoTutor = datosPagoTutorSnap.data();
+      const tieneDatosPago =
+        datosPagoTutor.yape ||
+        datosPagoTutor.plin ||
+        datosPagoTutor.banco ||
+        datosPagoTutor.cci;
+
+      if (!tieneDatosPago || !datosPagoTutor.titular) {
+        throw new Error("Completa tus datos de pago antes de aceptar reservas.");
+      }
+
+      datosActualizados.datosPagoTutor = {
+        yape: datosPagoTutor.yape || "",
+        plin: datosPagoTutor.plin || "",
+        banco: datosPagoTutor.banco || "",
+        cci: datosPagoTutor.cci || "",
+        titular: datosPagoTutor.titular || "",
+        instrucciones: datosPagoTutor.instrucciones || "",
+      };
+    }
+
+    transaction.update(reservaRef, datosActualizados);
+  });
+}
+
+export async function registrarPagoReserva(reservaId, datosPago) {
+  obtenerUsuarioAutenticado("Debes iniciar sesión para registrar un pago.");
+
+  if (!reservaId) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  const metodoPago = String(datosPago.metodoPago || "").trim();
+  const montoPagado = Number(datosPago.montoPagado || 0);
+  const numeroOperacion = String(datosPago.numeroOperacion || "").trim();
+  const comentarioPago = String(datosPago.comentarioPago || "").trim();
+
+  if (!metodoPago) {
+    throw new Error("Selecciona el método de pago.");
+  }
+
+  if (!montoPagado || montoPagado <= 0) {
+    throw new Error("Ingresa un monto pagado mayor a cero.");
+  }
+
+  if (!numeroOperacion) {
+    throw new Error("Ingresa el número de operación.");
+  }
+
+  const datosActualizados = {
+    estadoPago: "en_revision",
+    metodoPago,
+    montoPagado,
+    numeroOperacion,
+    comentarioPago,
+    comprobanteUrl: "",
+    pagoRegistradoEn: serverTimestamp(),
+    pagoActualizadoEn: serverTimestamp(),
+  };
+
+  await updateDoc(doc(db, "reservas", reservaId), datosActualizados);
+
+  return datosActualizados;
+}
+
+export async function confirmarPagoReserva(reservaId) {
+  obtenerUsuarioAutenticado("Debes iniciar sesión para confirmar un pago.");
+
+  if (!reservaId) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  await updateDoc(doc(db, "reservas", reservaId), {
+    estadoPago: "confirmado",
+    pagoConfirmadoEn: serverTimestamp(),
+    pagoActualizadoEn: serverTimestamp(),
+    motivoRechazoPago: "",
+  });
+}
+
+export async function rechazarPagoReserva(reservaId, motivo) {
+  obtenerUsuarioAutenticado("Debes iniciar sesión para rechazar un pago.");
+
+  if (!reservaId) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  const motivoRechazoPago = String(motivo || "").trim();
+
+  if (!motivoRechazoPago) {
+    throw new Error("Ingresa el motivo del rechazo del pago.");
+  }
+
+  await updateDoc(doc(db, "reservas", reservaId), {
+    estadoPago: "rechazado",
+    motivoRechazoPago,
+    pagoRechazadoEn: serverTimestamp(),
+    pagoActualizadoEn: serverTimestamp(),
   });
 }
 
@@ -1049,7 +1159,9 @@ export async function actualizarEnlaceClaseReserva(reservaId, datosClase) {
   }
 
   if (!/^https?:\/\//i.test(enlaceClase)) {
-    throw new Error("El enlace de la clase debe empezar con http:// o https://.");
+    throw new Error(
+      "El enlace de la clase debe empezar con http:// o https://.",
+    );
   }
 
   const datosActualizados = {
@@ -1062,4 +1174,63 @@ export async function actualizarEnlaceClaseReserva(reservaId, datosClase) {
   await updateDoc(doc(db, "reservas", reservaId), datosActualizados);
 
   return datosActualizados;
+}
+
+export async function actualizarDatosPagoTutor(datosPago) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para actualizar tus datos de pago.");
+  }
+
+  const datosPagoLimpios = {
+    uid: usuario.uid,
+    yape: String(datosPago.yape || "").trim(),
+    plin: String(datosPago.plin || "").trim(),
+    banco: String(datosPago.banco || "").trim(),
+    cci: String(datosPago.cci || "").trim(),
+    titular: String(datosPago.titular || "").trim(),
+    instrucciones: String(datosPago.instrucciones || "").trim(),
+    actualizadoEn: serverTimestamp(),
+  };
+
+  const tieneAlgunMetodo =
+    datosPagoLimpios.yape ||
+    datosPagoLimpios.plin ||
+    datosPagoLimpios.banco ||
+    datosPagoLimpios.cci;
+
+  if (!tieneAlgunMetodo) {
+    throw new Error("Agrega al menos un método de pago: Yape, Plin o banco.");
+  }
+
+  if (!datosPagoLimpios.titular) {
+    throw new Error("Ingresa el nombre del titular del pago.");
+  }
+
+  await setDoc(doc(db, "datosPagoTutores", usuario.uid), datosPagoLimpios, {
+    merge: true,
+  });
+
+  return datosPagoLimpios;
+}
+
+export async function obtenerMisDatosPagoTutor() {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para ver tus datos de pago.");
+  }
+
+  const referencia = doc(db, "datosPagoTutores", usuario.uid);
+  const documento = await getDoc(referencia);
+
+  if (!documento.exists()) {
+    return null;
+  }
+
+  return {
+    id: documento.id,
+    ...documento.data(),
+  };
 }

@@ -26,11 +26,36 @@ document.addEventListener("DOMContentLoaded", () => {
     return String(valor || fallback).toLowerCase().trim();
   }
 
-  function contarNotificacionesDesdeSesiones(sesiones) {
+  function obtenerClaveNotificacionesLeidas(usuario) {
+    const usuarioKey = usuario?.uid || usuario?.email || "usuario";
+
+    return `tfNotificacionesLeidas:${usuarioKey}`;
+  }
+
+  function obtenerIdsNotificacionesLeidas(usuario) {
+    try {
+      return new Set(
+        JSON.parse(localStorage.getItem(obtenerClaveNotificacionesLeidas(usuario)) || "[]"),
+      );
+    } catch (error) {
+      return new Set();
+    }
+  }
+
+  function contarNotificacionesDesdeSesiones(sesiones, usuario) {
     const hoy = obtenerFechaLocal();
     let total = 0;
+    const idsLeidos = obtenerIdsNotificacionesLeidas(usuario);
+
+    function contarSiNoLeida(id) {
+      if (!idsLeidos.has(id)) {
+        total += 1;
+      }
+    }
 
     sesiones.forEach((sesion) => {
+      const idSesion =
+        sesion.id || `${sesion.fecha || "sin-fecha"}-${sesion.curso || "curso"}`;
       const estado = normalizarTexto(sesion.estado, "pendiente");
       const estadoPago = normalizarTexto(sesion.estadoPago, "pendiente");
       const estadoClase = normalizarTexto(sesion.estadoClase, "pendiente");
@@ -39,30 +64,32 @@ document.addEventListener("DOMContentLoaded", () => {
         estado === "realizada" ||
         estado === "cancelada" ||
         estado === "rechazada";
+      const claseLista = estadoClase === "programada" || Boolean(enlaceClase);
 
-      if (enlaceClase && !reservaFinalizada) {
-        total += 1;
-        return;
+      if (estadoPago === "rechazado") {
+        contarSiNoLeida(`${idSesion}-pago-rechazado`);
+      } else if (estadoPago === "confirmado") {
+        contarSiNoLeida(`${idSesion}-pago-confirmado`);
+      } else if (estadoPago === "en_revision") {
+        contarSiNoLeida(`${idSesion}-pago-en-revision`);
+      } else if (estadoPago === "pendiente" && !reservaFinalizada) {
+        contarSiNoLeida(`${idSesion}-pago-pendiente`);
+      }
+
+      if (claseLista && !reservaFinalizada) {
+        contarSiNoLeida(`${idSesion}-clase-enlace`);
+      } else if (estadoClase === "pendiente" && !reservaFinalizada) {
+        contarSiNoLeida(`${idSesion}-clase-pendiente`);
+      }
+
+      if ((estado === "aceptada" || estado === "confirmada") && !reservaFinalizada) {
+        contarSiNoLeida(`${idSesion}-reserva-confirmada`);
+      } else if (estado === "pendiente") {
+        contarSiNoLeida(`${idSesion}-reserva-pendiente`);
       }
 
       if (sesion.fecha === hoy && !reservaFinalizada) {
-        total += 1;
-      }
-
-      if (estado === "pendiente") {
-        total += 1;
-      }
-
-      if (estadoPago === "pendiente") {
-        total += 1;
-      }
-
-      if (estadoClase === "pendiente" && !enlaceClase && !reservaFinalizada) {
-        total += 1;
-      }
-
-      if (estado === "confirmada") {
-        total += 1;
+        contarSiNoLeida(`${idSesion}-clase-hoy`);
       }
     });
 
@@ -77,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const sesiones = await obtenerMisSesiones();
-      actualizarContadores(contarNotificacionesDesdeSesiones(sesiones));
+      actualizarContadores(contarNotificacionesDesdeSesiones(sesiones, usuario));
     } catch (error) {
       console.error("Error al actualizar contador de notificaciones:", error);
       actualizarContadores(0);

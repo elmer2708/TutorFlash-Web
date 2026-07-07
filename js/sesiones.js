@@ -1,4 +1,8 @@
-import { observarUsuario, obtenerMisSesiones } from "./firebase-service.js";
+import {
+  observarUsuario,
+  obtenerMisSesiones,
+  registrarPagoReserva,
+} from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const estadoSesiones = document.querySelector("#estadoSesiones");
@@ -143,16 +147,54 @@ document.addEventListener("DOMContentLoaded", () => {
     return fechaHora;
   }
 
+  function obtenerMilisegundosCampoTemporal(valor) {
+    if (!valor) return 0;
+
+    if (typeof valor.toMillis === "function") {
+      return valor.toMillis();
+    }
+
+    if (typeof valor.seconds === "number") {
+      return valor.seconds * 1000;
+    }
+
+    const fecha = new Date(valor);
+    const tiempo = fecha.getTime();
+
+    return Number.isNaN(tiempo) ? 0 : tiempo;
+  }
+
+  function obtenerFechaCreacionSesion(sesion) {
+    const camposCreacion = [
+      "creadoEn",
+      "creado",
+      "creadoEnTimestamp",
+      "fechaCreacion",
+      "creadoEl",
+      "timestamp",
+      "createdAt",
+      "fechaRegistro",
+    ];
+
+    for (const campo of camposCreacion) {
+      const tiempo = obtenerMilisegundosCampoTemporal(sesion[campo]);
+
+      if (tiempo) return tiempo;
+    }
+
+    return obtenerFechaHoraSesion(sesion)?.getTime() || 0;
+  }
+
   function ordenarSesiones(sesiones) {
     return [...sesiones].sort((a, b) => {
-      const fechaA = obtenerFechaHoraSesion(a);
-      const fechaB = obtenerFechaHoraSesion(b);
+      const fechaA = obtenerFechaCreacionSesion(a);
+      const fechaB = obtenerFechaCreacionSesion(b);
 
-      if (!fechaA && !fechaB) return 0;
-      if (!fechaA) return 1;
-      if (!fechaB) return -1;
+      if (fechaA !== fechaB) {
+        return fechaB - fechaA;
+      }
 
-      return fechaB - fechaA;
+      return obtenerFechaHoraSesion(b) - obtenerFechaHoraSesion(a);
     });
   }
 
@@ -165,11 +207,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function obtenerTextoPago(sesion) {
     const estadoPago = obtenerEstadoPago(sesion);
 
-    if (estadoPago === "pagado" || estadoPago === "completado") {
-      return "Pago registrado";
+    const textos = {
+      pendiente: "Pago pendiente",
+      en_revision: "Pago en revisión",
+      confirmado: "Pago confirmado",
+      rechazado: "Pago rechazado",
+      pagado: "Pago registrado",
+      completado: "Pago registrado",
+    };
+
+    return textos[estadoPago] || "Pago pendiente";
+  }
+
+  function obtenerClasePago(sesion) {
+    const estadoPago = obtenerEstadoPago(sesion);
+
+    if (estadoPago === "confirmado" || estadoPago === "pagado") {
+      return "pago-ok";
     }
 
-    return "Pago pendiente";
+    if (estadoPago === "en_revision") {
+      return "pago-revision";
+    }
+
+    if (estadoPago === "rechazado") {
+      return "pago-rechazado";
+    }
+
+    return "pago-pendiente";
   }
 
   function obtenerEstadoClase(sesion) {
@@ -219,6 +284,132 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function crearFilaDatoPago(etiqueta, valor) {
+    if (!valor) return "";
+
+    return `
+      <div>
+        <span>${limpiarTexto(etiqueta)}</span>
+        <strong>${limpiarTexto(valor)}</strong>
+      </div>
+    `;
+  }
+
+  function crearFormularioPago(sesion) {
+    return `
+      <form class="pago-form" data-id="${limpiarTexto(sesion.id)}">
+        <label>
+          Método de pago
+          <select name="metodoPago" required>
+            <option value="">Selecciona método</option>
+            <option value="Yape">Yape</option>
+            <option value="Plin">Plin</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+
+        <label>
+          Monto pagado
+          <input
+            type="number"
+            name="montoPagado"
+            min="0"
+            step="0.01"
+            value="${limpiarTexto(sesion.total || "")}"
+            placeholder="Ejemplo: 50"
+            required
+          />
+        </label>
+
+        <label>
+          Número de operación
+          <input
+            type="text"
+            name="numeroOperacion"
+            placeholder="Ejemplo: 123456789"
+            required
+          />
+        </label>
+
+        <label class="pago-form-full">
+          Comentario opcional
+          <textarea
+            name="comentarioPago"
+            rows="3"
+            placeholder="Ejemplo: Pago realizado desde mi cuenta personal."
+          ></textarea>
+        </label>
+
+        <button type="submit" class="btn-registrar-pago">
+          Enviar pago para revisión
+        </button>
+      </form>
+    `;
+  }
+
+  function crearBloquePago(sesion) {
+    const estado = normalizarEstado(sesion.estado);
+    const estadoPago = obtenerEstadoPago(sesion);
+    const datosPago = sesion.datosPagoTutor || {};
+    const puedeRegistrar =
+      (estado === "aceptada" || estado === "confirmada") &&
+      (estadoPago === "pendiente" || estadoPago === "rechazado");
+
+    if (estado !== "aceptada" && estado !== "confirmada") {
+      return "";
+    }
+
+    if (estadoPago === "en_revision") {
+      return `
+        <div class="pago-estado-box en_revision">
+          Pago enviado para revisión. El tutor debe confirmarlo.
+        </div>
+      `;
+    }
+
+    if (estadoPago === "confirmado") {
+      return `
+        <div class="pago-estado-box confirmado">
+          Pago confirmado por el tutor.
+        </div>
+      `;
+    }
+
+    return `
+      <div class="pago-tutor-box estado-${limpiarTexto(estadoPago)}">
+        <div>
+          <span class="sesion-label">
+            ${estadoPago === "rechazado" ? "Pago rechazado" : "Pago pendiente"}
+          </span>
+          <h4>
+            ${
+              estadoPago === "rechazado"
+                ? "Pago rechazado por el tutor."
+                : "Datos de pago del tutor"
+            }
+          </h4>
+          ${
+            estadoPago === "rechazado"
+              ? `<p class="pago-help">${limpiarTexto(sesion.motivoRechazoPago || "Revisa los datos y vuelve a registrar el pago.")}</p>`
+              : ""
+          }
+        </div>
+
+        <div class="pago-tutor-grid">
+          ${crearFilaDatoPago("Yape", datosPago.yape)}
+          ${crearFilaDatoPago("Plin", datosPago.plin)}
+          ${crearFilaDatoPago("Banco", datosPago.banco)}
+          ${crearFilaDatoPago("CCI", datosPago.cci)}
+          ${crearFilaDatoPago("Titular", datosPago.titular)}
+          ${crearFilaDatoPago("Instrucciones", datosPago.instrucciones)}
+        </div>
+
+        ${puedeRegistrar ? crearFormularioPago(sesion) : ""}
+      </div>
+    `;
+  }
+
   function mostrarSesiones(sesiones) {
     if (!listaMisSesiones) return;
 
@@ -255,11 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const claseEstado = obtenerClaseEstado(estado);
 
         const pagoTexto = obtenerTextoPago(sesion);
-        const estadoPago = obtenerEstadoPago(sesion);
-        const pagoClase =
-          estadoPago === "pagado" || estadoPago === "completado"
-            ? "pago-ok"
-            : "pago-pendiente";
+        const pagoClase = obtenerClasePago(sesion);
 
         const claseTexto = obtenerTextoClase(sesion);
         const enlaceClase = sesion.enlaceClase || "";
@@ -350,6 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 Reservar otra tutoría
               </a>
             </div>
+
+            ${crearBloquePago(sesion)}
           </article>
         `;
       })
@@ -399,6 +588,45 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarSesiones(sesionesGlobales);
     });
   });
+
+  if (listaMisSesiones) {
+    listaMisSesiones.addEventListener("submit", async (event) => {
+      const formulario = event.target.closest(".pago-form");
+
+      if (!formulario) return;
+
+      event.preventDefault();
+
+      const reservaId = formulario.dataset.id;
+      const boton = formulario.querySelector("button[type='submit']");
+      const textoOriginal = boton?.textContent || "Enviar pago para revisión";
+
+      try {
+        if (boton) {
+          boton.disabled = true;
+          boton.textContent = "Enviando pago...";
+        }
+
+        await registrarPagoReserva(reservaId, {
+          metodoPago: formulario.metodoPago.value,
+          montoPagado: formulario.montoPagado.value,
+          numeroOperacion: formulario.numeroOperacion.value,
+          comentarioPago: formulario.comentarioPago.value,
+        });
+
+        mostrarEstado("Pago enviado para revisión del tutor.");
+        await cargarSesiones();
+      } catch (error) {
+        console.error("Error al registrar pago:", error);
+        mostrarEstado(error.message || "No se pudo registrar el pago.");
+
+        if (boton) {
+          boton.disabled = false;
+          boton.textContent = textoOriginal;
+        }
+      }
+    });
+  }
 
   observarUsuario((usuario) => {
     if (!usuario) {

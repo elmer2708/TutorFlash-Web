@@ -222,6 +222,7 @@
 }
 
 .tf-notification-card {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 14px;
@@ -232,6 +233,34 @@
   background: #ffffff;
   border: 1px solid rgba(7, 27, 61, 0.08);
   box-shadow: 0 10px 24px rgba(7, 27, 61, 0.06);
+}
+
+.tf-notification-body {
+  min-width: 0;
+  flex: 1;
+  padding-right: 28px;
+}
+
+.tf-notification-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: none;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: #071b3d;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.tf-notification-close:hover {
+  background: #ffc629;
 }
 
 .tf-notification-icon {

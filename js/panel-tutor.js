@@ -5,6 +5,8 @@ import {
   obtenerReservasDelTutor,
   actualizarEstadoReserva,
   actualizarEnlaceClaseReserva,
+  confirmarPagoReserva,
+  rechazarPagoReserva,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -153,6 +155,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return fechaHora;
+  }
+
+  function obtenerMilisegundosCampoTemporal(valor) {
+    if (!valor) return 0;
+
+    if (typeof valor.toMillis === "function") {
+      return valor.toMillis();
+    }
+
+    if (typeof valor.seconds === "number") {
+      return valor.seconds * 1000;
+    }
+
+    const fecha = new Date(valor);
+    const tiempo = fecha.getTime();
+
+    return Number.isNaN(tiempo) ? 0 : tiempo;
+  }
+
+  function obtenerFechaCreacionReserva(reserva) {
+    const camposCreacion = [
+      "creadoEn",
+      "creado",
+      "creadoEnTimestamp",
+      "fechaCreacion",
+      "creadoEl",
+      "timestamp",
+      "createdAt",
+      "fechaRegistro",
+    ];
+
+    for (const campo of camposCreacion) {
+      const tiempo = obtenerMilisegundosCampoTemporal(reserva[campo]);
+
+      if (tiempo) return tiempo;
+    }
+
+    return obtenerFechaHora(reserva)?.getTime() || 0;
   }
 
   function formatearFecha(fecha) {
@@ -394,6 +434,118 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   }
 
+  function ordenarReservasRecientes(reservas) {
+    return [...reservas].sort((a, b) => {
+      const fechaB = obtenerFechaCreacionReserva(b);
+      const fechaA = obtenerFechaCreacionReserva(a);
+
+      if (fechaA !== fechaB) {
+        return fechaB - fechaA;
+      }
+
+      const prioridadEstado = {
+        pendiente: 3,
+        aceptada: 2,
+        confirmada: 2,
+        realizada: 1,
+        cancelada: 0,
+        rechazada: 0,
+      };
+
+      return (
+        (prioridadEstado[normalizarEstado(b.estado)] || 0) -
+        (prioridadEstado[normalizarEstado(a.estado)] || 0)
+      );
+    });
+  }
+
+  function obtenerEstadoPago(reserva) {
+    return String(reserva.estadoPago || "pendiente")
+      .toLowerCase()
+      .trim();
+  }
+
+  function formatearMontoPago(valor) {
+    const monto = Number(valor || 0);
+    return monto.toFixed(2);
+  }
+
+  function crearBloquePagoTutor(reserva) {
+    const estadoPago = obtenerEstadoPago(reserva);
+    const comentarioPago = reserva.comentarioPago || "Sin comentario";
+
+    if (estadoPago === "en_revision") {
+      return `
+        <div class="pago-panel-box estado-en_revision">
+          <div class="pago-panel-header">
+            <strong>Pago en revisión</strong>
+            <span class="clase-estado programada">En revisión</span>
+          </div>
+
+          <div class="pago-panel-grid">
+            <div><span>Método</span><strong>${limpiarTexto(reserva.metodoPago || "No indicado")}</strong></div>
+            <div><span>Monto</span><strong>S/ ${formatearMontoPago(reserva.montoPagado)}</strong></div>
+            <div><span>Número de operación</span><strong>${limpiarTexto(reserva.numeroOperacion || "No indicado")}</strong></div>
+            <div><span>Comentario</span><strong>${limpiarTexto(comentarioPago)}</strong></div>
+          </div>
+
+          <div class="pago-panel-actions">
+            <button
+              type="button"
+              class="btn-confirmar-pago"
+              data-id="${limpiarTexto(reserva.id)}"
+              data-pago-accion="confirmar"
+            >
+              Confirmar pago
+            </button>
+
+            <button
+              type="button"
+              class="btn-rechazar-pago"
+              data-id="${limpiarTexto(reserva.id)}"
+              data-pago-accion="rechazar"
+            >
+              Rechazar pago
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    if (estadoPago === "confirmado") {
+      return `
+        <div class="pago-panel-box estado-confirmado">
+          <div class="pago-panel-header">
+            <strong>Pago confirmado.</strong>
+            <span class="clase-estado programada">Confirmado</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (estadoPago === "rechazado") {
+      return `
+        <div class="pago-panel-box estado-rechazado">
+          <div class="pago-panel-header">
+            <strong>Pago rechazado.</strong>
+            <span class="clase-estado pendiente">Rechazado</span>
+          </div>
+          <p>${limpiarTexto(reserva.motivoRechazoPago || "Sin motivo registrado.")}</p>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="pago-panel-box estado-pendiente">
+        <div class="pago-panel-header">
+          <strong>Pago pendiente.</strong>
+          <span class="clase-estado pendiente">Pendiente</span>
+        </div>
+        <p>El estudiante todavía no registró pago.</p>
+      </div>
+    `;
+  }
+
   function crearBotonesAccion(reserva) {
     const estado = normalizarEstado(reserva.estado);
 
@@ -442,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const reservasOrdenadas = ordenarReservasPorFechaHora(reservas, "asc");
+    const reservasOrdenadas = ordenarReservasRecientes(reservas);
 
     listaReservasTutor.innerHTML = reservasOrdenadas
       .map((reserva) => {
@@ -470,6 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <div><strong>Método:</strong> ${limpiarTexto(reserva.metodoPago || "Simulado")}</div>
             </div>
             ${crearBloqueClaseVirtual(reserva)}
+            ${crearBloquePagoTutor(reserva)}
           </div>
 
           <div class="reserva-actions">
@@ -638,6 +791,77 @@ document.addEventListener("DOMContentLoaded", () => {
           botonGuardar.disabled = false;
           botonGuardar.textContent = textoOriginal;
         }
+      } finally {
+        accionReservaEnProceso = false;
+      }
+    });
+  }
+
+  if (listaReservasTutor) {
+    listaReservasTutor.addEventListener("click", async (event) => {
+      const boton = event.target.closest("[data-id][data-pago-accion]");
+
+      if (!boton || accionReservaEnProceso) return;
+
+      const reservaId = boton.dataset.id;
+      const accionPago = boton.dataset.pagoAccion;
+
+      if (!reservaId || !["confirmar", "rechazar"].includes(accionPago)) {
+        mostrarMensaje("La acción de pago seleccionada no es válida.", "error");
+        return;
+      }
+
+      let motivo = "";
+
+      if (accionPago === "rechazar") {
+        motivo = prompt("Indica el motivo del rechazo del pago:") || "";
+
+        if (!motivo.trim()) {
+          mostrarMensaje("Ingresa un motivo para rechazar el pago.", "error");
+          return;
+        }
+      }
+
+      const tarjeta = boton.closest(".pago-panel-box");
+      const botonesPago = tarjeta
+        ? tarjeta.querySelectorAll("[data-id][data-pago-accion]")
+        : [boton];
+      const textoOriginal = boton.textContent;
+
+      try {
+        accionReservaEnProceso = true;
+
+        botonesPago.forEach((btn) => {
+          btn.disabled = true;
+        });
+
+        boton.textContent =
+          accionPago === "confirmar" ? "Confirmando..." : "Rechazando...";
+
+        if (accionPago === "confirmar") {
+          await confirmarPagoReserva(reservaId);
+          mostrarMensaje("Pago confirmado correctamente.", "exito");
+        } else {
+          await rechazarPagoReserva(reservaId, motivo);
+          mostrarMensaje("Pago rechazado correctamente.", "exito");
+        }
+
+        if (tutorActual) {
+          await cargarPanelTutor(tutorActual);
+        }
+      } catch (error) {
+        console.error("Error al actualizar pago:", error);
+
+        botonesPago.forEach((btn) => {
+          btn.disabled = false;
+        });
+
+        boton.textContent = textoOriginal;
+
+        mostrarMensaje(
+          error.message || "No se pudo actualizar el estado del pago.",
+          "error",
+        );
       } finally {
         accionReservaEnProceso = false;
       }

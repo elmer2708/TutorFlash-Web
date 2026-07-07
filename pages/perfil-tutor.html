@@ -226,6 +226,86 @@
               Guardar perfil
             </button>
           </form>
+
+          <section class="pago-section">
+            <div class="form-heading">
+              <span>Pagos</span>
+              <h2>Métodos de pago</h2>
+              <p class="pago-help">
+                Agrega los datos que verá el estudiante cuando deba realizar el
+                pago de una tutoría aceptada.
+              </p>
+            </div>
+
+            <div class="pago-grid">
+              <div class="pago-field">
+                <label for="pagoYape">Yape</label>
+                <input
+                  type="text"
+                  id="pagoYape"
+                  placeholder="Ejemplo: 999 888 777"
+                />
+              </div>
+
+              <div class="pago-field">
+                <label for="pagoPlin">Plin</label>
+                <input
+                  type="text"
+                  id="pagoPlin"
+                  placeholder="Ejemplo: 999 888 777"
+                />
+              </div>
+
+              <div class="pago-field">
+                <label for="pagoBanco">Banco</label>
+                <input
+                  type="text"
+                  id="pagoBanco"
+                  placeholder="Ejemplo: BCP, Interbank, BBVA"
+                />
+              </div>
+
+              <div class="pago-field">
+                <label for="pagoCci">CCI o número de cuenta</label>
+                <input
+                  type="text"
+                  id="pagoCci"
+                  placeholder="Ejemplo: 002-123456789..."
+                />
+              </div>
+
+              <div class="pago-field">
+                <label for="pagoTitular">Titular</label>
+                <input
+                  type="text"
+                  id="pagoTitular"
+                  placeholder="Nombre del titular de la cuenta"
+                />
+              </div>
+
+              <div class="pago-field pago-field-full">
+                <label for="pagoInstrucciones">Instrucciones de pago</label>
+                <textarea
+                  id="pagoInstrucciones"
+                  rows="4"
+                  placeholder="Ejemplo: Después de pagar, registra el número de operación en TutorFlash."
+                ></textarea>
+              </div>
+            </div>
+
+            <p id="mensajeDatosPago" class="mensaje-datos-pago">
+              Completa tus métodos de pago para que el estudiante tenga
+              instrucciones claras.
+            </p>
+
+            <button
+              type="button"
+              id="btnGuardarDatosPago"
+              class="btn-guardar"
+            >
+              Guardar datos de pago
+            </button>
+          </section>
         </section>
       </section>
     </main>

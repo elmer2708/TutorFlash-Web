@@ -92,16 +92,109 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function crearNotificacionesDesdeSesiones(sesiones) {
+  function actualizarContadorNotificaciones(notificaciones) {
+    if (!contadorNotificaciones) return;
+
+    contadorNotificaciones.textContent = notificaciones.length
+      ? String(notificaciones.length)
+      : "0";
+  }
+
+  function obtenerMilisegundosCampoTemporal(valor) {
+    if (!valor) return 0;
+
+    if (typeof valor.toMillis === "function") {
+      return valor.toMillis();
+    }
+
+    if (typeof valor.seconds === "number") {
+      return valor.seconds * 1000;
+    }
+
+    const fecha = new Date(valor);
+    const tiempo = fecha.getTime();
+
+    return Number.isNaN(tiempo) ? 0 : tiempo;
+  }
+
+  function obtenerFechaOrdenSesion(sesion) {
+    const camposOrden = [
+      "pagoActualizadoEn",
+      "actualizadoEn",
+      "pagoRegistradoEn",
+      "pagoConfirmadoEn",
+      "pagoRechazadoEn",
+      "creadoEn",
+      "creado",
+      "creadoEnTimestamp",
+      "fechaCreacion",
+      "creadoEl",
+      "timestamp",
+    ];
+
+    for (const campo of camposOrden) {
+      const tiempo = obtenerMilisegundosCampoTemporal(sesion[campo]);
+
+      if (tiempo) return tiempo;
+    }
+
+    return 0;
+  }
+
+  function obtenerClaveNotificacionesLeidas() {
+    const usuarioKey =
+      window.__tfUsuarioNotificacionesKey || "usuario-sin-identificar";
+
+    return `tfNotificacionesLeidas:${usuarioKey}`;
+  }
+
+  function obtenerIdsNotificacionesLeidas() {
+    try {
+      return new Set(
+        JSON.parse(localStorage.getItem(obtenerClaveNotificacionesLeidas()) || "[]"),
+      );
+    } catch (error) {
+      return new Set();
+    }
+  }
+
+  function guardarIdsNotificacionesLeidas(idsLeidos) {
+    localStorage.setItem(
+      obtenerClaveNotificacionesLeidas(),
+      JSON.stringify([...idsLeidos]),
+    );
+  }
+
+  function ordenarNotificaciones(notificaciones) {
+    return [...notificaciones].sort((a, b) => {
+      if (a.fechaOrden !== b.fechaOrden) {
+        return b.fechaOrden - a.fechaOrden;
+      }
+
+      return a.prioridad - b.prioridad;
+    });
+  }
+
+  function filtrarNotificacionesLeidas(notificaciones) {
+    const idsLeidos = obtenerIdsNotificacionesLeidas();
+
+    return notificaciones.filter((notificacion) => {
+      return !idsLeidos.has(notificacion.id);
+    });
+  }
+
+  function crearNotificacionesOrdenadasDesdeSesiones(sesiones) {
     const hoy = obtenerFechaLocal();
     const notificaciones = [];
 
     sesiones.forEach((sesion) => {
+      const idSesion =
+        sesion.id || `${sesion.fecha || "sin-fecha"}-${sesion.curso || "curso"}`;
       const tutor = sesion.tutor || sesion.nombreTutor || "tu tutor";
       const curso = sesion.curso || "tu curso";
       const fecha = sesion.fecha || "";
       const hora = sesion.hora || "hora pendiente";
-
+      const fechaOrden = obtenerFechaOrdenSesion(sesion);
       const estado = String(sesion.estado || "pendiente").toLowerCase().trim();
       const estadoPago = String(sesion.estadoPago || "pendiente")
         .toLowerCase()
@@ -114,73 +207,98 @@ document.addEventListener("DOMContentLoaded", () => {
         estado === "realizada" ||
         estado === "cancelada" ||
         estado === "rechazada";
+      const claseLista = estadoClase === "programada" || Boolean(enlaceClase);
 
-      if (enlaceClase && !reservaFinalizada) {
+      function agregarNotificacion(sufijo, datos) {
         notificaciones.push({
-          tipo: "confirmada",
-          icono: "🔗",
-          titulo: "Tu clase virtual ya tiene enlace",
-          detalle: `${curso} con ${tutor} ya tiene enlace disponible para ingresar.`,
-        });
-
-        return;
-      }
-
-      if (fecha === hoy && !reservaFinalizada) {
-        notificaciones.push({
-          tipo: "hoy",
-          icono: "📅",
-          titulo: "Tienes una clase programada para hoy",
-          detalle: `${curso} con ${tutor} a las ${hora}.`,
+          id: `${idSesion}-${sufijo}`,
+          fechaOrden,
+          ...datos,
         });
       }
 
-      if (estado === "pendiente") {
-        notificaciones.push({
-          tipo: "pendiente",
-          icono: "⏳",
-          titulo: "Tu reserva está pendiente",
-          detalle: `${curso} con ${tutor} para el ${formatearFecha(fecha)}.`,
-        });
-      }
-
-      if (estadoPago === "pendiente") {
-        notificaciones.push({
+      if (estadoPago === "rechazado") {
+        agregarNotificacion("pago-rechazado", {
           tipo: "pago",
+          prioridad: 1,
+          icono: "⚠️",
+          titulo: "Tu pago fue rechazado",
+          detalle: `Revisa el motivo y vuelve a registrar el pago de ${curso}.`,
+        });
+      } else if (estadoPago === "confirmado") {
+        agregarNotificacion("pago-confirmado", {
+          tipo: "pago",
+          prioridad: 2,
+          icono: "✅",
+          titulo: "Tu pago fue confirmado",
+          detalle: `El tutor confirmó el pago de tu tutoría de ${curso}.`,
+        });
+      } else if (estadoPago === "en_revision") {
+        agregarNotificacion("pago-en-revision", {
+          tipo: "pago",
+          prioridad: 3,
+          icono: "🧾",
+          titulo: "Pago enviado para revisión",
+          detalle: `Tu pago de ${curso} está pendiente de confirmación del tutor.`,
+        });
+      } else if (estadoPago === "pendiente" && !reservaFinalizada) {
+        agregarNotificacion("pago-pendiente", {
+          tipo: "pago",
+          prioridad: 6,
           icono: "💳",
           titulo: "Pago pendiente",
           detalle: `Aún falta registrar el pago de tu tutoría de ${curso}.`,
         });
       }
 
-      if (estadoClase === "pendiente" && !enlaceClase && !reservaFinalizada) {
-        notificaciones.push({
+      if (claseLista && !reservaFinalizada) {
+        agregarNotificacion("clase-enlace", {
+          tipo: "confirmada",
+          prioridad: 4,
+          icono: "🔗",
+          titulo: "Tu clase virtual ya tiene enlace",
+          detalle: `${curso} con ${tutor} ya tiene enlace disponible para ingresar.`,
+        });
+      } else if (estadoClase === "pendiente" && !reservaFinalizada) {
+        agregarNotificacion("clase-pendiente", {
           tipo: "clase",
+          prioridad: 7,
           icono: "💻",
           titulo: "Clase virtual pendiente",
           detalle: `El enlace de la clase con ${tutor} todavía no fue asignado.`,
         });
       }
 
-      if (estado === "confirmada") {
-        notificaciones.push({
+      if ((estado === "aceptada" || estado === "confirmada") && !reservaFinalizada) {
+        agregarNotificacion("reserva-confirmada", {
           tipo: "confirmada",
+          prioridad: 5,
           icono: "✅",
           titulo: "Tu tutoría fue confirmada",
           detalle: `${curso} con ${tutor} está confirmada para el ${formatearFecha(fecha)}.`,
         });
+      } else if (estado === "pendiente") {
+        agregarNotificacion("reserva-pendiente", {
+          tipo: "pendiente",
+          prioridad: 8,
+          icono: "⏳",
+          titulo: "Tu reserva está pendiente",
+          detalle: `${curso} con ${tutor} para el ${formatearFecha(fecha)}.`,
+        });
+      }
+
+      if (fecha === hoy && !reservaFinalizada) {
+        agregarNotificacion("clase-hoy", {
+          tipo: "hoy",
+          prioridad: 4,
+          icono: "📅",
+          titulo: "Tienes una clase programada para hoy",
+          detalle: `${curso} con ${tutor} a las ${hora}.`,
+        });
       }
     });
 
-    return notificaciones;
-  }
-
-  function actualizarContadorNotificaciones(notificaciones) {
-    if (!contadorNotificaciones) return;
-
-    contadorNotificaciones.textContent = notificaciones.length
-      ? String(notificaciones.length)
-      : "0";
+    return filtrarNotificacionesLeidas(ordenarNotificaciones(notificaciones));
   }
 
   function pintarNotificaciones(notificaciones) {
@@ -199,15 +317,28 @@ document.addEventListener("DOMContentLoaded", () => {
     listaNotificaciones.innerHTML = notificaciones
       .map((notificacion) => {
         return `
-          <article class="tf-notification-card tf-notification-${limpiarTexto(notificacion.tipo)}">
+          <article
+            class="tf-notification-card tf-notification-${limpiarTexto(notificacion.tipo)}"
+            data-notificacion-id="${limpiarTexto(notificacion.id)}"
+          >
             <div class="tf-notification-icon">
               ${limpiarTexto(notificacion.icono)}
             </div>
 
-            <div>
+            <div class="tf-notification-body">
               <h3>${limpiarTexto(notificacion.titulo)}</h3>
               <p>${limpiarTexto(notificacion.detalle)}</p>
             </div>
+
+            <button
+              type="button"
+              class="tf-notification-close"
+              data-marcar-leida="${limpiarTexto(notificacion.id)}"
+              aria-label="Ocultar notificación"
+              title="Ocultar notificación"
+            >
+              ×
+            </button>
           </article>
         `;
       })
@@ -219,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarEstado("Cargando notificaciones...");
 
       const sesiones = await obtenerMisSesiones();
-      const notificaciones = crearNotificacionesDesdeSesiones(sesiones);
+      const notificaciones = crearNotificacionesOrdenadasDesdeSesiones(sesiones);
 
       actualizarContadorNotificaciones(notificaciones);
       pintarNotificaciones(notificaciones);
@@ -236,6 +367,34 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarEstado("No se pudieron cargar las notificaciones.");
     }
   }
+
+  listaNotificaciones?.addEventListener("click", (event) => {
+    const boton = event.target.closest("[data-marcar-leida]");
+
+    if (!boton) return;
+
+    const notificacionId = boton.dataset.marcarLeida;
+    const idsLeidos = obtenerIdsNotificacionesLeidas();
+
+    idsLeidos.add(notificacionId);
+    guardarIdsNotificacionesLeidas(idsLeidos);
+
+    const tarjeta = boton.closest(".tf-notification-card");
+    tarjeta?.remove();
+
+    const restantes = listaNotificaciones.querySelectorAll(
+      ".tf-notification-card",
+    );
+
+    actualizarContadorNotificaciones([...restantes]);
+
+    if (!restantes.length) {
+      pintarNotificaciones([]);
+      mostrarEstado("");
+    } else {
+      mostrarEstado(`${restantes.length} notificación(es) encontrada(s).`);
+    }
+  });
 
   btnUsuario?.addEventListener("click", () => {
     menuUsuario?.classList.toggle("oculto");
@@ -267,6 +426,8 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "cuenta.html";
       return;
     }
+
+    window.__tfUsuarioNotificacionesKey = usuario.uid || usuario.email || "usuario";
 
     await cargarUsuario(usuario);
     await cargarNotificaciones();
