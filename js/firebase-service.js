@@ -1026,3 +1026,40 @@ export async function actualizarPerfilUsuarioActual(datosPerfil) {
 
   return perfilActualizado;
 }
+export async function actualizarEnlaceClaseReserva(reservaId, datosClase) {
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    throw new Error("Debes iniciar sesión para actualizar la clase.");
+  }
+
+  if (!reservaId) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  const plataformaClase = String(datosClase.plataformaClase || "").trim();
+  const enlaceClase = String(datosClase.enlaceClase || "").trim();
+
+  if (!plataformaClase) {
+    throw new Error("Selecciona la plataforma de la clase.");
+  }
+
+  if (!enlaceClase) {
+    throw new Error("Ingresa el enlace de la clase.");
+  }
+
+  if (!/^https?:\/\//i.test(enlaceClase)) {
+    throw new Error("El enlace de la clase debe empezar con http:// o https://.");
+  }
+
+  const datosActualizados = {
+    plataformaClase,
+    enlaceClase,
+    estadoClase: "programada",
+    actualizadoEn: serverTimestamp(),
+  };
+
+  await updateDoc(doc(db, "reservas", reservaId), datosActualizados);
+
+  return datosActualizados;
+}

@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const estadoNotificaciones = document.querySelector("#estadoNotificaciones");
   const listaNotificaciones = document.querySelector("#listaNotificaciones");
+  const contadorNotificaciones = document.getElementById(
+    "contadorNotificaciones",
+  );
 
   function limpiarTexto(valor) {
     return String(valor ?? "")
@@ -99,12 +102,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const fecha = sesion.fecha || "";
       const hora = sesion.hora || "hora pendiente";
 
-      const estado = sesion.estado || "pendiente";
-      const estadoPago = sesion.estadoPago || "pendiente";
-      const estadoClase = sesion.estadoClase || "pendiente";
-      const enlaceClase = sesion.enlaceClase || "";
+      const estado = String(sesion.estado || "pendiente").toLowerCase().trim();
+      const estadoPago = String(sesion.estadoPago || "pendiente")
+        .toLowerCase()
+        .trim();
+      const estadoClase = String(sesion.estadoClase || "pendiente")
+        .toLowerCase()
+        .trim();
+      const enlaceClase = String(sesion.enlaceClase || "").trim();
+      const reservaFinalizada =
+        estado === "realizada" ||
+        estado === "cancelada" ||
+        estado === "rechazada";
 
-      if (fecha === hoy && estado !== "realizada" && estado !== "cancelada") {
+      if (enlaceClase && !reservaFinalizada) {
+        notificaciones.push({
+          tipo: "confirmada",
+          icono: "🔗",
+          titulo: "Tu clase virtual ya tiene enlace",
+          detalle: `${curso} con ${tutor} ya tiene enlace disponible para ingresar.`,
+        });
+
+        return;
+      }
+
+      if (fecha === hoy && !reservaFinalizada) {
         notificaciones.push({
           tipo: "hoy",
           icono: "📅",
@@ -131,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      if (estadoClase === "pendiente" && !enlaceClase) {
+      if (estadoClase === "pendiente" && !enlaceClase && !reservaFinalizada) {
         notificaciones.push({
           tipo: "clase",
           icono: "💻",
@@ -151,6 +173,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     return notificaciones;
+  }
+
+  function actualizarContadorNotificaciones(notificaciones) {
+    if (!contadorNotificaciones) return;
+
+    contadorNotificaciones.textContent = notificaciones.length
+      ? String(notificaciones.length)
+      : "0";
   }
 
   function pintarNotificaciones(notificaciones) {
@@ -191,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const sesiones = await obtenerMisSesiones();
       const notificaciones = crearNotificacionesDesdeSesiones(sesiones);
 
+      actualizarContadorNotificaciones(notificaciones);
       pintarNotificaciones(notificaciones);
 
       if (notificaciones.length) {
@@ -241,3 +272,4 @@ document.addEventListener("DOMContentLoaded", () => {
     await cargarNotificaciones();
   });
 });
+

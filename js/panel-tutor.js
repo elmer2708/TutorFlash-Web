@@ -4,6 +4,7 @@ import {
   obtenerTutorActivoActual,
   obtenerReservasDelTutor,
   actualizarEstadoReserva,
+  actualizarEnlaceClaseReserva,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -293,6 +294,106 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function crearOpcionPlataforma(valor, plataformaActual) {
+    const seleccionado =
+      normalizarTexto(valor) === normalizarTexto(plataformaActual)
+        ? "selected"
+        : "";
+
+    return `
+    <option value="${limpiarTexto(valor)}" ${seleccionado}>
+      ${limpiarTexto(valor)}
+    </option>
+  `;
+  }
+
+  function crearBloqueClaseVirtual(reserva) {
+    const estado = normalizarEstado(reserva.estado);
+    const plataformaClase = reserva.plataformaClase || "Google Meet";
+    const enlaceClase = reserva.enlaceClase || "";
+    const tieneEnlace = Boolean(enlaceClase);
+
+    if (estado !== "aceptada" && estado !== "realizada") {
+      return `
+      <div class="clase-virtual-box clase-pendiente">
+        <div class="clase-virtual-header">
+          <strong>Clase virtual</strong>
+          <span class="clase-estado pendiente">Pendiente</span>
+        </div>
+        <p>Acepta la reserva para poder agregar el enlace de la clase.</p>
+      </div>
+    `;
+    }
+
+    return `
+    <div class="clase-virtual-box">
+      <div class="clase-virtual-header">
+        <strong>Clase virtual</strong>
+
+        <span class="clase-estado ${tieneEnlace ? "programada" : "pendiente"}">
+          ${tieneEnlace ? "Enlace enviado" : "Enlace pendiente"}
+        </span>
+      </div>
+
+      ${
+        tieneEnlace
+          ? `
+            <p>
+              Plataforma: <strong>${limpiarTexto(plataformaClase)}</strong>
+            </p>
+
+            <a
+              href="${limpiarTexto(enlaceClase)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="clase-link"
+            >
+              Abrir enlace de clase
+            </a>
+          `
+          : `
+            <p>
+              Agrega el enlace de Google Meet, Zoom u otra plataforma para que el estudiante pueda ingresar.
+            </p>
+          `
+      }
+
+      ${
+        estado === "aceptada"
+          ? `
+            <form class="form-clase" data-id="${limpiarTexto(reserva.id)}">
+              <label>
+                Plataforma
+                <select name="plataformaClase" required>
+                  ${crearOpcionPlataforma("Google Meet", plataformaClase)}
+                  ${crearOpcionPlataforma("Zoom", plataformaClase)}
+                  ${crearOpcionPlataforma("WhatsApp", plataformaClase)}
+                  ${crearOpcionPlataforma("Otro", plataformaClase)}
+                </select>
+              </label>
+
+              <label>
+                Enlace de clase
+                <input
+                  type="url"
+                  name="enlaceClase"
+                  value="${limpiarTexto(enlaceClase)}"
+                  placeholder="https://meet.google.com/..."
+                  required
+                />
+              </label>
+
+              <button type="submit" class="btn-guardar-clase">
+                ${tieneEnlace ? "Actualizar enlace" : "Guardar enlace"}
+              </button>
+            </form>
+          `
+          : ""
+      }
+    </div>
+  `;
+  }
+
   function crearBotonesAccion(reserva) {
     const estado = normalizarEstado(reserva.estado);
 
@@ -368,6 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <div><strong>Total:</strong> S/ ${formatearMonto(reserva.total)}</div>
               <div><strong>Método:</strong> ${limpiarTexto(reserva.metodoPago || "Simulado")}</div>
             </div>
+            ${crearBloqueClaseVirtual(reserva)}
           </div>
 
           <div class="reserva-actions">
@@ -482,6 +584,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (filtroReservas) {
     filtroReservas.addEventListener("change", pintarReservas);
+  }
+
+  if (listaReservasTutor) {
+    listaReservasTutor.addEventListener("submit", async (event) => {
+      const formulario = event.target.closest(".form-clase");
+
+      if (!formulario || accionReservaEnProceso) return;
+
+      event.preventDefault();
+
+      const reservaId = formulario.dataset.id;
+      const plataformaClase = formulario.plataformaClase.value;
+      const enlaceClase = formulario.enlaceClase.value;
+      const botonGuardar = formulario.querySelector("button[type='submit']");
+      const textoOriginal = botonGuardar?.textContent || "Guardar enlace";
+
+      if (!reservaId) {
+        mostrarMensaje("No se encontró la reserva seleccionada.", "error");
+        return;
+      }
+
+      try {
+        accionReservaEnProceso = true;
+
+        if (botonGuardar) {
+          botonGuardar.disabled = true;
+          botonGuardar.textContent = "Guardando...";
+        }
+
+        await actualizarEnlaceClaseReserva(reservaId, {
+          plataformaClase,
+          enlaceClase,
+        });
+
+        mostrarMensaje(
+          "Enlace de clase guardado correctamente. El estudiante ya podrá verlo.",
+          "exito",
+        );
+
+        if (tutorActual) {
+          await cargarPanelTutor(tutorActual);
+        }
+      } catch (error) {
+        console.error("Error al guardar enlace de clase:", error);
+
+        mostrarMensaje(
+          error.message || "No se pudo guardar el enlace de la clase.",
+          "error",
+        );
+
+        if (botonGuardar) {
+          botonGuardar.disabled = false;
+          botonGuardar.textContent = textoOriginal;
+        }
+      } finally {
+        accionReservaEnProceso = false;
+      }
+    });
   }
 
   if (listaReservasTutor) {

@@ -653,3 +653,126 @@ select:disabled {
     width: 100%;
   }
 }
+.clase-virtual-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(12, 35, 64, 0.1);
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.clase-virtual-box p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.clase-virtual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.clase-virtual-header strong {
+  color: #0c2340;
+}
+
+.clase-estado {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.clase-estado.pendiente {
+  background: #fff4d6;
+  color: #8a5a00;
+}
+
+.clase-estado.programada {
+  background: #dff7e8;
+  color: #137333;
+}
+
+.clase-link {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #0c2340;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.form-clase {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.7fr) minmax(220px, 1.3fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.form-clase label {
+  display: grid;
+  gap: 7px;
+  color: #0c2340;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.form-clase select,
+.form-clase input {
+  width: 100%;
+  border: 1px solid #d7dde6;
+  border-radius: 14px;
+  padding: 12px 13px;
+  background: #f8fbff;
+  color: #0c2340;
+  font: inherit;
+  font-weight: 700;
+  outline: none;
+}
+
+.form-clase select:focus,
+.form-clase input:focus {
+  border-color: #f5b700;
+  box-shadow: 0 0 0 3px rgba(245, 183, 0, 0.18);
+}
+
+.btn-guardar-clase {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: #f5b700;
+  color: #0c2340;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.btn-guardar-clase:hover:not(:disabled) {
+  background: #ffcc4d;
+}
+
+.btn-guardar-clase:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .form-clase {
+    grid-template-columns: 1fr;
+  }
+
+  .clase-link,
+  .btn-guardar-clase {
+    width: 100%;
+  }
+}
