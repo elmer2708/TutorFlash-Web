@@ -1,30 +1,85 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi perfil tutor | TutorFlash</title>
     <link rel="stylesheet" href="../css/perfil-tutor.css" />
+    <link rel="stylesheet" href="../css/panel-tutor.css" />
+      <link rel="stylesheet" href="../css/chat.css" />
   </head>
   <body>
-    <aside class="perfil-sidebar">
-      <a href="../index.html" class="sidebar-logo">
-        <span>⚡</span>
-        <strong>TutorFlash</strong>
+        <aside class="tutor-sidebar">
+      <a href="../index.html" class="sidebar-logo" aria-label="TutorFlash">
+        <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
       </a>
 
       <nav class="sidebar-nav">
-        <a href="panel-tutor.html">Dashboard</a>
-        <a href="panel-tutor.html#reservas">Mis reservas</a>
-        <a href="perfil-tutor.html" class="activo">Mi perfil tutor</a>
-        <a href="disponibilidad-tutor.html">Disponibilidad</a>
-        <a href="disponibilidad-tutor.html">Actualizar disponibilidad</a>
+        <a href="panel-tutor.html" class="sidebar-link">
+          <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+          </span>
+          <span class="sidebar-label">Panel</span>
+        </a>
+        <a href="panel-tutor.html#reservas" class="sidebar-link">
+          <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path></svg>
+          </span>
+          <span class="sidebar-label">Mis reservas</span>
+        </a>
+        <a href="disponibilidad-tutor.html" class="sidebar-link">
+          <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          </span>
+          <span class="sidebar-label">Disponibilidad</span>
+        </a>
+        <a href="perfil-tutor.html" class="sidebar-link active activo">
+          <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+          </span>
+          <span class="sidebar-label">Mi perfil tutor</span>
+        </a>
+        <a href="historial-tutor.html" class="sidebar-link">
+          <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
+          </span>
+          <span class="sidebar-label">Historial</span>
+        </a>
       </nav>
 
-      <button id="btnCerrarSesionTutor" class="btn-salir">Salir</button>
+      <div class="tf-sidebar-card tutor-sidebar-card">
+        <span>Consejo rapido</span>
+        <p>Manten tu perfil, disponibilidad y pagos al dia para recibir reservas.</p>
+      </div>
     </aside>
 
     <main class="perfil-main">
+      <header class="tutor-topbar">
+        <div>
+          <span class="tutor-topbar-label">Portal tutor</span>
+          <strong>Gestion de tutorias</strong>
+        </div>
+
+        <div class="tf-user-area tutor-user-area">
+          <button class="tf-user-chip" id="btnUsuarioTutor" type="button">
+            <span class="tf-user-avatar" id="avatarTutorTop">TF</span>
+            <span class="tf-user-meta">
+              <strong id="nombreTutorTop">Tutor</strong>
+              <small>Mi cuenta</small>
+            </span>
+          </button>
+
+          <div class="tf-user-dropdown oculto" id="menuUsuarioTutor">
+            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">x</button>
+            <p class="tf-user-email" id="correoTutorMenu">correo@ejemplo.com</p>
+            <div class="tf-user-dropdown-avatar" id="avatarTutorMenu">TF</div>
+            <h3 id="saludoTutorMenu">Hola, tutor</h3>
+            <a class="tf-user-dropdown-btn" href="perfil-tutor.html">Ver perfil tutor</a>
+            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesion</button>
+          </div>
+        </div>
+      </header>
+
       <header class="perfil-header">
         <div>
           <span class="perfil-label">Perfil público del tutor</span>
@@ -34,14 +89,7 @@
             una tutoría contigo.
           </p>
         </div>
-
-        <div class="header-actions">
-          <a href="panel-tutor.html" class="btn-outline">Volver al panel</a>
-          <a href="disponibilidad-tutor.html" class="btn-primary"
-            >Actualizar disponibilidad</a
-          >
-        </div>
-      </header>
+</header>
 
       <section class="perfil-layout">
         <article class="preview-card">
@@ -161,12 +209,7 @@
               <div class="form-grupo">
                 <label for="modalidadTutorPerfil">Modalidad</label>
                 <select id="modalidadTutorPerfil">
-                  <option value="">Selecciona una modalidad</option>
                   <option value="Virtual">Virtual</option>
-                  <option value="Presencial">Presencial</option>
-                  <option value="Virtual y presencial">
-                    Virtual y presencial
-                  </option>
                 </select>
               </div>
 
@@ -175,7 +218,8 @@
                 <input
                   type="number"
                   id="precioTutorPerfil"
-                  min="0"
+                  min="1"
+                  max="300"
                   step="1"
                   placeholder="Ejemplo: 25"
                 />
@@ -209,6 +253,16 @@
                 />
               </div>
             </div>
+            <div class="form-grupo">
+              <label for="cvUrlTutorPerfil">Enlace de CV</label>
+              <input
+                type="url"
+                id="cvUrlTutorPerfil"
+                placeholder="https://drive.google.com/..."
+                autocomplete="url"
+              />
+            </div>
+            
 
             <div class="form-grupo">
               <label for="estadoPublicoTutorPerfil">Estado público</label>
@@ -244,6 +298,10 @@
                   type="text"
                   id="pagoYape"
                   placeholder="Ejemplo: 999 888 777"
+                  inputmode="numeric"
+                  minlength="9"
+                  maxlength="9"
+                  pattern="^9[0-9]{8}$"
                 />
               </div>
 
@@ -253,6 +311,10 @@
                   type="text"
                   id="pagoPlin"
                   placeholder="Ejemplo: 999 888 777"
+                  inputmode="numeric"
+                  minlength="9"
+                  maxlength="9"
+                  pattern="^9[0-9]{8}$"
                 />
               </div>
 
@@ -298,11 +360,7 @@
               instrucciones claras.
             </p>
 
-            <button
-              type="button"
-              id="btnGuardarDatosPago"
-              class="btn-guardar"
-            >
+            <button type="button" id="btnGuardarDatosPago" class="btn-guardar">
               Guardar datos de pago
             </button>
           </section>
@@ -310,6 +368,15 @@
       </section>
     </main>
 
+    <script type="module" src="../js/sidebar-responsive.js"></script>
+    <script type="module" src="../js/tutor-account.js"></script>
     <script type="module" src="../js/perfil-tutor.js"></script>
+      <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
+
+
+
+
+
+

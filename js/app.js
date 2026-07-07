@@ -7,6 +7,7 @@ import {
   obtenerDisponibilidadPorTutorId,
   obtenerReservasOcupadasPorTutorFecha,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const inputBuscar = document.querySelector("#buscarCurso");
@@ -179,6 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const diaSeleccionado = normalizarDia(obtenerDiaPorFecha(fecha));
 
     return bloques.filter((bloque) => {
+      if (bloque.fecha) {
+        return bloque.activo !== false && bloque.fecha === fecha;
+      }
+
       return (
         bloque.activo !== false && normalizarDia(bloque.dia) === diaSeleccionado
       );
@@ -517,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const obtenerDisponibilidadTutor = (disponibilidad) => {
     if (!disponibilidad) {
-      return "Disponible hoy";
+      return "Este tutor aún no registró horarios.";
     }
 
     if (disponibilidad === "Mañana") {
@@ -562,7 +567,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const precio = obtenerPrecioTutor(tutor);
 
     const rating = tutor.rating || obtenerRatingTutor();
-    const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
+    const disponibilidad =
+      tutor.disponibilidadResumen ||
+      obtenerDisponibilidadTutor(tutor.disponibilidad);
 
     const modalidad = tutor.modalidad || "Modalidad no indicada";
     const nivel = tutor.nivel || "Nivel no indicado";
@@ -847,7 +854,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const usuario = obtenerUsuarioActual();
 
     if (!usuario) {
-      alert("Primero debes iniciar sesión para reservar una tutoría.");
+      mostrarAviso("Primero debes iniciar sesión para reservar una tutoría.", "advertencia");
       window.location.href = "cuenta.html";
       return;
     }
@@ -871,15 +878,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!fechaReserva.value || !horaReserva.value) {
-      alert("Completa la fecha y la hora de la reserva.");
+      mostrarAviso("Completa la fecha y la hora de la reserva.", "advertencia");
       return;
     }
 
     await cargarReservasOcupadasTutor();
 
     if (horaChocaConReserva(horaReserva.value)) {
-      alert(
+      mostrarAviso(
         "Ese horario acaba de ser reservado por otra persona. Elige otro horario.",
+        "advertencia",
       );
       await actualizarHorasDisponibles();
       return;
@@ -891,12 +899,12 @@ document.addEventListener("DOMContentLoaded", () => {
       tutorTieneDisponibilidadConfigurada() &&
       !horaCabeEnBloques(horaReserva.value, bloquesDelDia)
     ) {
-      alert("Ese horario no está dentro de la disponibilidad del tutor.");
+      mostrarAviso("Ese horario no está dentro de la disponibilidad del tutor.", "advertencia");
       return;
     }
 
     if (fechaEsHoy(fechaReserva.value) && horaYaPaso(horaReserva.value)) {
-      alert("Esa hora ya pasó. Elige otro horario disponible.");
+      mostrarAviso("Esa hora ya pasó. Elige otro horario disponible.", "advertencia");
       return;
     }
 
@@ -911,7 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
       curso: tutorSeleccionado.curso,
       fecha: fechaReserva.value,
       hora: horaReserva.value,
-      modalidad: modalidadReserva.value,
+      modalidad: "Virtual",
       duracion: duracionReserva.value,
       total: totalCalculado,
       metodoPago: metodoPago?.value || "Pago simulado",
@@ -938,8 +946,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error al guardar reserva:", error);
 
-      alert(
+      mostrarAviso(
         error.message || "No se pudo guardar la reserva. Inténtalo otra vez.",
+        "error",
       );
 
       if (btnConfirmarReserva) {
@@ -1003,10 +1012,10 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCerrarSesionApp?.addEventListener("click", async () => {
     try {
       await cerrarSesion();
-      alert("Sesión cerrada correctamente.");
+      mostrarAviso("Sesión cerrada correctamente.", "exito");
     } catch (error) {
       console.error(error);
-      alert("No se pudo cerrar sesión.");
+      mostrarAviso("No se pudo cerrar sesión.", "error");
     }
   });
   cargarTutoresDesdeFirestore();

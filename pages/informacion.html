@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -16,26 +16,109 @@
 
   <body>
     <header class="tf-info-header">
-      <a href="../index.html" class="tf-info-logo">
+      <a href="../index.html" class="tf-info-logo" aria-label="Ir al inicio">
         <img
           src="../assets/img/logo-tutorflash-transparente.png"
-          alt="Logo de TutorFlash"
+          alt="TutorFlash"
         />
-        <span>TutorFlash</span>
       </a>
 
-      <nav class="tf-info-nav" aria-label="Menú principal">
-        <a href="#como-funciona">Cómo funciona</a>
-        <a href="#beneficios">Beneficios</a>
-        <a href="#estudiantes">Estudiantes</a>
-        <a href="#tutores">Tutores</a>
-        <a href="#preguntas">Preguntas</a>
-      </nav>
+      <button
+        class="tf-info-menu-toggle"
+        id="btnInfoMenu"
+        type="button"
+        aria-label="Abrir menú"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 18h16"></path>
+        </svg>
+      </button>
 
-      <div class="tf-info-actions">
-        <a href="cuenta.html" class="tf-info-login">Iniciar sesión</a>
-        <a href="cuenta.html" class="tf-info-register">Registrarse</a>
-      </div>
+      <nav class="tf-info-nav" id="infoNav" aria-label="Menú principal">
+        <a href="#como-funciona">
+          <span class="tf-info-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3v18"></path>
+              <path d="M5 8h14"></path>
+              <path d="M7 16h10"></path>
+            </svg>
+          </span>
+          Cómo funciona
+        </a>
+
+        <a href="#beneficios">
+          <span class="tf-info-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="m12 2 2.8 6.6 7.2.6-5.5 4.7 1.7 7.1L12 17.3 5.8 21l1.7-7.1L2 9.2l7.2-.6L12 2z"
+              ></path>
+            </svg>
+          </span>
+          Beneficios
+        </a>
+
+        <a href="#estudiantes">
+          <span class="tf-info-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 21a8 8 0 0 1 16 0"></path>
+            </svg>
+          </span>
+          Estudiantes
+        </a>
+
+        <a href="#tutores">
+          <span class="tf-info-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
+          Tutores
+        </a>
+
+        <a href="#preguntas">
+          <span class="tf-info-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path
+                d="M9.1 9a3 3 0 1 1 5.8 1c-.5 1-1.4 1.5-2.1 2.1-.6.5-.8.9-.8 1.9"
+              ></path>
+              <path d="M12 17h.01"></path>
+            </svg>
+          </span>
+          Preguntas
+        </a>
+
+        <div class="tf-info-actions">
+          <a href="cuenta.html" class="tf-info-login">
+            <span class="tf-info-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <path d="M10 17l5-5-5-5"></path>
+                <path d="M15 12H3"></path>
+              </svg>
+            </span>
+            Iniciar sesión
+          </a>
+
+          <a href="cuenta.html" class="tf-info-register">
+            <span class="tf-info-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M19 8v6"></path>
+                <path d="M22 11h-6"></path>
+              </svg>
+            </span>
+            Registrarse
+          </a>
+        </div>
+      </nav>
     </header>
 
     <main>
@@ -87,7 +170,7 @@
 
             <div>
               <strong>Reservar</strong>
-              <span>Elige fecha, hora, duración y modalidad de clase.</span>
+              <span>Elige fecha, hora y duración de clase.</span>
             </div>
 
             <div>
@@ -117,7 +200,7 @@
             <h3>Busca el curso</h3>
             <p>
               El estudiante ingresa el curso que necesita reforzar y puede
-              filtrar tutores según nivel, modalidad o disponibilidad.
+              filtrar tutores según nivel o disponibilidad.
             </p>
           </article>
 
@@ -126,7 +209,7 @@
             <h3>Revisa tutores</h3>
             <p>
               Cada tutor muestra información útil como cursos, descripción,
-              modalidad, distrito, precio por hora y estado de disponibilidad.
+              modalidad virtual, precio por hora y estado de disponibilidad.
             </p>
           </article>
 
@@ -134,7 +217,7 @@
             <span>03</span>
             <h3>Reserva una tutoría</h3>
             <p>
-              El estudiante selecciona fecha, hora, duración y modalidad. La
+              El estudiante selecciona fecha, hora y duración. La
               solicitud queda guardada para su seguimiento.
             </p>
           </article>
@@ -289,7 +372,7 @@
 
             <div>
               <strong>Modalidad</strong>
-              <span>Virtual, presencial o ambas.</span>
+              <span>Virtual.</span>
             </div>
           </div>
         </div>
@@ -345,7 +428,7 @@
           <article>
             <h3>📌 Reservas registradas</h3>
             <p>
-              Cada tutoría queda guardada con fecha, hora, modalidad, duración,
+              Cada tutoría queda guardada con fecha, hora, duración,
               total y estado.
             </p>
           </article>
@@ -394,7 +477,7 @@
           <article>
             <h3>¿Las clases son virtuales?</h3>
             <p>
-              La plataforma permite registrar modalidad virtual, presencial o
+              La plataforma permite registrar modalidad virtual y
               ambas, según la información configurada por cada tutor.
             </p>
           </article>
@@ -447,5 +530,8 @@
         <a href="#como-funciona">Cómo funciona</a>
       </nav>
     </footer>
+    <script src="../js/informacion.js"></script>
   </body>
 </html>
+
+

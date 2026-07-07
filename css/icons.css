@@ -1,0 +1,39 @@
+/* ==============================
+   TUTORFLASH - ICONOS SVG
+================================= */
+
+.tf-svg-icon {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.tf-svg-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tf-sidebar-menu a .tf-svg-icon,
+.sidebar-nav a .tf-svg-icon,
+.admin-nav a .tf-svg-icon {
+  opacity: 0.95;
+}
+
+.tf-icon-btn .tf-svg-icon,
+.tf-notification-btn .tf-svg-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.tf-icon-btn .tf-svg-icon svg,
+.tf-notification-btn .tf-svg-icon svg {
+  width: 22px;
+  height: 22px;
+}

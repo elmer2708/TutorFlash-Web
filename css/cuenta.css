@@ -151,24 +151,22 @@ body {
 /* MAIN */
 
 .cuenta-main {
-  max-width: 1180px;
+  max-width: 560px;
   margin: 0 auto;
-  padding: 28px 7% 70px;
+  padding: 34px 5% 64px;
 }
 
 .cuenta-layout {
-  min-height: calc(100vh - 150px);
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  min-height: calc(100vh - 138px);
+  display: flex;
   align-items: center;
-  gap: 44px;
+  justify-content: center;
 }
 
 /* LADO IZQUIERDO */
 
 .cuenta-info {
-  position: relative;
-  padding: 34px 0;
+  display: none;
 }
 
 .cuenta-badge {
@@ -246,14 +244,15 @@ body {
 
 .auth-panel {
   display: flex;
+  width: 100%;
   justify-content: center;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 460px;
-  padding: 34px;
-  border-radius: 30px;
+  max-width: 440px;
+  padding: 32px;
+  border-radius: 26px;
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(219, 228, 238, 0.95);
   box-shadow: var(--sombra-media);
@@ -416,6 +415,20 @@ body {
   text-decoration: underline;
 }
 
+.btn-auth-link {
+  border: none;
+  background: transparent;
+  color: var(--azul-800);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.btn-auth-link:hover {
+  text-decoration: underline;
+}
+
 /* CUENTA ACTIVA */
 
 .cuenta-activa {
@@ -518,23 +531,11 @@ body {
 
 @media (max-width: 980px) {
   .cuenta-layout {
-    grid-template-columns: 1fr;
-    gap: 30px;
+    min-height: calc(100vh - 132px);
   }
 
   .cuenta-info {
-    text-align: center;
-    padding-bottom: 0;
-  }
-
-  .cuenta-info > p,
-  .cuenta-beneficios {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .cuenta-beneficios article {
-    text-align: left;
+    display: none;
   }
 }
 
@@ -551,7 +552,7 @@ body {
   }
 
   .cuenta-main {
-    padding: 20px 5% 54px;
+    padding: 22px 5% 48px;
   }
 
   .auth-card {
@@ -560,9 +561,6 @@ body {
     border-radius: 26px;
   }
 
-  .cuenta-info h1 {
-    font-size: 2.35rem;
-  }
 }
 
 @media (max-width: 600px) {
@@ -592,14 +590,6 @@ body {
 
   .cuenta-nav a {
     font-size: 0.9rem;
-  }
-
-  .cuenta-info {
-    text-align: left;
-  }
-
-  .cuenta-beneficios article {
-    padding: 16px;
   }
 
   .auth-card {
@@ -687,13 +677,312 @@ select:disabled {
     background: rgba(255, 255, 255, 0.68);
   }
 
-  .cuenta-beneficios article {
-    align-items: flex-start;
-  }
 }
 
 @media (max-width: 340px) {
   .cuenta-nav {
     grid-template-columns: 1fr;
+  }
+}
+
+/* LOGIN - AJUSTE VISUAL FINAL */
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    linear-gradient(135deg, rgba(8, 24, 39, 0.04) 0 22%, transparent 22% 100%),
+    linear-gradient(315deg, rgba(244, 197, 66, 0.12) 0 18%, transparent 18% 100%),
+    radial-gradient(ellipse at 50% -10%, rgba(244, 197, 66, 0.24), transparent 48%),
+    radial-gradient(ellipse at 86% 78%, rgba(141, 205, 232, 0.28), transparent 42%),
+    linear-gradient(180deg, #f9fcff 0%, #eef6fb 48%, #f7f1df 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 74px 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(8, 24, 39, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(8, 24, 39, 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 72%, transparent 100%);
+  opacity: 0.22;
+}
+
+.cuenta-header {
+  position: sticky;
+  min-height: 74px;
+  justify-content: center;
+  padding: 8px max(18px, 4vw);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 14px 34px rgba(7, 27, 61, 0.08);
+}
+
+.logo-link {
+  width: clamp(180px, 20vw, 235px);
+  height: 58px;
+  justify-content: center;
+  overflow: visible;
+}
+
+.logo-link img {
+  width: 100%;
+  height: auto;
+  max-height: 64px;
+  object-fit: contain;
+  transform: scale(1.45);
+}
+
+.volver-inicio {
+  position: absolute;
+  right: max(18px, 4vw);
+  min-height: 38px;
+  padding: 0 15px;
+  background: rgba(255, 248, 232, 0.92);
+  border-color: rgba(244, 197, 66, 0.55);
+  color: var(--azul-950);
+  font-size: 0.88rem;
+  box-shadow: 0 10px 24px rgba(7, 27, 61, 0.08);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.volver-inicio:hover {
+  background: var(--amarillo);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(244, 197, 66, 0.24);
+}
+
+.cuenta-main {
+  width: min(100%, 720px);
+  max-width: none;
+  padding: clamp(24px, 5vh, 54px) 18px clamp(42px, 7vh, 78px);
+}
+
+.cuenta-layout {
+  position: relative;
+  min-height: calc(100vh - 150px);
+  isolation: isolate;
+}
+
+.cuenta-layout::before,
+.cuenta-layout::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 34px;
+  pointer-events: none;
+}
+
+.cuenta-layout::before {
+  width: min(640px, 92vw);
+  height: min(520px, 68vh);
+  background:
+    linear-gradient(145deg, rgba(8, 24, 39, 0.9), rgba(18, 59, 93, 0.72)),
+    linear-gradient(135deg, rgba(244, 197, 66, 0.22), transparent);
+  transform: rotate(-4deg);
+  box-shadow: 0 34px 80px rgba(7, 27, 61, 0.18);
+}
+
+.cuenta-layout::after {
+  width: min(540px, 82vw);
+  height: min(460px, 62vh);
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  transform: translate(34px, 20px) rotate(3deg);
+  box-shadow: 0 24px 70px rgba(7, 27, 61, 0.1);
+}
+
+.auth-panel {
+  position: relative;
+  z-index: 1;
+  padding: clamp(18px, 4vw, 34px);
+}
+
+.auth-card {
+  max-width: 500px;
+  padding: clamp(26px, 4vw, 42px);
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 251, 241, 0.96)),
+    var(--blanco);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 30px 80px rgba(7, 27, 61, 0.24),
+    0 0 0 1px rgba(244, 197, 66, 0.1) inset;
+}
+
+.auth-card-header {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(219, 228, 238, 0.78);
+}
+
+.auth-card-header p {
+  color: #9a6d00;
+  letter-spacing: 0.12em;
+}
+
+.auth-card-header h2 {
+  font-size: clamp(1.85rem, 4vw, 2.25rem);
+}
+
+.auth-form {
+  gap: 13px;
+}
+
+.auth-form input,
+.auth-form select {
+  min-height: 52px;
+  border-radius: 15px;
+  background: #f8fbff;
+  border-color: rgba(123, 151, 178, 0.38);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.auth-form input:hover,
+.auth-form select:hover {
+  border-color: rgba(29, 79, 122, 0.45);
+  background: #ffffff;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: var(--amarillo);
+  box-shadow:
+    0 0 0 4px rgba(244, 197, 66, 0.2),
+    0 12px 28px rgba(7, 27, 61, 0.08);
+}
+
+.btn-auth-principal {
+  min-height: 54px;
+  margin-top: 12px;
+  background: linear-gradient(180deg, #ffd95c 0%, #f4c542 100%);
+  box-shadow:
+    0 16px 32px rgba(244, 197, 66, 0.34),
+    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+}
+
+.btn-auth-principal:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffe27a 0%, #f2bd24 100%);
+}
+
+.btn-auth-link {
+  justify-self: center;
+  min-height: 34px;
+  padding: 0 8px;
+}
+
+.auth-cambio {
+  margin-top: 10px;
+}
+
+.cuenta-nav a:focus-visible,
+.logo-link:focus-visible,
+.volver-inicio:focus-visible,
+.auth-cambio button:focus-visible,
+.btn-auth-link:focus-visible,
+.btn-auth-principal:focus-visible,
+#btnCerrarSesion:focus-visible,
+.cuenta-activa-links a:focus-visible {
+  outline: 3px solid rgba(244, 197, 66, 0.75);
+  outline-offset: 3px;
+}
+
+@media (min-width: 1024px) {
+  .cuenta-main {
+    width: min(100%, 760px);
+  }
+
+  .auth-card {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 760px) {
+  .cuenta-header {
+    min-height: 104px;
+    justify-content: center;
+    padding: 8px 16px 12px;
+  }
+
+  .logo-link {
+    width: clamp(164px, 52vw, 210px);
+    height: 48px;
+  }
+
+  .logo-link img {
+    max-height: 50px;
+    transform: scale(1.72);
+  }
+
+  .volver-inicio {
+    position: static;
+    margin-top: 6px;
+  }
+
+  .cuenta-main {
+    padding-top: 18px;
+  }
+
+  .cuenta-layout {
+    min-height: calc(100vh - 156px);
+  }
+
+  .cuenta-layout::before {
+    width: min(420px, 92vw);
+    height: min(470px, 70vh);
+    transform: rotate(-2deg);
+  }
+
+  .cuenta-layout::after {
+    transform: translate(12px, 18px) rotate(2deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .cuenta-main {
+    padding-inline: 12px;
+  }
+
+  .auth-panel {
+    padding: 14px 6px;
+  }
+
+  .auth-card {
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 360px) {
+  .cuenta-header {
+    min-height: 98px;
+  }
+
+  .logo-link {
+    width: 172px;
+  }
+
+  .volver-inicio {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 0.82rem;
+  }
+
+  .auth-card {
+    padding: 22px 16px;
   }
 }

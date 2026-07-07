@@ -85,6 +85,123 @@ body {
   background: #143c6d;
 }
 
+.tutor-user-area {
+  position: relative;
+}
+
+.tf-user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px 6px 6px;
+  background: #ffffff;
+  color: #071b3d;
+  box-shadow: 0 10px 22px rgba(7, 27, 61, 0.08);
+  cursor: pointer;
+}
+
+.tf-user-avatar,
+.tf-user-dropdown-avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #102a43;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.tf-user-avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 0.78rem;
+}
+
+.tf-user-meta {
+  display: grid;
+  text-align: left;
+  line-height: 1.1;
+}
+
+.tf-user-meta small {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.tf-user-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 30;
+  width: min(320px, calc(100vw - 32px));
+  padding: 20px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 22px 48px rgba(7, 27, 61, 0.16);
+  text-align: center;
+}
+
+.tf-user-dropdown-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #0c2340;
+  cursor: pointer;
+}
+
+.tf-user-email {
+  margin: 16px 0 12px;
+  color: #64748b;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.tf-user-dropdown-avatar {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 10px;
+}
+
+.tf-user-dropdown h3 {
+  margin: 0 0 14px;
+  color: #0c2340;
+}
+
+.tf-user-dropdown-btn,
+.tf-user-dropdown-logout {
+  width: 100%;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tf-user-dropdown-btn {
+  background: #eef4fb;
+  color: #0c2340;
+}
+
+.tf-user-dropdown-logout {
+  background: #102a43;
+  color: #ffffff;
+}
+
 /* HERO */
 
 .tutor-hero {

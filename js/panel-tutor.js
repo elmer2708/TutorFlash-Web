@@ -1,4 +1,4 @@
-import {
+﻿import {
   observarUsuario,
   cerrarSesion,
   obtenerTutorActivoActual,
@@ -7,7 +7,9 @@ import {
   actualizarEnlaceClaseReserva,
   confirmarPagoReserva,
   rechazarPagoReserva,
+  obtenerMisDatosPagoTutor,
 } from "./firebase-service.js";
+import { validarEnlaceClase } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nombreTutorPanel = document.getElementById("nombreTutorPanel");
@@ -28,17 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const statAceptadas = document.getElementById("statAceptadas");
   const statRealizadas = document.getElementById("statRealizadas");
   const statIngresos = document.getElementById("statIngresos");
+  const statPagosRevision = document.getElementById("statPagosRevision");
 
   const proximaSesionCard = document.getElementById("proximaSesionCard");
   const listaReservasTutor = document.getElementById("listaReservasTutor");
   const listaHistorialTutor = document.getElementById("listaHistorialTutor");
   const filtroReservas = document.getElementById("filtroReservas");
+  const checklistTutor = document.getElementById("checklistTutor");
 
   const btnCerrarSesionTutor = document.getElementById("btnCerrarSesionTutor");
 
   let tutorActual = null;
   let reservasActuales = [];
   let accionReservaEnProceso = false;
+  let datosPagoTutorActual = null;
 
   function mostrarMensaje(texto, tipo = "info") {
     if (!panelMensaje) return;
@@ -259,18 +264,82 @@ document.addEventListener("DOMContentLoaded", () => {
       (reserva) => normalizarEstado(reserva.estado) === "realizada",
     );
 
-    const ingresosEstimados = reservas
+    const pagosRevision = reservas.filter((reserva) => {
+      return String(reserva.estadoPago || "pendiente").toLowerCase().trim() ===
+        "en_revision";
+    }).length;
+
+    const ingresosConfirmados = reservas
       .filter((reserva) => {
-        const estado = normalizarEstado(reserva.estado);
-        return estado === "aceptada" || estado === "realizada";
+        return String(reserva.estadoPago || "").toLowerCase().trim() ===
+          "confirmado";
       })
       .reduce((total, reserva) => total + convertirNumero(reserva.total), 0);
 
     if (statPendientes) statPendientes.textContent = pendientes.length;
     if (statAceptadas) statAceptadas.textContent = aceptadas.length;
     if (statRealizadas) statRealizadas.textContent = realizadas.length;
+    if (statPagosRevision) statPagosRevision.textContent = pagosRevision;
     if (statIngresos)
-      statIngresos.textContent = `S/ ${ingresosEstimados.toFixed(2)}`;
+      statIngresos.textContent = `S/ ${ingresosConfirmados.toFixed(2)}`;
+  }
+
+  function pintarChecklistTutor(reservas) {
+    if (!checklistTutor) return;
+
+    const perfilCompleto = Boolean(tutorActual?.perfilCompleto);
+    const disponibilidadRegistrada = Boolean(tutorActual?.disponibilidad);
+    const pendientes = reservas.filter(
+      (reserva) => normalizarEstado(reserva.estado) === "pendiente",
+    ).length;
+    const pagosRevision = reservas.filter((reserva) => {
+      return String(reserva.estadoPago || "").toLowerCase().trim() ===
+        "en_revision";
+    }).length;
+
+    const items = [
+      {
+        ok: perfilCompleto,
+        texto: perfilCompleto ? "Perfil completo" : "Perfil pendiente",
+      },
+      {
+        ok: Boolean(datosPagoTutorActual),
+        texto: datosPagoTutorActual
+          ? "Métodos de pago registrados"
+          : "Métodos de pago pendientes",
+        ayuda: !datosPagoTutorActual
+          ? "Completa tus métodos de pago antes de aceptar reservas."
+          : "",
+      },
+      {
+        ok: disponibilidadRegistrada,
+        texto: disponibilidadRegistrada
+          ? "Disponibilidad registrada"
+          : "Disponibilidad pendiente",
+        ayuda: !disponibilidadRegistrada
+          ? "Completa tu disponibilidad para que los estudiantes puedan reservar contigo."
+          : "",
+      },
+      {
+        ok: pendientes === 0,
+        texto: `${pendientes} reserva(s) pendientes por revisar`,
+      },
+      {
+        ok: pagosRevision === 0,
+        texto: `${pagosRevision} pago(s) por revisar`,
+      },
+    ];
+
+    checklistTutor.innerHTML = items
+      .map((item) => {
+        return `
+          <div class="checklist-item ${item.ok ? "ok" : "warning"}">
+            <strong>${item.ok ? "✅" : "⚠️"} ${limpiarTexto(item.texto)}</strong>
+            ${item.ayuda ? `<p>${limpiarTexto(item.ayuda)}</p>` : ""}
+          </div>
+        `;
+      })
+      .join("");
   }
 
   function obtenerProximaSesion(reservas) {
@@ -327,6 +396,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (filtro === "todas") {
       return reservasActuales;
+    }
+
+    if (filtro === "pago-revision") {
+      return reservasActuales.filter((reserva) => {
+        return String(reserva.estadoPago || "").toLowerCase().trim() ===
+          "en_revision";
+      });
     }
 
     return reservasActuales.filter(
@@ -686,11 +762,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       reservasActuales = await obtenerReservasDelTutor();
+      datosPagoTutorActual = await obtenerMisDatosPagoTutor().catch(() => null);
 
       calcularResumen(reservasActuales);
       pintarProximaSesion(reservasActuales);
       pintarReservas();
       pintarHistorial(reservasActuales);
+      pintarChecklistTutor(reservasActuales);
 
       if (!reservasActuales.length) {
         mostrarMensaje(
@@ -723,14 +801,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const tutorActivo = await obtenerTutorActivoActual();
 
         if (!tutorActivo) {
-          window.location.href = "app.html";
+          window.location.href = "tutor.html";
           return;
         }
 
         await cargarPanelTutor(tutorActivo);
       } catch (error) {
         console.error("Error al validar tutor:", error);
-        window.location.href = "app.html";
+        window.location.href = "tutor.html";
       }
     });
   }
@@ -738,6 +816,22 @@ document.addEventListener("DOMContentLoaded", () => {
   if (filtroReservas) {
     filtroReservas.addEventListener("change", pintarReservas);
   }
+
+  document.querySelectorAll(".stat-link[data-href]").forEach((tarjeta) => {
+    tarjeta.addEventListener("click", () => {
+      const filtro = tarjeta.dataset.filtro;
+
+      if (filtroReservas && filtro) {
+        filtroReservas.value = filtro;
+        pintarReservas();
+      }
+
+      document.querySelector(tarjeta.dataset.href)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  });
 
   if (listaReservasTutor) {
     listaReservasTutor.addEventListener("submit", async (event) => {
@@ -768,7 +862,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         await actualizarEnlaceClaseReserva(reservaId, {
           plataformaClase,
-          enlaceClase,
+          enlaceClase: validarEnlaceClase(enlaceClase),
         });
 
         mostrarMensaje(
@@ -948,18 +1042,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  if (btnCerrarSesionTutor) {
-    btnCerrarSesionTutor.addEventListener("click", async () => {
-      try {
-        await cerrarSesion();
-        window.location.href = "../index.html";
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-        mostrarMensaje("No se pudo cerrar sesión.", "error");
-      }
-    });
-  }
-
   validarAccesoTutor();
 });
+

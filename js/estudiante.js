@@ -4,6 +4,7 @@ import {
   obtenerPerfilUsuarioActual,
   obtenerMisSesiones,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const btnUsuario = document.querySelector("#btnUsuario");
@@ -171,15 +172,23 @@ document.addEventListener("DOMContentLoaded", () => {
       (sesion) => normalizarEstado(sesion.estado) === "realizada",
     ).length;
 
-    const invertido = sesiones.reduce((acumulado, sesion) => {
-      return acumulado + obtenerTotalSesion(sesion);
-    }, 0);
+    const pagosPendientes = sesiones.filter((sesion) => {
+      const estado = normalizarEstado(sesion.estado);
+      const estadoPago = String(sesion.estadoPago || "pendiente")
+        .toLowerCase()
+        .trim();
+
+      return (
+        !["cancelada", "rechazada", "realizada"].includes(estado) &&
+        (estadoPago === "pendiente" || estadoPago === "rechazado")
+      );
+    }).length;
 
     if (totalPendientes) totalPendientes.textContent = pendientes;
     if (totalAceptadas) totalAceptadas.textContent = aceptadas;
     if (totalRealizadas) totalRealizadas.textContent = realizadas;
     if (totalInvertido) {
-      totalInvertido.textContent = `S/ ${invertido.toFixed(2)}`;
+      totalInvertido.textContent = pagosPendientes;
     }
   }
 
@@ -316,10 +325,16 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../index.html";
       } catch (error) {
         console.error(error);
-        alert("No se pudo cerrar sesión.");
+        mostrarAviso("No se pudo cerrar sesión.", "error");
       }
     });
   }
+
+  document.querySelectorAll(".tf-stat-link[data-href]").forEach((tarjeta) => {
+    tarjeta.addEventListener("click", () => {
+      window.location.href = tarjeta.dataset.href;
+    });
+  });
 
   observarUsuario((usuario) => {
     if (!usuario) {

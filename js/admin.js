@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "contenedorPostulaciones",
   );
   const btnCerrarSesionAdmin = document.getElementById("btnCerrarSesionAdmin");
+  const btnUsuarioAdmin = document.getElementById("btnUsuarioAdmin");
+  const menuUsuarioAdmin = document.getElementById("menuUsuarioAdmin");
+  const cerrarMenuAdmin = document.getElementById("cerrarMenuAdmin");
+  const correoAdminMenu = document.getElementById("correoAdminMenu");
   const estadoVacio = document.getElementById("estadoVacio");
   const estadoVacioTitulo = document.getElementById("estadoVacioTitulo");
   const estadoVacioTexto = document.getElementById("estadoVacioTexto");
@@ -34,6 +38,33 @@ document.addEventListener("DOMContentLoaded", () => {
   let postulacionesActuales = [];
   let accionEnProceso = false;
   let filtroActual = "todos";
+
+  function cerrarDropdownAdmin() {
+    if (!menuUsuarioAdmin) return;
+
+    menuUsuarioAdmin.classList.add("oculto");
+    menuUsuarioAdmin.classList.remove("is-open");
+    btnUsuarioAdmin?.setAttribute("aria-expanded", "false");
+  }
+
+  function abrirDropdownAdmin() {
+    if (!menuUsuarioAdmin) return;
+
+    menuUsuarioAdmin.classList.remove("oculto");
+    menuUsuarioAdmin.classList.add("is-open");
+    btnUsuarioAdmin?.setAttribute("aria-expanded", "true");
+  }
+
+  function alternarDropdownAdmin() {
+    if (!menuUsuarioAdmin) return;
+
+    if (menuUsuarioAdmin.classList.contains("is-open")) {
+      cerrarDropdownAdmin();
+      return;
+    }
+
+    abrirDropdownAdmin();
+  }
 
   function mostrarMensaje(texto, tipo = "info") {
     if (!adminMensaje) return;
@@ -55,6 +86,52 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function textoLimpio(valor, reemplazo = "No registrado") {
+    const texto = String(valor ?? "").trim();
+    return texto || reemplazo;
+  }
+
+  function obtenerCelularValido(valor) {
+    const celular = String(valor || "").replace(/\s+/g, "");
+    return /^9\d{8}$/.test(celular) ? celular : "";
+  }
+
+  function crearLinkWhatsapp(telefono) {
+    const celular = obtenerCelularValido(telefono);
+
+    if (!celular) return "";
+
+    return `
+      <a
+        href="https://wa.me/51${escaparHtml(celular)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="postulacion-link"
+      >
+        Contactar por WhatsApp
+      </a>
+    `;
+  }
+
+  function crearLinkCv(cvUrl) {
+    const enlace = String(cvUrl || "").trim();
+
+    if (!/^https?:\/\//i.test(enlace) || /\s/.test(enlace)) {
+      return "<span>CV no registrado</span>";
+    }
+
+    return `
+      <a
+        href="${escaparHtml(enlace)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="postulacion-link"
+      >
+        Ver CV
+      </a>
+    `;
   }
 
   function normalizarEstado(estado) {
@@ -278,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="card-top">
               <div>
                 <p class="postulacion-label">Tutor postulante</p>
-                <h2>${escaparHtml(postulacion.nombre || "Tutor sin nombre")}</h2>
+                <h2>${escaparHtml(textoLimpio(postulacion.nombre, "Tutor sin nombre"))}</h2>
               </div>
 
               <span class="estado-postulacion ${claseEstado}">
@@ -289,32 +366,42 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="postulacion-meta">
               <p class="postulacion-dato">
                 <strong>Correo</strong>
-                ${escaparHtml(postulacion.correo || postulacion.correoUsuario || "No registrado")}
+                ${escaparHtml(textoLimpio(postulacion.correo || postulacion.correoUsuario))}
               </p>
 
               <p class="postulacion-dato">
                 <strong>Teléfono</strong>
-                ${escaparHtml(postulacion.telefono || "No registrado")}
+                ${escaparHtml(textoLimpio(postulacion.telefono))}
               </p>
 
               <p class="postulacion-dato">
                 <strong>Cursos</strong>
-                ${escaparHtml(postulacion.cursos || "No registrado")}
+                ${escaparHtml(textoLimpio(postulacion.cursos))}
               </p>
 
               <p class="postulacion-dato">
                 <strong>Nivel</strong>
-                ${escaparHtml(postulacion.nivel || "No registrado")}
+                ${escaparHtml(textoLimpio(postulacion.nivel))}
               </p>
 
               <p class="postulacion-dato">
                 <strong>Disponibilidad</strong>
-                ${escaparHtml(postulacion.disponibilidad || "No registrada")}
+                ${escaparHtml(textoLimpio(postulacion.disponibilidad))}
               </p>
 
               <p class="postulacion-dato">
                 <strong>Experiencia</strong>
-                ${escaparHtml(postulacion.experiencia || "No registrada")}
+                ${escaparHtml(textoLimpio(postulacion.experiencia))}
+              </p>
+
+              <p class="postulacion-dato">
+                <strong>Modalidad</strong>
+                Virtual
+              </p>
+
+              <p class="postulacion-dato">
+                <strong>CV</strong>
+                ${crearLinkCv(postulacion.cvUrl)}
               </p>
             </div>
 
@@ -324,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
 
               <div class="postulacion-acciones">
+                ${crearLinkWhatsapp(postulacion.telefono)}
                 <button
                   type="button"
                   class="btn-aprobar"
@@ -478,6 +566,19 @@ document.addEventListener("DOMContentLoaded", () => {
       pintarPostulaciones(postulacionesActuales);
     });
   });
+
+  document.querySelectorAll("[data-filtro-stat]").forEach((tarjeta) => {
+    tarjeta.addEventListener("click", () => {
+      filtroActual = tarjeta.dataset.filtroStat || "todos";
+      actualizarBotonesFiltro();
+      pintarPostulaciones(postulacionesActuales);
+      contenedorPostulaciones?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  });
+
   if (contenedorPostulaciones) {
     contenedorPostulaciones.addEventListener("click", async (event) => {
       const boton = event.target.closest("button");
@@ -502,7 +603,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCerrarSesionAdmin.addEventListener("click", async () => {
       try {
         await cerrarSesion();
-        window.location.href = "../index.html";
+        window.location.href = "cuenta.html";
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
         mostrarMensaje("No se pudo cerrar sesión.", "error");
@@ -533,6 +634,46 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (correoAdminMenu) {
+      correoAdminMenu.textContent = usuario.email || "admin@tutorflash.com";
+    }
+
     cargarPostulaciones();
+  });
+
+  cerrarDropdownAdmin();
+
+  btnUsuarioAdmin?.setAttribute("aria-haspopup", "true");
+  btnUsuarioAdmin?.setAttribute("aria-controls", "menuUsuarioAdmin");
+
+  btnUsuarioAdmin?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    alternarDropdownAdmin();
+  });
+
+  menuUsuarioAdmin?.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  cerrarMenuAdmin?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    cerrarDropdownAdmin();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (
+      menuUsuarioAdmin &&
+      btnUsuarioAdmin &&
+      !menuUsuarioAdmin.contains(event.target) &&
+      !btnUsuarioAdmin.contains(event.target)
+    ) {
+      cerrarDropdownAdmin();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      cerrarDropdownAdmin();
+    }
   });
 });

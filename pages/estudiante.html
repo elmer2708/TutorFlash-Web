@@ -1,10 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash | Portal del estudiante</title>
     <link rel="stylesheet" href="../css/estudiante.css" />
+    <link rel="stylesheet" href="../css/icons.css" />
+      <link rel="stylesheet" href="../css/chat.css" />
   </head>
 
   <body>
@@ -18,15 +20,63 @@
           />
         </a>
 
-        <nav class="tf-sidebar-menu">
-          <a href="estudiante.html" class="is-active">🏠 Panel</a>
-          <a href="agenda-estudiante.html">📅 Mi agenda</a>
-          <a href="buscar-tutor.html">🔎 Buscar tutor</a>
-          <a href="tutores.html">👨‍🏫 Tutores</a>
-          <a href="favoritos.html">⭐ Favoritos</a>
-          <a href="notificaciones.html">🔔 Notificaciones</a>
-          <a href="sesiones.html">📚 Mis sesiones</a>
-          <a href="perfil-estudiante.html">👤 Mi perfil</a>
+                <nav class="tf-sidebar-menu">
+          <a href="estudiante.html" class="sidebar-link active is-active">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+            </span>
+            <span class="sidebar-label">Panel</span>
+          </a>
+
+          <a href="agenda-estudiante.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path></svg>
+            </span>
+            <span class="sidebar-label">Mi agenda</span>
+          </a>
+
+          <a href="buscar-tutor.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            </span>
+            <span class="sidebar-label">Buscar tutor</span>
+          </a>
+
+          <a href="tutores.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </span>
+            <span class="sidebar-label">Tutores</span>
+          </a>
+
+          <a href="favoritos.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.6 1.7-7-5.4-4.7 7.1-.6L12 2l2.8 6.6 7.1.6-5.4 4.7 1.7 7z"></path></svg>
+            </span>
+            <span class="sidebar-label">Favoritos</span>
+          </a>
+
+          <a href="notificaciones.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+            </span>
+            <span class="sidebar-label">Notificaciones</span>
+          </a>
+
+          <a href="sesiones.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
+            </span>
+            <span class="sidebar-label">Mis sesiones</span>
+          </a>
+
+          <a href="perfil-estudiante.html" class="sidebar-link">
+            <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+            </span>
+            <span class="sidebar-label">Mi perfil</span>
+          </a>
+
         </nav>
 
         <div class="tf-sidebar-card">
@@ -41,7 +91,7 @@
         <header class="tf-topbar">
           <div>
             <span class="tf-page-label">Portal del estudiante</span>
-            <h1 id="tituloBienvenida">Hola, estudiante 👋</h1>
+            <h1 id="tituloBienvenida">Hola, estudiante</h1>
           </div>
 
           <div class="tf-topbar-actions">
@@ -51,9 +101,20 @@
                 href="notificaciones.html"
                 class="tf-notification-btn"
                 title="Notificaciones"
+                aria-label="Ver notificaciones"
               >
-                🔔
-                <span class="tf-notification-dot" id="contadorNotificaciones">0</span>
+                <span class="tf-svg-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                    ></path>
+                    <path d="M10 21h4"></path>
+                  </svg>
+                </span>
+
+                <span class="tf-notification-dot" id="contadorNotificaciones">
+                  0
+                </span>
               </a>
 
               <div
@@ -67,17 +128,17 @@
 
                 <div class="tf-notification-list">
                   <article class="tf-notification-item">
-                    <strong>🟢 Tutor disponible</strong>
+                    <strong>Tutor disponible</strong>
                     <p>Ana Torres está en línea.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>✅ Reserva pendiente</strong>
+                    <strong>Reserva pendiente</strong>
                     <p>Tu tutoría está esperando confirmación.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>💳 Pago pendiente</strong>
+                    <strong>Pago pendiente</strong>
                     <p>El pago se completará después de que el tutor acepte.</p>
                   </article>
                 </div>
@@ -180,28 +241,44 @@
 
           <!-- RESUMEN -->
           <section class="tf-stats-grid">
-            <article class="tf-stat-card">
+            <article
+              class="tf-stat-card tf-stat-link"
+              data-href="sesiones.html?filtro=pendiente"
+            >
               <span>Pendientes</span>
               <strong id="totalPendientes">0</strong>
               <p>Solicitudes enviadas</p>
+              <small>Ver detalle →</small>
             </article>
 
-            <article class="tf-stat-card">
+            <article
+              class="tf-stat-card tf-stat-link"
+              data-href="sesiones.html?filtro=aceptada"
+            >
               <span>Aceptadas</span>
               <strong id="totalAceptadas">0</strong>
               <p>Sesiones confirmadas</p>
+              <small>Ver detalle →</small>
             </article>
 
-            <article class="tf-stat-card">
+            <article
+              class="tf-stat-card tf-stat-link"
+              data-href="sesiones.html?filtro=realizada"
+            >
               <span>Realizadas</span>
               <strong id="totalRealizadas">0</strong>
               <p>Tutorías completadas</p>
+              <small>Ver detalle →</small>
             </article>
 
-            <article class="tf-stat-card">
-              <span>Total invertido</span>
-              <strong id="totalInvertido">S/ 0.00</strong>
-              <p>Gasto estimado</p>
+            <article
+              class="tf-stat-card tf-stat-link"
+              data-href="sesiones.html?filtro=pago-pendiente"
+            >
+              <span>Pagos pendientes</span>
+              <strong id="totalInvertido">0</strong>
+              <p>Reservas por pagar</p>
+              <small>Ver detalle →</small>
             </article>
           </section>
 
@@ -241,6 +318,11 @@
     </div>
 
     <script type="module" src="../js/contador-notificaciones.js"></script>
+    <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/estudiante.js"></script>
+      <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
+
+
+

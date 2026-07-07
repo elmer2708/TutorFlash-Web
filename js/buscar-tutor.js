@@ -1,4 +1,4 @@
-import {
+﻿import {
   observarUsuario,
   cerrarSesion,
   obtenerUsuarioActual,
@@ -9,7 +9,9 @@ import {
   obtenerPerfilUsuarioActual,
   guardarTutorFavorito,
   obtenerMisFavoritos,
+  eliminarTutorFavorito,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -111,6 +113,31 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function mostrarAvisoDisponibilidad(mensaje, contenedor = document.body) {
+    if (!contenedor) return;
+
+    let aviso = contenedor.querySelector(".tf-aviso-disponibilidad");
+
+    if (!aviso) {
+      aviso = document.createElement("div");
+      aviso.className = "tf-aviso-disponibilidad";
+
+      const accionesTutor =
+        contenedor.querySelector(".tf-tutor-actions") ||
+        contenedor.querySelector(".tf-reserve-btn") ||
+        contenedor;
+
+      accionesTutor.insertAdjacentElement("afterend", aviso);
+    }
+
+    aviso.innerHTML = `
+    <strong>⚠️ Horarios no disponibles</strong>
+    <span>${mensaje}</span>
+  `;
+
+    aviso.hidden = false;
   }
 
   function normalizar(texto) {
@@ -287,6 +314,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const diaSeleccionado = normalizarDia(obtenerDiaPorFecha(fecha));
 
     return bloques.filter((bloque) => {
+      if (bloque.fecha) {
+        return bloque.activo !== false && bloque.fecha === fecha;
+      }
+
       return (
         bloque.activo !== false && normalizarDia(bloque.dia) === diaSeleccionado
       );
@@ -294,7 +325,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function tutorTieneDisponibilidadConfigurada() {
-    return Array.isArray(disponibilidadTutorSeleccionado?.bloques);
+    return (
+      Array.isArray(disponibilidadTutorSeleccionado?.bloques) &&
+      disponibilidadTutorSeleccionado.bloques.some((bloque) => {
+        return bloque.activo !== false && bloque.horaInicio && bloque.horaFin;
+      })
+    );
   }
 
   function horaCabeEnBloques(hora, bloques) {
@@ -425,9 +461,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!tieneDisponibilidadReal) {
-      disponibilidad = obtenerDisponibilidadReal(
-        tutorSeleccionado.availability,
-      );
+      disponibilidad = "Este tutor aún no registró disponibilidad.";
     }
 
     modalInfo.textContent = `⭐ ${tutorSeleccionado.rating} · ${disponibilidad}`;
@@ -444,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const opcionesOriginales = tieneDisponibilidadReal
       ? generarHorasDesdeBloques(bloquesDelDia)
-      : horasBaseReserva;
+      : [];
 
     const horasDisponibles = opcionesOriginales.filter((hora) => {
       const fueraDeHorarioTutor =
@@ -604,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function obtenerDisponibilidadTutor(disponibilidad) {
     if (!disponibilidad) {
-      return "Disponible hoy";
+      return "Este tutor aún no registró horarios.";
     }
 
     if (disponibilidad === "Mañana") {
@@ -631,6 +665,28 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
+  function obtenerCelularValido(valor) {
+    const celular = String(valor || "").replace(/\s+/g, "");
+    return /^9\d{8}$/.test(celular) ? celular : "";
+  }
+
+  function crearBotonWhatsapp(tutor) {
+    const celular = obtenerCelularValido(tutor.telefono || tutor.celular);
+
+    if (!celular) return "";
+
+    return `
+      <a
+        href="https://wa.me/51${limpiarTexto(celular)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="tf-whatsapp-btn"
+      >
+        Contactar por WhatsApp
+      </a>
+    `;
+  }
+
   function crearTarjetaTutor(tutor) {
     const tutorId = tutor.id || tutor.uid || tutor.tutorId || "";
     const nombreTutor = capitalizarTexto(tutor.nombre || "Tutor");
@@ -639,9 +695,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const precio = obtenerPrecioTutor(tutor);
     const rating = obtenerRatingTutor(tutor);
-    const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
+    const disponibilidad =
+      tutor.disponibilidadResumen ||
+      obtenerDisponibilidadTutor(tutor.disponibilidad);
 
-    const modalidad = tutor.modalidad || "Modalidad no indicada";
+    const modalidad = "Virtual";
     const nivel = tutor.nivel || "Nivel no indicado";
     const distrito = tutor.distrito || tutor.zona || "Zona no indicada";
 
@@ -717,6 +775,7 @@ document.addEventListener("DOMContentLoaded", () => {
   >
     ♡ Guardar favorito
   </button>
+  ${crearBotonWhatsapp(tutor)}
 </div>
       </article>
     `;
@@ -804,44 +863,76 @@ document.addEventListener("DOMContentLoaded", () => {
           disponibilidadTutorSeleccionado = null;
         }
 
+        if (!tutorTieneDisponibilidadConfigurada()) {
+          mostrarAvisoDisponibilidad(
+            "Este tutor aún no registró disponibilidad. No se puede reservar por ahora.",
+            tarjeta,
+          );
+          return;
+        }
+
         await abrirModal();
       });
     });
   }
 
   function activarFavoritosVisuales(tutores, favoritosIds) {
+    const favoritosGuardados = new Set(favoritosIds);
+
     document.querySelectorAll(".tf-favorite-btn").forEach((boton) => {
       const tutorId = boton.dataset.tutorId;
 
-      if (favoritosIds.includes(tutorId)) {
-        boton.textContent = "♥ Guardado";
-        boton.disabled = true;
-        return;
+      function pintarEstadoFavorito() {
+        if (favoritosGuardados.has(tutorId)) {
+          boton.textContent = "♥ Guardado";
+          boton.classList.add("is-favorite");
+        } else {
+          boton.textContent = "♡ Guardar favorito";
+          boton.classList.remove("is-favorite");
+        }
+
+        boton.disabled = false;
       }
 
+      pintarEstadoFavorito();
+
       boton.addEventListener("click", async () => {
+        if (boton.disabled) return;
+
         try {
+          boton.disabled = true;
+
+          if (favoritosGuardados.has(tutorId)) {
+            boton.textContent = "Quitando...";
+
+            await eliminarTutorFavorito(tutorId);
+
+            favoritosGuardados.delete(tutorId);
+            pintarEstadoFavorito();
+            return;
+          }
+
           const tutor = tutores.find((item) => {
             const id = item.id || item.uid || item.tutorId;
             return id === tutorId;
           });
 
           if (!tutor) {
-            alert("No se encontró la información del tutor.");
-            return;
+            throw new Error("No se encontró la información del tutor.");
           }
 
-          boton.disabled = true;
           boton.textContent = "Guardando...";
 
           await guardarTutorFavorito(tutor);
 
-          boton.textContent = "♥ Guardado";
+          favoritosGuardados.add(tutorId);
+          pintarEstadoFavorito();
         } catch (error) {
-          console.error("Error al guardar favorito:", error);
-          boton.disabled = false;
-          boton.textContent = "♡ Guardar favorito";
-          alert(`No se pudo guardar el tutor como favorito: ${error.message}`);
+          console.error("Error al actualizar favorito:", error);
+
+          mostrarAviso(error.message || "No se pudo actualizar este tutor en tus favoritos.", "error");
+
+          pintarEstadoFavorito();
         }
       });
     });
@@ -897,7 +988,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const texto = normalizar(textoOriginal);
 
     const nivelElegido = normalizar(filtroNivel?.value || "");
-    const modalidadElegida = normalizar(filtroModalidad?.value || "");
+    const modalidadElegida = "";
 
     let encontrados = 0;
 
@@ -1025,7 +1116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const usuario = obtenerUsuarioActual();
 
     if (!usuario) {
-      alert("Primero debes iniciar sesión para reservar una tutoría.");
+      mostrarAviso("Primero debes iniciar sesión para reservar una tutoría.", "advertencia");
       window.location.href = "cuenta.html";
       return;
     }
@@ -1048,16 +1139,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!fechaReserva.value || !horaReserva.value) {
-      alert("Completa la fecha y la hora de la reserva.");
+      mostrarAviso("Completa la fecha y la hora de la reserva.", "advertencia");
       return;
     }
 
     await cargarReservasOcupadasTutor();
 
     if (horaChocaConReserva(horaReserva.value)) {
-      alert(
-        "Ese horario acaba de ser reservado por otra persona. Elige otro horario.",
-      );
+      mostrarAviso("Ese horario acaba de ser reservado por otra persona. Elige otro horario.", "advertencia");
       await actualizarHorasDisponibles();
       return;
     }
@@ -1068,12 +1157,12 @@ document.addEventListener("DOMContentLoaded", () => {
       tutorTieneDisponibilidadConfigurada() &&
       !horaCabeEnBloques(horaReserva.value, bloquesDelDia)
     ) {
-      alert("Ese horario no está dentro de la disponibilidad del tutor.");
+      mostrarAviso("Ese horario no está dentro de la disponibilidad del tutor.", "advertencia");
       return;
     }
 
     if (fechaEsHoy(fechaReserva.value) && horaYaPaso(horaReserva.value)) {
-      alert("Esa hora ya pasó. Elige otro horario disponible.");
+      mostrarAviso("Esa hora ya pasó. Elige otro horario disponible.", "advertencia");
       return;
     }
 
@@ -1088,7 +1177,7 @@ document.addEventListener("DOMContentLoaded", () => {
       curso: tutorSeleccionado.curso,
       fecha: fechaReserva.value,
       hora: horaReserva.value,
-      modalidad: modalidadReserva.value,
+      modalidad: "Virtual",
       duracion: duracionReserva.value,
       total: totalCalculado,
 
@@ -1122,8 +1211,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error al guardar reserva:", error);
 
-      alert(
+      mostrarAviso(
         error.message || "No se pudo guardar la reserva. Inténtalo otra vez.",
+        "error",
       );
 
       if (btnConfirmarReserva) {
@@ -1212,7 +1302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../index.html";
       } catch (error) {
         console.error(error);
-        alert("No se pudo cerrar sesión.");
+        mostrarAviso("No se pudo cerrar sesión.", "error");
       }
     });
   }
@@ -1227,3 +1317,4 @@ document.addEventListener("DOMContentLoaded", () => {
     await cargarTutoresDesdeFirestore();
   });
 });
+

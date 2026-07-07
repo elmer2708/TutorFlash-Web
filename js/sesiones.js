@@ -3,6 +3,11 @@ import {
   obtenerMisSesiones,
   registrarPagoReserva,
 } from "./firebase-service.js";
+import {
+  limitarTexto,
+  validarMontoPositivo,
+  validarNumeroOperacion,
+} from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const estadoSesiones = document.querySelector("#estadoSesiones");
@@ -16,7 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const botonesFiltro = document.querySelectorAll("[data-filtro]");
 
   let sesionesGlobales = [];
-  let filtroActivo = "todas";
+  const filtrosPermitidos = [
+    "todas",
+    "pendiente",
+    "aceptada",
+    "realizada",
+    "pago-pendiente",
+  ];
+  const filtroUrl = new URLSearchParams(window.location.search).get("filtro");
+  let filtroActivo = filtrosPermitidos.includes(filtroUrl || "")
+    ? filtroUrl
+    : "todas";
 
   function mostrarEstado(mensaje) {
     if (estadoSesiones) {
@@ -280,6 +295,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return sesiones.filter((sesion) => {
+      if (filtroActivo === "pago-pendiente") {
+        const estado = normalizarEstado(sesion.estado);
+        const estadoPago = obtenerEstadoPago(sesion);
+
+        return (
+          !["cancelada", "rechazada", "realizada"].includes(estado) &&
+          (estadoPago === "pendiente" || estadoPago === "rechazado")
+        );
+      }
+
       return normalizarEstado(sesion.estado) === filtroActivo;
     });
   }
@@ -579,6 +604,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   botonesFiltro.forEach((boton) => {
+    if (boton.dataset.filtro === filtroActivo) {
+      botonesFiltro.forEach((item) => item.classList.remove("is-active"));
+      boton.classList.add("is-active");
+    }
+
     boton.addEventListener("click", () => {
       botonesFiltro.forEach((item) => item.classList.remove("is-active"));
       boton.classList.add("is-active");
@@ -609,9 +639,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         await registrarPagoReserva(reservaId, {
           metodoPago: formulario.metodoPago.value,
-          montoPagado: formulario.montoPagado.value,
-          numeroOperacion: formulario.numeroOperacion.value,
-          comentarioPago: formulario.comentarioPago.value,
+          montoPagado: validarMontoPositivo(
+            formulario.montoPagado.value,
+            "monto pagado",
+          ),
+          numeroOperacion: validarNumeroOperacion(
+            formulario.numeroOperacion.value,
+          ),
+          comentarioPago: limitarTexto(
+            formulario.comentarioPago.value,
+            300,
+            "comentario",
+          ),
         });
 
         mostrarEstado("Pago enviado para revisión del tutor.");

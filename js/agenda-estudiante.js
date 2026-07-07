@@ -4,6 +4,7 @@ import {
   obtenerPerfilUsuarioActual,
   obtenerMisSesiones,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -428,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../index.html";
       } catch (error) {
         console.error(error);
-        alert("No se pudo cerrar sesión.");
+        mostrarAviso("No se pudo cerrar sesión.", "error");
       }
     });
   }

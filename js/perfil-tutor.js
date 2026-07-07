@@ -1,4 +1,4 @@
-import {
+﻿import {
   observarUsuario,
   cerrarSesion,
   obtenerTutorActivoActual,
@@ -6,6 +6,11 @@ import {
   actualizarDatosPagoTutor,
   obtenerMisDatosPagoTutor,
 } from "./firebase-service.js";
+import {
+  limitarTexto,
+  validarCelularPeru,
+  validarEnlaceClase,
+} from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const formPerfilTutor = document.getElementById("formPerfilTutor");
@@ -38,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const pagoCciInput = document.getElementById("pagoCci");
   const pagoTitularInput = document.getElementById("pagoTitular");
   const pagoInstruccionesInput = document.getElementById("pagoInstrucciones");
+  const cvUrlInput = document.getElementById("cvUrlTutorPerfil");
 
   const avatarPreview = document.getElementById("avatarTutorPreview");
   const previewNombre = document.getElementById("previewNombre");
@@ -154,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
       presentacionInput?.value.trim() || "Tu presentación aparecerá aquí.";
     const cursos = cursosInput?.value.trim() || "Cursos no registrados";
     const nivel = nivelInput?.value || "Nivel no indicado";
-    const modalidad = modalidadInput?.value || "Modalidad no indicada";
+    const modalidad = "Virtual";
     const precio = Number(precioInput?.value || 0);
     const disponibilidad = disponibilidadInput?.value || "No indicada";
     const distrito = distritoInput?.value.trim() || "No indicado";
@@ -184,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const experiencia = tutor.experiencia || tutor.descripcion || "";
     const cursos = tutor.cursos || "";
     const nivel = tutor.nivel || "";
-    const modalidad = tutor.modalidad || "";
+    const modalidad = "Virtual";
     const precioHora = tutor.precioHora || tutor.precio || "";
     const disponibilidad = tutor.disponibilidad || "";
     const distrito = tutor.distrito || tutor.zona || "";
@@ -201,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (disponibilidadInput) disponibilidadInput.value = disponibilidad;
     if (distritoInput) distritoInput.value = distrito;
     if (estadoPublicoInput) estadoPublicoInput.value = estadoPublico;
+    if (cvUrlInput) cvUrlInput.value = tutor.cvUrl || "";
 
     actualizarPreview();
   }
@@ -257,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tutorActivo = await obtenerTutorActivoActual();
 
         if (!tutorActivo) {
-          window.location.href = "app.html";
+          window.location.href = "tutor.html";
           return;
         }
 
@@ -286,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     disponibilidadInput,
     distritoInput,
     estadoPublicoInput,
+    cvUrlInput,
   ];
 
   camposPreview.forEach((campo) => {
@@ -326,11 +334,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const experiencia = experienciaInput?.value.trim() || "";
       const cursos = corregirCursosTexto(cursosInput?.value || "");
       const nivel = nivelInput?.value || "";
-      const modalidad = modalidadInput?.value || "";
+      const modalidad = "Virtual";
       const precioHora = Number(precioInput?.value || 0);
       const disponibilidad = disponibilidadInput?.value || "";
       const distrito = capitalizarTexto(distritoInput?.value || "");
       const estadoPublico = estadoPublicoInput?.value || "activo";
+      const cvUrl = cvUrlInput?.value.trim() || "";
 
       if (
         !nombre ||
@@ -338,10 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
         !experiencia ||
         !cursos ||
         !nivel ||
-        !modalidad ||
         !precioHora ||
-        !disponibilidad ||
-        !distrito
+        !disponibilidad
       ) {
         mostrarMensaje(
           "Completa todos los campos antes de guardar tu perfil.",
@@ -355,7 +362,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (precioHora > 300) {
+        mostrarMensaje("El precio por hora no debe superar S/ 300.", "error");
+        return;
+      }
+
       try {
+        const cvUrlValidado = cvUrl ? validarEnlaceClase(cvUrl) : "";
+
         if (btnGuardarPerfilTutor) {
           btnGuardarPerfilTutor.disabled = true;
           btnGuardarPerfilTutor.textContent = "Guardando perfil...";
@@ -372,7 +386,14 @@ document.addEventListener("DOMContentLoaded", () => {
           precioHora,
           disponibilidad,
           distrito,
+          zona: distrito,
           estadoPublico,
+          cvUrl: cvUrlValidado,
+          cvTipo: cvUrlValidado.includes("drive.google.com")
+            ? "drive"
+            : cvUrlValidado
+              ? "enlace"
+              : "",
           perfilCompleto: true,
         });
 
@@ -398,8 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (btnGuardarDatosPago) {
     btnGuardarDatosPago.addEventListener("click", async () => {
-      const yape = pagoYapeInput?.value.trim() || "";
-      const plin = pagoPlinInput?.value.trim() || "";
+      let yape = pagoYapeInput?.value.trim() || "";
+      let plin = pagoPlinInput?.value.trim() || "";
       const banco = pagoBancoInput?.value.trim() || "";
       const cci = pagoCciInput?.value.trim() || "";
       const titular = pagoTitularInput?.value.trim() || "";
@@ -423,6 +444,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
+        if (yape) yape = validarCelularPeru(yape, "Yape");
+        if (plin) plin = validarCelularPeru(plin, "Plin");
+
+        if (banco.length > 60) {
+          throw new Error("El banco no debe superar 60 caracteres.");
+        }
+
+        if (cci && !/^[0-9\s-]{5,34}$/.test(cci)) {
+          throw new Error(
+            "El CCI o número de cuenta solo debe tener números, espacios o guiones.",
+          );
+        }
+
         btnGuardarDatosPago.disabled = true;
         btnGuardarDatosPago.textContent = "Guardando datos...";
 
@@ -432,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
           banco,
           cci,
           titular,
-          instrucciones,
+          instrucciones: limitarTexto(instrucciones, 500, "instrucciones"),
         });
 
         mostrarMensajeDatosPago(
@@ -451,18 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  if (btnCerrarSesionTutor) {
-    btnCerrarSesionTutor.addEventListener("click", async () => {
-      try {
-        await cerrarSesion();
-        window.location.href = "../index.html";
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-        mostrarMensaje("No se pudo cerrar sesión.", "error");
-      }
-    });
-  }
-
   validarAcceso();
 });
+

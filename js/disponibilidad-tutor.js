@@ -1,13 +1,14 @@
 import {
   observarUsuario,
-  cerrarSesion,
   obtenerTutorActivoActual,
   obtenerDisponibilidadTutorActual,
   guardarDisponibilidadTutorActual,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const formBloqueHorario = document.getElementById("formBloqueHorario");
+  const fechaDisponibilidad = document.getElementById("fechaDisponibilidad");
   const diaHorario = document.getElementById("diaHorario");
   const estadoHorario = document.getElementById("estadoHorario");
   const horaInicio = document.getElementById("horaInicio");
@@ -45,10 +46,153 @@ document.addEventListener("DOMContentLoaded", () => {
     domingo: 7,
   };
 
-  function mostrarMensaje(texto) {
+  const diasPorFecha = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miercoles",
+    "jueves",
+    "viernes",
+    "sabado",
+  ];
+
+  function obtenerFechaLocal() {
+    const hoy = new Date();
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, "0");
+    const day = String(hoy.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function fechaEsValida(fecha) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(fecha || ""))) return false;
+
+    const [year, month, day] = fecha.split("-").map(Number);
+    const fechaLocal = new Date(year, month - 1, day);
+
+    return (
+      fechaLocal.getFullYear() === year &&
+      fechaLocal.getMonth() === month - 1 &&
+      fechaLocal.getDate() === day
+    );
+  }
+
+  function obtenerDiaPorFecha(fecha) {
+    if (!fechaEsValida(fecha)) return "";
+
+    const [year, month, day] = fecha.split("-").map(Number);
+    const fechaLocal = new Date(year, month - 1, day);
+
+    return diasPorFecha[fechaLocal.getDay()] || "";
+  }
+
+  function normalizarDia(valor) {
+    return String(valor || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function formatearFecha(fecha) {
+    if (!fechaEsValida(fecha)) return "";
+
+    const [year, month, day] = fecha.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function sincronizarDiaConFecha() {
+    if (!fechaDisponibilidad || !diaHorario) return;
+
+    const diaCalculado = obtenerDiaPorFecha(fechaDisponibilidad.value);
+    diaHorario.value = diaCalculado;
+  }
+
+  function mostrarMensaje(texto, tipo = "info") {
     if (mensajeDisponibilidad) {
       mensajeDisponibilidad.textContent = texto;
     }
+
+    mostrarAviso(texto, tipo);
+  }
+
+  function obtenerMensajeErrorGuardado(error) {
+    const detalle = `${error?.code || ""} ${error?.message || ""}`;
+
+    if (/permission|permiso|insufficient/i.test(detalle)) {
+      return "No tienes permiso para guardar esta disponibilidad.";
+    }
+
+    if (/Agrega al menos un horario válido/i.test(detalle)) {
+      return "Agrega al menos un horario válido.";
+    }
+
+    if (/Ya agregaste ese horario/i.test(detalle)) {
+      return "Ya agregaste ese horario.";
+    }
+
+    if (/fecha .*no es válida|Selecciona una fecha disponible/i.test(detalle)) {
+      return "Selecciona una fecha disponible.";
+    }
+
+    if (/fecha disponible no puede ser anterior/i.test(detalle)) {
+      return "La fecha disponible no puede ser anterior a hoy.";
+    }
+
+    if (/hora de inicio debe ser menor/i.test(detalle)) {
+      return "La hora de inicio debe ser menor que la hora de fin.";
+    }
+
+    return "No se pudo guardar la disponibilidad. Intenta nuevamente.";
+  }
+
+  function bloquesValidosParaGuardar() {
+    const clavesBloques = new Set();
+
+    return bloquesHorario.map((bloque) => {
+      if (!bloque || typeof bloque !== "object") {
+        throw new Error("Agrega al menos un horario válido.");
+      }
+
+      const fecha = String(bloque.fecha || "").trim();
+      const diaFecha = obtenerDiaPorFecha(fecha);
+      const dia = normalizarDia(bloque.dia || diaFecha);
+      const horaInicio = String(bloque.horaInicio || "").trim();
+      const horaFin = String(bloque.horaFin || "").trim();
+
+      if (!fecha || !fechaEsValida(fecha)) {
+        throw new Error("Selecciona una fecha disponible.");
+      }
+
+      if (fecha < obtenerFechaLocal()) {
+        throw new Error("La fecha disponible no puede ser anterior a hoy.");
+      }
+
+      if (!dia || dia !== diaFecha || !horaInicio || !horaFin) {
+        throw new Error("Agrega al menos un horario válido.");
+      }
+
+      if (horaInicio >= horaFin) {
+        throw new Error("La hora de inicio debe ser menor que la hora de fin.");
+      }
+
+      const claveBloque = `${fecha}|${horaInicio}|${horaFin}`;
+
+      if (clavesBloques.has(claveBloque)) {
+        throw new Error("Ya agregaste ese horario.");
+      }
+
+      clavesBloques.add(claveBloque);
+
+      return {
+        ...bloque,
+        fecha,
+        dia,
+        horaInicio,
+        horaFin,
+      };
+    });
   }
 
   function formatearHora(hora) {
@@ -67,8 +211,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function ordenarBloques() {
     bloquesHorario.sort((a, b) => {
-      const diaA = ordenDias[a.dia] || 99;
-      const diaB = ordenDias[b.dia] || 99;
+      if (a.fecha && b.fecha && a.fecha !== b.fecha) {
+        return a.fecha.localeCompare(b.fecha);
+      }
+
+      const diaA = ordenDias[normalizarDia(a.dia)] || 99;
+      const diaB = ordenDias[normalizarDia(b.dia)] || 99;
 
       if (diaA !== diaB) {
         return diaA - diaB;
@@ -79,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function limpiarFormulario() {
+    if (fechaDisponibilidad) fechaDisponibilidad.value = "";
     if (diaHorario) diaHorario.value = "";
     if (estadoHorario) estadoHorario.value = "true";
     if (horaInicio) horaInicio.value = "";
@@ -103,17 +252,21 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((bloque, index) => {
         const estadoTexto = bloque.activo ? "Activo" : "Inactivo";
         const estadoClase = bloque.activo ? "activo" : "inactivo";
+        const diaNormalizado = normalizarDia(bloque.dia);
+        const diaTexto = nombresDias[diaNormalizado] || bloque.dia || "Día";
+        const fechaTexto = formatearFecha(bloque.fecha);
 
         return `
           <article class="bloque-card">
             <div>
-              <h3>${nombresDias[bloque.dia] || bloque.dia}</h3>
+              <h3>${fechaTexto ? `${diaTexto} ${fechaTexto}` : diaTexto}</h3>
 
               <p>
                 ${formatearHora(bloque.horaInicio)} - ${formatearHora(bloque.horaFin)}
               </p>
 
               <div class="bloque-tags">
+                ${bloque.fecha ? `<span>${bloque.fecha}</span>` : ""}
                 <span>${bloque.horaInicio} - ${bloque.horaFin}</span>
                 <span class="${estadoClase}">${estadoTexto}</span>
               </div>
@@ -131,10 +284,33 @@ document.addEventListener("DOMContentLoaded", () => {
   function existeBloqueRepetido(nuevoBloque) {
     return bloquesHorario.some((bloque) => {
       return (
-        bloque.dia === nuevoBloque.dia &&
+        bloque.fecha === nuevoBloque.fecha &&
         bloque.horaInicio === nuevoBloque.horaInicio &&
         bloque.horaFin === nuevoBloque.horaFin
       );
+    });
+  }
+
+  function convertirHoraAMinutos(hora) {
+    const [horas, minutos] = String(hora || "00:00").split(":").map(Number);
+    return horas * 60 + minutos;
+  }
+
+  function bloqueSeSuperpone(nuevoBloque) {
+    const nuevoInicio = convertirHoraAMinutos(nuevoBloque.horaInicio);
+    const nuevoFin = convertirHoraAMinutos(nuevoBloque.horaFin);
+
+    return bloquesHorario.some((bloque) => {
+      if (bloque.fecha || nuevoBloque.fecha) {
+        if (bloque.fecha !== nuevoBloque.fecha) return false;
+      } else if (normalizarDia(bloque.dia) !== normalizarDia(nuevoBloque.dia)) {
+        return false;
+      }
+
+      const inicio = convertirHoraAMinutos(bloque.horaInicio);
+      const fin = convertirHoraAMinutos(bloque.horaFin);
+
+      return nuevoInicio < fin && nuevoFin > inicio;
     });
   }
 
@@ -147,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bloquesHorario = Array.isArray(disponibilidad.bloques)
         ? disponibilidad.bloques.map((bloque) => ({
             ...bloque,
+            dia: bloque.dia || nombresDias[obtenerDiaPorFecha(bloque.fecha)] || "",
             activo: bloque.activo !== false,
           }))
         : [];
@@ -179,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tutorActivo = await obtenerTutorActivoActual();
 
         if (!tutorActivo) {
-          window.location.href = "app.html";
+          window.location.href = "tutor.html";
           return;
         }
 
@@ -188,31 +365,66 @@ document.addEventListener("DOMContentLoaded", () => {
         await cargarDisponibilidad();
       } catch (error) {
         console.error("Error al validar tutor:", error);
-        window.location.href = "app.html";
+        window.location.href = "tutor.html";
       }
     });
   }
 
   if (formBloqueHorario) {
+    if (fechaDisponibilidad) {
+      fechaDisponibilidad.min = obtenerFechaLocal();
+      fechaDisponibilidad.addEventListener("change", sincronizarDiaConFecha);
+    }
+
     formBloqueHorario.addEventListener("submit", (event) => {
       event.preventDefault();
 
+      sincronizarDiaConFecha();
+
+      const fecha = fechaDisponibilidad?.value || "";
       const dia = diaHorario.value;
       const inicio = horaInicio.value;
       const fin = horaFin.value;
       const activo = estadoHorario.value === "true";
 
+      if (!fecha) {
+        mostrarMensaje("Selecciona una fecha disponible.", "advertencia");
+        return;
+      }
+
+      if (!fechaEsValida(fecha)) {
+        mostrarMensaje("Selecciona una fecha disponible.", "advertencia");
+        return;
+      }
+
+      if (fecha < obtenerFechaLocal()) {
+        mostrarMensaje(
+          "La fecha disponible no puede ser anterior a hoy.",
+          "advertencia",
+        );
+        return;
+      }
+
       if (!dia || !inicio || !fin) {
-        mostrarMensaje("Completa el día, la hora de inicio y la hora de fin.");
+        mostrarMensaje("Agrega al menos un horario válido.", "advertencia");
         return;
       }
 
       if (inicio >= fin) {
-        mostrarMensaje("La hora de inicio debe ser menor que la hora de fin.");
+        mostrarMensaje(
+          "La hora de inicio debe ser menor que la hora de fin.",
+          "advertencia",
+        );
+        return;
+      }
+
+      if (convertirHoraAMinutos(fin) - convertirHoraAMinutos(inicio) < 30) {
+        mostrarMensaje("El bloque debe durar al menos 30 minutos.", "advertencia");
         return;
       }
 
       const nuevoBloque = {
+        fecha,
         dia,
         horaInicio: inicio,
         horaFin: fin,
@@ -220,7 +432,15 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       if (existeBloqueRepetido(nuevoBloque)) {
-        mostrarMensaje("Ese bloque de horario ya fue agregado.");
+        mostrarMensaje("Ya agregaste ese horario.", "advertencia");
+        return;
+      }
+
+      if (bloqueSeSuperpone(nuevoBloque)) {
+        mostrarMensaje(
+          "Ese horario se cruza con otro bloque del mismo día.",
+          "advertencia",
+        );
         return;
       }
 
@@ -229,7 +449,10 @@ document.addEventListener("DOMContentLoaded", () => {
       pintarBloques();
       limpiarFormulario();
 
-      mostrarMensaje("Bloque agregado. No olvides guardar la disponibilidad.");
+      mostrarMensaje(
+        "Bloque agregado. No olvides guardar la disponibilidad.",
+        "info",
+      );
     });
   }
 
@@ -256,38 +479,38 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnGuardarDisponibilidad) {
     btnGuardarDisponibilidad.addEventListener("click", async () => {
       if (!tutorActual) {
-        mostrarMensaje("No se encontró un tutor activo.");
+        mostrarMensaje("No se encontró un tutor activo.", "error");
+        console.error("No se puede guardar disponibilidad sin tutor activo.");
         return;
       }
 
       try {
+        const bloquesValidos = bloquesValidosParaGuardar();
+
+        if (!bloquesValidos.length) {
+          mostrarMensaje("Agrega al menos un horario válido.", "advertencia");
+          return;
+        }
+
         btnGuardarDisponibilidad.disabled = true;
         btnGuardarDisponibilidad.textContent = "Guardando...";
 
-        await guardarDisponibilidadTutorActual(bloquesHorario);
+        await guardarDisponibilidadTutorActual(bloquesValidos);
+        bloquesHorario = bloquesValidos;
+        pintarBloques();
 
-        mostrarMensaje("Disponibilidad guardada correctamente.");
+        mostrarMensaje("Disponibilidad guardada correctamente.", "exito");
       } catch (error) {
         console.error("Error al guardar disponibilidad:", error);
-        mostrarMensaje("No se pudo guardar la disponibilidad.");
+        mostrarMensaje(obtenerMensajeErrorGuardado(error), "error");
       } finally {
         btnGuardarDisponibilidad.disabled = false;
         btnGuardarDisponibilidad.textContent = "Guardar disponibilidad";
       }
     });
+  } else {
+    console.error("No se encontró el botón btnGuardarDisponibilidad.");
   }
-
-  if (btnCerrarSesionTutor) {
-    btnCerrarSesionTutor.addEventListener("click", async () => {
-      try {
-        await cerrarSesion();
-        window.location.href = "../index.html";
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-        mostrarMensaje("No se pudo cerrar sesión.");
-      }
-    });
-  }
-
   validarAccesoTutor();
 });
+

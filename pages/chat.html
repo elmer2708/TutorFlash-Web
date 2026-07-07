@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat | TutorFlash</title>
+    <link rel="stylesheet" href="../css/chat.css" />
+  </head>
+  <body class="chat-page">
+    <main class="chat-shell">
+      <section class="chat-layout">
+        <aside class="chat-conversations">
+          <div class="chat-heading">
+            <span>TutorFlash</span>
+            <h1>Mensajes</h1>
+            <p>Conversa con estudiantes o tutores cuando exista una reserva.</p>
+          </div>
+
+          <div id="chatListaConversaciones" class="chat-list">
+            <div class="chat-empty">Cargando conversaciones...</div>
+          </div>
+        </aside>
+
+        <section class="chat-panel">
+          <header class="chat-panel-header">
+            <div>
+              <span id="chatCurso">Selecciona una conversación</span>
+              <h2 id="chatTitulo">Aún no hay chat abierto</h2>
+            </div>
+            <a href="estudiante.html" class="chat-back">Volver</a>
+          </header>
+
+          <div id="chatMensajes" class="chat-messages">
+            <div class="chat-empty">Elige una conversación para ver mensajes.</div>
+          </div>
+
+          <form id="chatForm" class="chat-form">
+            <input
+              id="chatTexto"
+              type="text"
+              maxlength="500"
+              placeholder="Escribe un mensaje..."
+              autocomplete="off"
+            />
+            <button id="chatEnviar" type="submit">Enviar</button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="../js/chat.js"></script>
+  </body>
+</html>

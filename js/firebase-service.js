@@ -4,6 +4,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
@@ -84,8 +85,50 @@ function validarCampoObligatorio(valor, mensajeError) {
   }
 }
 
+function limpiarTextoSeguro(valor) {
+  return String(valor || "").trim();
+}
+
+function validarUrlOpcional(valor, campo = "enlace") {
+  const enlace = limpiarTextoSeguro(valor);
+
+  if (!enlace) return "";
+
+  if (/\s/.test(enlace) || !/^https?:\/\//i.test(enlace)) {
+    throw new Error(`El ${campo} debe empezar con http:// o https:// y no tener espacios.`);
+  }
+
+  return enlace;
+}
+
+function validarCelularPeruOpcional(valor, campo = "celular") {
+  const celular = String(valor || "").replace(/\s+/g, "");
+
+  if (!celular) return "";
+
+  if (!/^9\d{8}$/.test(celular)) {
+    throw new Error(`Ingresa un ${campo} válido de 9 dígitos.`);
+  }
+
+  return celular;
+}
+
+function obtenerCvTipo(url) {
+  return /drive\.google\.com/i.test(url) ? "drive" : "enlace";
+}
+
 export function observarUsuario(callback) {
   onAuthStateChanged(auth, callback);
+}
+
+export async function enviarRestablecimientoPassword(correo) {
+  const correoNormalizado = normalizarCorreo(correo);
+
+  if (!correoNormalizado || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoNormalizado)) {
+    throw new Error("Ingresa un correo válido para restablecer tu contraseña.");
+  }
+
+  await sendPasswordResetEmail(auth, correoNormalizado);
 }
 
 export async function registrarUsuario(nombre, correo, password, rol) {
@@ -123,7 +166,11 @@ export async function registrarUsuario(nombre, correo, password, rol) {
 }
 
 export async function iniciarSesion(correo, password) {
-  const credencial = await signInWithEmailAndPassword(auth, correo, password);
+  const credencial = await signInWithEmailAndPassword(
+    auth,
+    normalizarCorreo(correo),
+    password,
+  );
   return credencial.user;
 }
 
@@ -160,10 +207,7 @@ export async function guardarReserva(reserva) {
     reserva?.hora,
     "Selecciona una hora para la reserva.",
   );
-  validarCampoObligatorio(
-    reserva?.modalidad,
-    "Selecciona una modalidad para la reserva.",
-  );
+  const modalidad = "Virtual";
   validarCampoObligatorio(
     reserva?.duracion,
     "Selecciona la duración de la reserva.",
@@ -181,10 +225,14 @@ export async function guardarReserva(reserva) {
     curso: reserva.curso,
     fecha: reserva.fecha,
     hora: reserva.hora,
-    modalidad: reserva.modalidad,
+    modalidad,
     duracion: reserva.duracion,
     total: reserva.total,
     metodoPago: reserva.metodoPago || "pendiente",
+    estadoPago: reserva.estadoPago || "pendiente",
+    plataformaClase: reserva.plataformaClase || "",
+    enlaceClase: reserva.enlaceClase || "",
+    estadoClase: reserva.estadoClase || "pendiente",
     estado: "pendiente",
     creadoEn: serverTimestamp(),
   });
@@ -281,16 +329,26 @@ export async function guardarPostulacionTutor(postulacion) {
     "Describe brevemente tu experiencia.",
   );
 
+  const telefono = validarCelularPeruOpcional(
+    postulacion.telefono,
+    "celular",
+  );
+  const cvUrl = validarUrlOpcional(postulacion.cvUrl, "enlace de CV");
+
   await addDoc(collection(db, "postulacionesTutores"), {
     uid: usuario.uid,
     correoUsuario: usuario.email,
     nombre: postulacion.nombre.trim(),
     correo: postulacion.correo.trim(),
-    telefono: postulacion.telefono.trim(),
+    telefono,
     cursos: postulacion.cursos.trim(),
     nivel: postulacion.nivel.trim(),
     disponibilidad: postulacion.disponibilidad.trim(),
     experiencia: postulacion.experiencia.trim(),
+    modalidad: "Virtual",
+    cvUrl,
+    cvTipo: cvUrl ? obtenerCvTipo(cvUrl) : "",
+    cvActualizadoEn: cvUrl ? serverTimestamp() : null,
     estado: "pendiente",
     fechaPostulacion: serverTimestamp(),
   });
@@ -363,6 +421,9 @@ export async function aprobarPostulacionTutor(postulacion) {
         nivel: datosPostulacion.nivel || "",
         disponibilidad: datosPostulacion.disponibilidad || "",
         descripcion: datosPostulacion.experiencia || "",
+        modalidad: "Virtual",
+        cvUrl: datosPostulacion.cvUrl || "",
+        cvTipo: datosPostulacion.cvTipo || "",
         estado: "activo",
         estadoPublico: "activo",
         perfilCompleto: false,
@@ -424,6 +485,44 @@ export async function rechazarPostulacionTutor(postulacionId) {
 /* TUTORES ACTIVOS */
 /* ============================= */
 
+function formatearFechaCorta(fecha) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(fecha || ""))) return "";
+
+  const [year, month, day] = fecha.split("-");
+  return `${day}/${month}/${year}`;
+}
+
+function formatearResumenDisponibilidad(disponibilidad) {
+  const ahora = new Date();
+  const hoy = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-${String(ahora.getDate()).padStart(2, "0")}`;
+  const bloques = Array.isArray(disponibilidad?.bloques)
+    ? disponibilidad.bloques
+        .filter((bloque) => {
+          return (
+            bloque?.activo !== false &&
+            bloque.fecha &&
+            bloque.fecha >= hoy &&
+            bloque.horaInicio &&
+            bloque.horaFin
+          );
+        })
+        .sort((a, b) => {
+          if (a.fecha !== b.fecha) return a.fecha.localeCompare(b.fecha);
+          return a.horaInicio.localeCompare(b.horaInicio);
+        })
+    : [];
+
+  if (!bloques.length) {
+    return "Este tutor aún no registró horarios.";
+  }
+
+  const bloque = bloques[0];
+  const fechaTexto = formatearFechaCorta(bloque.fecha);
+  const diaTexto = bloque.dia || "";
+
+  return `${diaTexto}${fechaTexto ? ` ${fechaTexto}` : ""} · ${bloque.horaInicio} - ${bloque.horaFin}`;
+}
+
 export async function obtenerTutoresActivos() {
   const consulta = query(
     collection(db, "tutores"),
@@ -432,7 +531,7 @@ export async function obtenerTutoresActivos() {
 
   const resultado = await getDocs(consulta);
 
-  return resultado.docs
+  const tutores = resultado.docs
     .map((documento) => ({
       id: documento.id,
       ...documento.data(),
@@ -442,6 +541,33 @@ export async function obtenerTutoresActivos() {
 
       return estadoPublico === "activo" && tutor.perfilCompleto === true;
     });
+
+  const tutoresConDisponibilidad = await Promise.all(
+    tutores.map(async (tutor) => {
+      try {
+        const disponibilidad = await obtenerDisponibilidadPorTutorId(
+          tutor.id || tutor.uid || tutor.tutorId,
+        );
+
+        return {
+          ...tutor,
+          disponibilidadReal: disponibilidad,
+          disponibilidadResumen: formatearResumenDisponibilidad(
+            disponibilidad,
+          ),
+        };
+      } catch (error) {
+        console.error("Error al cargar disponibilidad del tutor:", error);
+        return {
+          ...tutor,
+          disponibilidadReal: null,
+          disponibilidadResumen: "Este tutor aún no registró horarios.",
+        };
+      }
+    }),
+  );
+
+  return tutoresConDisponibilidad;
 }
 /* ============================= */
 /* PANEL DEL TUTOR */
@@ -727,6 +853,8 @@ export async function actualizarPerfilTutorActual(datosPerfil) {
     "fotoUrl",
     "estadoPublico",
     "perfilCompleto",
+    "cvUrl",
+    "cvTipo",
   ];
 
   const datosLimpios = {};
@@ -805,6 +933,28 @@ export async function actualizarPerfilTutorActual(datosPerfil) {
     datosLimpios.precio = precio;
   }
 
+  if (Object.prototype.hasOwnProperty.call(datosLimpios, "telefono")) {
+    datosLimpios.telefono = validarCelularPeruOpcional(
+      datosLimpios.telefono,
+      "celular",
+    );
+  }
+
+  if (Object.prototype.hasOwnProperty.call(datosLimpios, "modalidad")) {
+    datosLimpios.modalidad = "Virtual";
+  }
+
+  if (Object.prototype.hasOwnProperty.call(datosLimpios, "cvUrl")) {
+    datosLimpios.cvUrl = validarUrlOpcional(
+      datosLimpios.cvUrl,
+      "enlace de CV",
+    );
+    datosLimpios.cvTipo = datosLimpios.cvUrl
+      ? obtenerCvTipo(datosLimpios.cvUrl)
+      : "";
+    datosLimpios.cvActualizadoEn = datosLimpios.cvUrl ? serverTimestamp() : null;
+  }
+
   if (Object.prototype.hasOwnProperty.call(datosLimpios, "estadoPublico")) {
     const estadoPublico = normalizarEstado(datosLimpios.estadoPublico);
 
@@ -856,10 +1006,19 @@ export async function obtenerDisponibilidadTutorActual() {
     throw new Error("Solo un tutor activo puede ver su disponibilidad.");
   }
 
+  const disponibilidadRef = doc(db, "disponibilidadTutores", usuario.uid);
+  const disponibilidadSnap = await getDoc(disponibilidadRef);
+
+  if (disponibilidadSnap.exists()) {
+    return {
+      id: disponibilidadSnap.id,
+      ...disponibilidadSnap.data(),
+    };
+  }
+
   const consulta = query(
     collection(db, "disponibilidadTutores"),
     where("uid", "==", usuario.uid),
-    where("tutorId", "==", tutorActivo.id),
     limit(1),
   );
 
@@ -896,6 +1055,10 @@ export async function guardarDisponibilidadTutorActual(bloques) {
     throw new Error("La disponibilidad debe tener una lista de horarios.");
   }
 
+  if (bloques.length === 0) {
+    throw new Error("Agrega al menos un horario válido.");
+  }
+
   const diasPermitidos = [
     "lunes",
     "martes",
@@ -907,22 +1070,84 @@ export async function guardarDisponibilidadTutorActual(bloques) {
     "sábado",
     "domingo",
   ];
+  const nombresDiasDisponibilidad = {
+    lunes: "Lunes",
+    martes: "Martes",
+    miercoles: "Miércoles",
+    jueves: "Jueves",
+    viernes: "Viernes",
+    sabado: "Sábado",
+    domingo: "Domingo",
+  };
+  const diasPorFecha = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miercoles",
+    "jueves",
+    "viernes",
+    "sabado",
+  ];
 
   const formatoHora = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const formatoFecha = /^\d{4}-\d{2}-\d{2}$/;
+  const obtenerFechaLocal = () => {
+    const hoy = new Date();
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, "0");
+    const day = String(hoy.getDate()).padStart(2, "0");
 
+    return `${year}-${month}-${day}`;
+  };
+  const normalizarDiaDisponibilidad = (dia) =>
+    String(dia || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  const obtenerDiaPorFecha = (fecha) => {
+    if (!formatoFecha.test(fecha)) return "";
+
+    const [year, month, day] = fecha.split("-").map(Number);
+    const fechaLocal = new Date(year, month - 1, day);
+
+    if (
+      fechaLocal.getFullYear() !== year ||
+      fechaLocal.getMonth() !== month - 1 ||
+      fechaLocal.getDate() !== day
+    ) {
+      return "";
+    }
+
+    return diasPorFecha[fechaLocal.getDay()] || "";
+  };
+
+  const clavesBloques = new Set();
   const bloquesLimpios = bloques.map((bloque, index) => {
     if (!bloque || typeof bloque !== "object" || Array.isArray(bloque)) {
       throw new Error(`El bloque ${index + 1} no es válido.`);
     }
 
-    const dia = String(bloque.dia || "")
-      .toLowerCase()
-      .trim();
+    const fecha = String(bloque.fecha || "").trim();
+    const diaFecha = obtenerDiaPorFecha(fecha);
+    const dia = normalizarDiaDisponibilidad(bloque.dia || diaFecha);
     const horaInicio = String(bloque.horaInicio || "").trim();
     const horaFin = String(bloque.horaFin || "").trim();
 
+    if (!diaFecha) {
+      throw new Error(`La fecha del bloque ${index + 1} no es válida.`);
+    }
+
+    if (fecha < obtenerFechaLocal()) {
+      throw new Error("La fecha disponible no puede ser anterior a hoy.");
+    }
+
     if (!diasPermitidos.includes(dia)) {
       throw new Error(`El día del bloque ${index + 1} no es válido.`);
+    }
+
+    if (dia !== diaFecha) {
+      throw new Error(`El día del bloque ${index + 1} no coincide con la fecha.`);
     }
 
     if (!formatoHora.test(horaInicio)) {
@@ -943,8 +1168,17 @@ export async function guardarDisponibilidadTutorActual(bloques) {
       );
     }
 
+    const claveBloque = `${fecha}|${horaInicio}|${horaFin}`;
+
+    if (clavesBloques.has(claveBloque)) {
+      throw new Error("Ya agregaste ese horario.");
+    }
+
+    clavesBloques.add(claveBloque);
+
     return {
-      dia,
+      fecha,
+      dia: nombresDiasDisponibilidad[dia] || dia,
       horaInicio,
       horaFin,
       activo: bloque.activo !== false,
@@ -959,37 +1193,17 @@ export async function guardarDisponibilidadTutorActual(bloques) {
     actualizadoEn: serverTimestamp(),
   };
 
-  const consulta = query(
-    collection(db, "disponibilidadTutores"),
-    where("uid", "==", usuario.uid),
-    where("tutorId", "==", tutorActivo.id),
-    limit(1),
+  await setDoc(
+    doc(db, "disponibilidadTutores", usuario.uid),
+    {
+      ...datosDisponibilidad,
+      creadoEn: serverTimestamp(),
+    },
+    { merge: true },
   );
 
-  const resultado = await getDocs(consulta);
-
-  if (resultado.empty) {
-    const nuevoDocumento = await addDoc(
-      collection(db, "disponibilidadTutores"),
-      {
-        ...datosDisponibilidad,
-        creadoEn: serverTimestamp(),
-      },
-    );
-
-    return {
-      id: nuevoDocumento.id,
-      ...datosDisponibilidad,
-    };
-  }
-
-  const documento = resultado.docs[0];
-  const disponibilidadRef = doc(db, "disponibilidadTutores", documento.id);
-
-  await updateDoc(disponibilidadRef, datosDisponibilidad);
-
   return {
-    id: documento.id,
+    id: usuario.uid,
     ...datosDisponibilidad,
   };
 }
@@ -997,6 +1211,17 @@ export async function guardarDisponibilidadTutorActual(bloques) {
 export async function obtenerDisponibilidadPorTutorId(tutorId) {
   if (!tutorId) {
     return null;
+  }
+
+  const disponibilidadSnap = await getDoc(
+    doc(db, "disponibilidadTutores", tutorId),
+  );
+
+  if (disponibilidadSnap.exists()) {
+    return {
+      id: disponibilidadSnap.id,
+      ...disponibilidadSnap.data(),
+    };
   }
 
   const consulta = query(
@@ -1010,12 +1235,31 @@ export async function obtenerDisponibilidadPorTutorId(tutorId) {
     return null;
   }
 
-  const documento = resultado.docs[0];
-
-  return {
+  const documentos = resultado.docs.map((documento) => ({
     id: documento.id,
     ...documento.data(),
-  };
+  }));
+
+  const disponibilidadConHorario =
+    documentos.find(
+      (documento) =>
+        documento.id === tutorId &&
+        Array.isArray(documento.bloques) &&
+        documento.bloques.length > 0,
+    ) ||
+    documentos.find(
+      (documento) =>
+        documento.uid === tutorId &&
+        Array.isArray(documento.bloques) &&
+        documento.bloques.length > 0,
+    ) ||
+    documentos.find(
+      (documento) =>
+        Array.isArray(documento.bloques) && documento.bloques.length > 0,
+    ) ||
+    documentos[0];
+
+  return disponibilidadConHorario || null;
 }
 export async function obtenerReservasOcupadasPorTutorFecha(tutorId, fecha) {
   if (!tutorId || !fecha) {
@@ -1185,8 +1429,8 @@ export async function actualizarDatosPagoTutor(datosPago) {
 
   const datosPagoLimpios = {
     uid: usuario.uid,
-    yape: String(datosPago.yape || "").trim(),
-    plin: String(datosPago.plin || "").trim(),
+    yape: validarCelularPeruOpcional(datosPago.yape, "Yape"),
+    plin: validarCelularPeruOpcional(datosPago.plin, "Plin"),
     banco: String(datosPago.banco || "").trim(),
     cci: String(datosPago.cci || "").trim(),
     titular: String(datosPago.titular || "").trim(),
@@ -1206,6 +1450,16 @@ export async function actualizarDatosPagoTutor(datosPago) {
 
   if (!datosPagoLimpios.titular) {
     throw new Error("Ingresa el nombre del titular del pago.");
+  }
+
+  if (datosPagoLimpios.banco.length > 60) {
+    throw new Error("El banco no debe superar 60 caracteres.");
+  }
+
+  if (datosPagoLimpios.cci && !/^[0-9\s-]{5,34}$/.test(datosPagoLimpios.cci)) {
+    throw new Error(
+      "El CCI o número de cuenta solo debe tener números, espacios o guiones.",
+    );
   }
 
   await setDoc(doc(db, "datosPagoTutores", usuario.uid), datosPagoLimpios, {
@@ -1233,4 +1487,341 @@ export async function obtenerMisDatosPagoTutor() {
     id: documento.id,
     ...documento.data(),
   };
+}
+
+export async function obtenerReservasParaChat() {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para ver tus chats.",
+  );
+
+  const consultas = [
+    query(collection(db, "reservas"), where("usuarioId", "==", usuario.uid)),
+    query(collection(db, "reservas"), where("tutorId", "==", usuario.uid)),
+  ];
+
+  const resultados = await Promise.all(consultas.map((consulta) => getDocs(consulta)));
+  const reservas = new Map();
+
+  resultados.forEach((resultado) => {
+    resultado.docs.forEach((documento) => {
+      const data = documento.data();
+      const estado = normalizarEstado(data.estado);
+
+      if (!["cancelada", "rechazada"].includes(estado)) {
+        reservas.set(documento.id, {
+          id: documento.id,
+          ...data,
+        });
+      }
+    });
+  });
+
+  return [...reservas.values()];
+}
+
+function obtenerNombreEstudianteReserva(reserva) {
+  return limpiarTextoSeguro(
+    reserva?.estudianteNombre ||
+      reserva?.nombreEstudiante ||
+      reserva?.nombreUsuario ||
+      reserva?.correoUsuario ||
+      "Estudiante",
+  );
+}
+
+function obtenerNombreTutorReserva(reserva) {
+  return limpiarTextoSeguro(
+    reserva?.tutorNombre || reserva?.tutor || reserva?.nombreTutor || "Tutor",
+  );
+}
+
+function validarReservaParaChat(reserva) {
+  const reservaId = limpiarTextoSeguro(reserva?.id || reserva?.reservaId);
+  const estudianteId = limpiarTextoSeguro(
+    reserva?.estudianteId || reserva?.usuarioId,
+  );
+  const tutorId = limpiarTextoSeguro(reserva?.tutorId);
+  const estudianteNombre = obtenerNombreEstudianteReserva(reserva);
+  const tutorNombre = obtenerNombreTutorReserva(reserva);
+
+  if (!reservaId) {
+    throw new Error("Primero necesitas una reserva para iniciar un chat.");
+  }
+
+  if (!estudianteId || !tutorId || !estudianteNombre || !tutorNombre) {
+    throw new Error("La reserva no tiene los datos necesarios para iniciar el chat.");
+  }
+
+  return {
+    reservaId,
+    estudianteId,
+    tutorId,
+    estudianteNombre,
+    tutorNombre,
+  };
+}
+
+export async function crearOObtenerChatDesdeReserva(reserva) {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para abrir el chat.",
+  );
+
+  const datosReserva = validarReservaParaChat(reserva);
+
+  if (!datosReserva.reservaId) {
+    throw new Error("No se encontró la reserva para crear el chat.");
+  }
+
+  if (datosReserva.estudianteId !== usuario.uid && datosReserva.tutorId !== usuario.uid) {
+    throw new Error("No puedes abrir un chat de una reserva que no te pertenece.");
+  }
+
+  const chatId = datosReserva.reservaId;
+  const chatRef = doc(db, "chats", chatId);
+  const chatSnap = await getDoc(chatRef);
+  const datosChat = {
+    estudianteId: datosReserva.estudianteId,
+    estudianteNombre: datosReserva.estudianteNombre,
+    tutorId: datosReserva.tutorId,
+    tutorNombre: datosReserva.tutorNombre,
+    reservaId: datosReserva.reservaId,
+    curso: reserva.curso || "",
+    participantes: [datosReserva.estudianteId, datosReserva.tutorId],
+    actualizadoEn: serverTimestamp(),
+  };
+
+  if (!chatSnap.exists()) {
+    await setDoc(chatRef, {
+      ...datosChat,
+      ultimoMensaje: "",
+      creadoEn: serverTimestamp(),
+      leidosPor: {},
+    });
+  } else {
+    await setDoc(chatRef, datosChat, { merge: true });
+  }
+
+  return {
+    id: chatId,
+    ...datosChat,
+    ultimoMensaje: chatSnap.exists() ? chatSnap.data().ultimoMensaje || "" : "",
+    leidosPor: chatSnap.exists() ? chatSnap.data().leidosPor || {} : {},
+  };
+}
+
+export async function asegurarChatReserva(reserva) {
+  return crearOObtenerChatDesdeReserva(reserva);
+}
+
+export async function obtenerMisChats() {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para ver tus chats.",
+  );
+
+  const consultas = [
+    query(collection(db, "chats"), where("participantes", "array-contains", usuario.uid)),
+    query(collection(db, "chats"), where("estudianteId", "==", usuario.uid)),
+    query(collection(db, "chats"), where("tutorId", "==", usuario.uid)),
+  ];
+
+  const resultados = await Promise.allSettled(
+    consultas.map((consulta) => getDocs(consulta)),
+  );
+  const consultasExitosas = resultados.filter(
+    (resultado) => resultado.status === "fulfilled",
+  );
+
+  if (!consultasExitosas.length) {
+    throw resultados[0].reason;
+  }
+
+  const chats = new Map();
+
+  consultasExitosas.forEach((resultado) => {
+    resultado.value.docs.forEach((documento) => {
+      chats.set(documento.id, {
+        id: documento.id,
+        ...documento.data(),
+      });
+    });
+  });
+
+  return [...chats.values()].sort((a, b) => {
+    const fechaA = a.actualizadoEn?.toMillis ? a.actualizadoEn.toMillis() : 0;
+    const fechaB = b.actualizadoEn?.toMillis ? b.actualizadoEn.toMillis() : 0;
+    return fechaB - fechaA;
+  });
+}
+
+async function obtenerRolChatActual(usuario) {
+  const consulta = query(
+    collection(db, "usuarios"),
+    where("usuarioId", "==", usuario.uid),
+    limit(1),
+  );
+  const resultado = await getDocs(consulta);
+
+  if (!resultado.empty) {
+    return normalizarEstado(resultado.docs[0].data().rol);
+  }
+
+  const usuarioSnap = await getDoc(doc(db, "usuarios", usuario.uid));
+
+  if (usuarioSnap.exists()) {
+    return normalizarEstado(usuarioSnap.data().rol);
+  }
+
+  return "";
+}
+
+export async function obtenerResumenChats() {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesiÃ³n para ver tus chats.",
+  );
+
+  const rol = await obtenerRolChatActual(usuario);
+
+  if (!["estudiante", "tutor"].includes(rol)) {
+    throw new Error("No se pudo detectar tu rol para cargar el chat.");
+  }
+
+  const reservas = await obtenerReservasParaChat();
+  const chatsDesdeReservas = await Promise.allSettled(
+    reservas.map((reserva) => crearOObtenerChatDesdeReserva(reserva)),
+  );
+  const chatsPreparados = new Map();
+
+  chatsDesdeReservas.forEach((resultado) => {
+    if (resultado.status === "fulfilled") {
+      chatsPreparados.set(resultado.value.id, resultado.value);
+      return;
+    }
+
+    console.error("No se pudo preparar un chat desde una reserva:", resultado.reason);
+  });
+
+  const chatsExistentes = await obtenerMisChats();
+
+  chatsExistentes.forEach((chat) => {
+    chatsPreparados.set(chat.id, chat);
+  });
+
+  const chats = [...chatsPreparados.values()].sort((a, b) => {
+    const fechaA = a.actualizadoEn?.toMillis ? a.actualizadoEn.toMillis() : 0;
+    const fechaB = b.actualizadoEn?.toMillis ? b.actualizadoEn.toMillis() : 0;
+    return fechaB - fechaA;
+  });
+
+  return {
+    usuarioId: usuario.uid,
+    rol,
+    chats,
+    tieneReservas: reservas.length > 0,
+  };
+}
+
+export async function obtenerMensajesChat(chatId) {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para ver los mensajes.",
+  );
+
+  if (!chatId) {
+    throw new Error("No se encontró el chat.");
+  }
+
+  const chatSnap = await getDoc(doc(db, "chats", chatId));
+
+  if (!chatSnap.exists()) {
+    throw new Error("El chat ya no existe.");
+  }
+
+  const chat = chatSnap.data();
+
+  if (!Array.isArray(chat.participantes) || !chat.participantes.includes(usuario.uid)) {
+    throw new Error("No tienes permiso para ver este chat.");
+  }
+
+  const consulta = query(
+    collection(db, "chats", chatId, "mensajes"),
+    orderBy("fecha", "asc"),
+  );
+  const resultado = await getDocs(consulta);
+
+  return resultado.docs.map((documento) => ({
+    id: documento.id,
+    ...documento.data(),
+  }));
+}
+
+export async function enviarMensajeChat(chatId, texto) {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para enviar mensajes.",
+  );
+  const mensaje = limpiarTextoSeguro(texto);
+
+  if (!chatId) {
+    throw new Error("No se encontró el chat.");
+  }
+
+  if (!mensaje) {
+    throw new Error("Escribe un mensaje antes de enviarlo.");
+  }
+
+  if (mensaje.length > 500) {
+    throw new Error("El mensaje no debe superar 500 caracteres.");
+  }
+
+  const chatRef = doc(db, "chats", chatId);
+  const chatSnap = await getDoc(chatRef);
+
+  if (!chatSnap.exists()) {
+    throw new Error("El chat ya no existe.");
+  }
+
+  const chat = chatSnap.data();
+
+  if (!Array.isArray(chat.participantes) || !chat.participantes.includes(usuario.uid)) {
+    throw new Error("No tienes permiso para enviar mensajes en este chat.");
+  }
+
+  const autorRol = chat.tutorId === usuario.uid ? "tutor" : "estudiante";
+
+  await addDoc(collection(db, "chats", chatId, "mensajes"), {
+    texto: mensaje,
+    autorId: usuario.uid,
+    autorRol,
+    fecha: serverTimestamp(),
+    leido: false,
+  });
+
+  await setDoc(
+    chatRef,
+    {
+      ultimoMensaje: mensaje,
+      ultimoAutorId: usuario.uid,
+      actualizadoEn: serverTimestamp(),
+      leidosPor: {
+        [usuario.uid]: serverTimestamp(),
+      },
+    },
+    { merge: true },
+  );
+}
+
+export async function marcarChatLeido(chatId) {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para marcar mensajes como leídos.",
+  );
+
+  if (!chatId) return;
+
+  await setDoc(
+    doc(db, "chats", chatId),
+    {
+      leidosPor: {
+        [usuario.uid]: serverTimestamp(),
+      },
+    },
+    { merge: true },
+  );
 }

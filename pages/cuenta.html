@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -10,12 +10,11 @@
 
   <body>
     <header class="cuenta-header">
-      <a href="../index.html" class="logo-link">
+      <a href="../index.html" class="logo-link" aria-label="Ir al inicio">
         <img
           src="../assets/img/logo-tutorflash-transparente.png"
           alt="TutorFlash"
         />
-        <span>TutorFlash</span>
       </a>
 
       <a href="../index.html" class="volver-inicio"> Volver al inicio </a>
@@ -23,49 +22,12 @@
 
     <main class="cuenta-main">
       <section class="cuenta-layout">
-        <section class="cuenta-info">
-          <div class="cuenta-badge">Acceso TutorFlash</div>
-
-          <h1>Entra a tu plataforma de tutorías rápidas</h1>
-
-          <p>
-            Inicia sesión para reservar tutorías, revisar tus sesiones o acceder
-            a tu panel según tu rol dentro de TutorFlash.
-          </p>
-
-          <div class="cuenta-beneficios">
-            <article>
-              <span>⚡</span>
-              <div>
-                <h3>Reservas rápidas</h3>
-                <p>Encuentra tutores disponibles antes de tus evaluaciones.</p>
-              </div>
-            </article>
-
-            <article>
-              <span>📚</span>
-              <div>
-                <h3>Sesiones organizadas</h3>
-                <p>Revisa el estado de tus tutorías desde tu cuenta.</p>
-              </div>
-            </article>
-
-            <article>
-              <span>👨‍🏫</span>
-              <div>
-                <h3>Acceso para tutores</h3>
-                <p>Postula como tutor y administra tus sesiones aprobadas.</p>
-              </div>
-            </article>
-          </div>
-        </section>
-
         <section class="auth-panel">
           <div class="auth-card" id="authCard">
             <div class="auth-card-header">
               <p>Mi cuenta</p>
-              <h2>Bienvenido a TutorFlash</h2>
-              <span>Accede con tu correo y contraseña.</span>
+              <h2>Inicia sesión</h2>
+              <span>Accede a tu cuenta de TutorFlash.</span>
             </div>
 
             <p class="auth-mensaje oculto" id="authMensaje"></p>
@@ -77,6 +39,7 @@
                 id="loginCorreo"
                 placeholder="ejemplo@correo.com"
                 autocomplete="email"
+                required
               />
 
               <label for="loginPassword">Contraseña</label>
@@ -85,10 +48,16 @@
                 id="loginPassword"
                 placeholder="Ingresa tu contraseña"
                 autocomplete="current-password"
+                minlength="6"
+                required
               />
 
               <button type="submit" id="btnLogin" class="btn-auth-principal">
                 Iniciar sesión
+              </button>
+
+              <button type="button" id="btnRestablecerPassword" class="btn-auth-link">
+                Olvidé mi contraseña
               </button>
 
               <p class="auth-cambio">
@@ -104,6 +73,9 @@
                 id="registroNombre"
                 placeholder="Escribe tu nombre completo"
                 autocomplete="name"
+                minlength="2"
+                maxlength="60"
+                required
               />
 
               <label for="registroRol">Tipo de cuenta</label>
@@ -118,6 +90,7 @@
                 id="registroCorreo"
                 placeholder="ejemplo@correo.com"
                 autocomplete="email"
+                required
               />
 
               <label for="registroPassword">Contraseña</label>
@@ -126,6 +99,8 @@
                 id="registroPassword"
                 placeholder="Mínimo 6 caracteres"
                 autocomplete="new-password"
+                minlength="6"
+                required
               />
 
               <button type="submit" id="btnRegistro" class="btn-auth-principal">
@@ -141,15 +116,8 @@
             <div class="cuenta-activa oculto" id="cuentaActiva">
               <div class="cuenta-activa-icono">✓</div>
 
-              <h2>Sesión iniciada</h2>
-              <p id="usuarioActualTexto"></p>
-
-              <div class="cuenta-activa-links">
-                <a href="app.html">Ir a la plataforma</a>
-                <a href="sesiones.html">Ver mis sesiones</a>
-              </div>
-
-              <button type="button" id="btnCerrarSesion">Cerrar sesión</button>
+              <h2>Redirigiendo a tu panel...</h2>
+              <p id="usuarioActualTexto">Validando tu rol en TutorFlash.</p>
             </div>
           </div>
         </section>
@@ -159,3 +127,4 @@
     <script type="module" src="../js/cuenta.js"></script>
   </body>
 </html>
+

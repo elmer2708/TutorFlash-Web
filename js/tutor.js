@@ -1,9 +1,10 @@
-import {
+﻿import {
   observarUsuario,
   cerrarSesion,
   obtenerPostulacionTutorPorUid,
   guardarPostulacionTutor,
 } from "./firebase-service.js";
+import { validarCelularPeru, validarEnlaceClase } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const formPostulacionTutor = document.getElementById("formPostulacionTutor");
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "disponibilidadTutor",
   );
   const inputExperienciaTutor = document.getElementById("experienciaTutor");
+  const inputCvUrlTutor = document.getElementById("cvUrlTutor");
 
   let usuarioActual = null;
   let postulacionExistente = null;
@@ -133,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
       inputNivelTutor,
       inputDisponibilidadTutor,
       inputExperienciaTutor,
+      inputCvUrlTutor,
       btnEnviarPostulacion,
     ];
 
@@ -170,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
       inputExperienciaTutor.value =
         postulacion.experiencia || postulacion.descripcion || "";
     }
+    if (inputCvUrlTutor) inputCvUrlTutor.value = postulacion.cvUrl || "";
   }
 
   function prepararVistaSinSesion() {
@@ -361,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const experienciaTutor = String(
         inputExperienciaTutor?.value || "",
       ).trim();
+      const cvUrlTutor = String(inputCvUrlTutor?.value || "").trim();
 
       if (
         !nombreTutor ||
@@ -378,8 +383,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (telefonoTutor.length < 7) {
-        mostrarMensajeTutor("Ingresa un teléfono o WhatsApp válido.", "error");
+      let telefonoValidado = "";
+      let cvUrlValidado = "";
+
+      try {
+        telefonoValidado = validarCelularPeru(telefonoTutor, "celular");
+        cvUrlValidado = cvUrlTutor ? validarEnlaceClase(cvUrlTutor) : "";
+      } catch (error) {
+        mostrarMensajeTutor(error.message, "error");
         return;
       }
 
@@ -392,11 +403,12 @@ document.addEventListener("DOMContentLoaded", () => {
         await guardarPostulacionTutor({
           nombre: nombreTutor,
           correo: correoTutor,
-          telefono: telefonoTutor,
+          telefono: telefonoValidado,
           cursos: cursosTutor,
           nivel: nivelTutor,
           disponibilidad: disponibilidadTutor,
           experiencia: experienciaTutor,
+          cvUrl: cvUrlValidado,
         });
 
         postulacionExistente = {
@@ -404,11 +416,12 @@ document.addEventListener("DOMContentLoaded", () => {
           correoUsuario: usuarioActual.email,
           nombre: nombreTutor,
           correo: correoTutor,
-          telefono: telefonoTutor,
+          telefono: telefonoValidado,
           cursos: cursosTutor,
           nivel: nivelTutor,
           disponibilidad: disponibilidadTutor,
           experiencia: experienciaTutor,
+          cvUrl: cvUrlValidado,
           estado: "pendiente",
         };
 
@@ -442,16 +455,5 @@ document.addEventListener("DOMContentLoaded", () => {
   inputCursosTutor?.addEventListener("blur", () => {
     inputCursosTutor.value = corregirCursosTexto(inputCursosTutor.value);
   });
-
-  if (btnCerrarSesionTutor) {
-    btnCerrarSesionTutor.addEventListener("click", async () => {
-      try {
-        await cerrarSesion();
-        window.location.href = "../index.html";
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-        mostrarMensajeTutor("No se pudo cerrar sesión.", "error");
-      }
-    });
-  }
 });
+

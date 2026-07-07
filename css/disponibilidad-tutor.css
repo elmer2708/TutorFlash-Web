@@ -273,6 +273,12 @@ body {
   box-shadow: 0 0 0 3px rgba(242, 183, 5, 0.18);
 }
 
+.form-grupo select:disabled {
+  background: #eef4fb;
+  color: #123b5d;
+  opacity: 1;
+}
+
 .btn-guardar,
 .btn-guardar-final {
   border: none;
@@ -406,12 +412,22 @@ body {
 
 @media (max-width: 860px) {
   .disponibilidad-sidebar {
-    position: static;
-    width: 100%;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 120;
+    width: min(82vw, 300px);
+    height: 100vh;
+    transform: translateX(-105%);
+    transition: transform 0.24s ease;
+  }
+
+  body.tf-sidebar-open .disponibilidad-sidebar {
+    transform: translateX(0);
   }
 
   .disponibilidad-main {
     margin-left: 0;
+    padding-top: 70px;
   }
 
   .sidebar-nav {
@@ -443,6 +459,43 @@ body {
   .btn-primary,
   .btn-guardar-final {
     width: 100%;
+  }
+}
+
+.tf-menu-toggle,
+.tf-sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .tf-menu-toggle {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 140;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: none;
+    border-radius: 14px;
+    background: #f5b700;
+    color: #0c2340;
+    font-size: 1.35rem;
+    font-weight: 900;
+    box-shadow: 0 12px 26px rgba(12, 35, 64, 0.2);
+  }
+
+  .tf-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: none;
+    background: rgba(12, 35, 64, 0.44);
+  }
+
+  body.tf-sidebar-open .tf-sidebar-overlay {
+    display: block;
   }
 }
 

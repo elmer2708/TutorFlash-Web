@@ -1,10 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Postulación Tutor | TutorFlash</title>
     <link rel="stylesheet" href="../css/tutor.css" />
+      <link rel="stylesheet" href="../css/chat.css" />
   </head>
   <body>
     <header class="tutor-header">
@@ -17,7 +18,25 @@
         <a href="panel-tutor.html">Panel tutor</a>
         <a href="sesiones.html">Mis sesiones</a>
         <a href="perfil-tutor.html">Mi perfil tutor</a>
-        <button id="btnCerrarSesionTutor" class="btn-nav-salir">Salir</button>
+
+        <div class="tf-user-area tutor-user-area">
+          <button class="tf-user-chip" id="btnUsuarioTutor" type="button">
+            <span class="tf-user-avatar" id="avatarTutorTop">TF</span>
+            <span class="tf-user-meta">
+              <strong id="nombreTutorTop">Tutor</strong>
+              <small>Mi cuenta</small>
+            </span>
+          </button>
+
+          <div class="tf-user-dropdown oculto" id="menuUsuarioTutor">
+            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">x</button>
+            <p class="tf-user-email" id="correoTutorMenu">correo@ejemplo.com</p>
+            <div class="tf-user-dropdown-avatar" id="avatarTutorMenu">TF</div>
+            <h3 id="saludoTutorMenu">Hola, tutor</h3>
+            <a class="tf-user-dropdown-btn" href="perfil-tutor.html">Ver perfil tutor</a>
+            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesion</button>
+          </div>
+        </div>
       </nav>
     </header>
 
@@ -162,6 +181,11 @@
                 id="telefonoTutor"
                 placeholder="Ejemplo: 987654321"
                 autocomplete="tel"
+                inputmode="numeric"
+                minlength="9"
+                maxlength="9"
+                pattern="^9[0-9]{8}$"
+                required
               />
             </div>
 
@@ -210,6 +234,16 @@
                 placeholder="Cuenta brevemente qué cursos dominas, a qué estudiantes puedes ayudar y qué experiencia tienes."
               ></textarea>
             </div>
+            <div class="form-grupo">
+              <label for="cvUrlTutor">Enlace de CV</label>
+              <input
+                type="url"
+                id="cvUrlTutor"
+                placeholder="https://drive.google.com/..."
+                autocomplete="url"
+              />
+            </div>
+            
 
             <button
               type="submit"
@@ -233,6 +267,11 @@
       </div>
     </footer>
 
+    <script type="module" src="../js/tutor-account.js"></script>
     <script type="module" src="../js/tutor.js"></script>
+      <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
+
+
+

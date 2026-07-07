@@ -6,6 +6,7 @@ import {
   guardarTutorFavorito,
   obtenerMisFavoritos,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -156,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function obtenerDisponibilidadTutor(disponibilidad) {
     if (!disponibilidad) {
-      return "Disponible hoy";
+      return "Este tutor aún no registró horarios.";
     }
 
     if (disponibilidad === "Mañana") {
@@ -219,7 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const precio = obtenerPrecioTutor(tutor);
     const rating = obtenerRatingTutor(tutor);
-    const disponibilidad = obtenerDisponibilidadTutor(tutor.disponibilidad);
+    const disponibilidad =
+      tutor.disponibilidadResumen ||
+      obtenerDisponibilidadTutor(tutor.disponibilidad);
 
     const modalidad = tutor.modalidad || "Modalidad no indicada";
     const nivel = tutor.nivel || "Nivel no indicado";
@@ -361,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           if (!tutor) {
-            alert("No se encontró la información del tutor.");
+            mostrarAviso("No se encontró la información del tutor.", "error");
             return;
           }
 
@@ -375,7 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error al guardar favorito:", error);
           boton.disabled = false;
           boton.textContent = "♡ Guardar favorito";
-          alert("No se pudo guardar el tutor como favorito.");
+          mostrarAviso("No se pudo guardar el tutor como favorito.", "error");
         }
       });
     });
@@ -450,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../index.html";
       } catch (error) {
         console.error(error);
-        alert("No se pudo cerrar sesión.");
+        mostrarAviso("No se pudo cerrar sesión.", "error");
       }
     });
   }

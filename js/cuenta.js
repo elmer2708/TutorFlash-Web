@@ -7,6 +7,7 @@ import {
   obtenerPerfilUsuarioActual,
   obtenerTutorActivoActual,
   obtenerPostulacionTutorPorUid,
+  enviarRestablecimientoPassword,
 } from "./firebase-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -25,8 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginCorreo = document.querySelector("#loginCorreo");
   const loginPassword = document.querySelector("#loginPassword");
   const btnLogin = document.querySelector("#btnLogin");
+  const btnRestablecerPassword = document.querySelector(
+    "#btnRestablecerPassword",
+  );
 
-  const btnCerrarSesion = document.querySelector("#btnCerrarSesion");
   const cuentaActiva = document.querySelector("#cuentaActiva");
   const usuarioActualTexto = document.querySelector("#usuarioActualTexto");
   const authMensaje = document.querySelector("#authMensaje");
@@ -204,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (accionAuthEnProceso) return;
 
     const nombre = registroNombre?.value.trim() || "";
-    const correo = registroCorreo?.value.trim() || "";
+    const correo = registroCorreo?.value.trim().toLowerCase() || "";
     const password = registroPassword?.value.trim() || "";
 
     let rol = registroRol ? registroRol.value : "estudiante";
@@ -218,6 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
         "Completa todos los campos para crear tu cuenta.",
         "error",
       );
+      return;
+    }
+
+    if (nombre.length < 2 || /^\d+$/.test(nombre)) {
+      mostrarMensaje("Ingresa un nombre válido.", "error");
       return;
     }
 
@@ -263,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (accionAuthEnProceso) return;
 
-    const correo = loginCorreo?.value.trim() || "";
+    const correo = loginCorreo?.value.trim().toLowerCase() || "";
     const password = loginPassword?.value.trim() || "";
 
     if (!correo || !password) {
@@ -306,32 +314,39 @@ document.addEventListener("DOMContentLoaded", () => {
     registroForm.addEventListener("submit", manejarRegistro);
   }
 
+  btnRestablecerPassword?.addEventListener("click", async () => {
+    if (accionAuthEnProceso) return;
+
+    const correo = loginCorreo?.value.trim().toLowerCase() || "";
+
+    try {
+      accionAuthEnProceso = true;
+      cambiarTextoBoton(btnRestablecerPassword, "Enviando...");
+
+      await enviarRestablecimientoPassword(correo);
+
+      mostrarMensaje(
+        "Te enviamos un enlace para restablecer tu contraseña.",
+        "exito",
+      );
+    } catch (error) {
+      console.error("Error al restablecer contraseña:", error);
+      mostrarMensaje(
+        error.message || "No se pudo enviar el correo de restablecimiento.",
+        "error",
+      );
+    } finally {
+      accionAuthEnProceso = false;
+      restaurarBoton(btnRestablecerPassword);
+    }
+  });
+
   if (btnLogin && btnLogin.type !== "submit") {
     btnLogin.addEventListener("click", manejarLogin);
   }
 
   if (btnRegistro && btnRegistro.type !== "submit") {
     btnRegistro.addEventListener("click", manejarRegistro);
-  }
-
-  if (btnCerrarSesion) {
-    btnCerrarSesion.addEventListener("click", async () => {
-      try {
-        cambiarTextoBoton(btnCerrarSesion, "Cerrando sesión...");
-
-        await cerrarSesion();
-
-        limpiarCampos();
-        limpiarMensaje();
-        mostrarVistaLogin();
-        mostrarMensaje("Sesión cerrada correctamente.", "exito");
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-        mostrarMensaje("No se pudo cerrar sesión.", "error");
-      } finally {
-        restaurarBoton(btnCerrarSesion);
-      }
-    });
   }
 
   observarUsuario((usuario) => {
@@ -341,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cuentaActiva) cuentaActiva.classList.remove("oculto");
 
       if (usuarioActualTexto) {
-        usuarioActualTexto.textContent = `Sesión activa: ${usuario.email}`;
+        usuarioActualTexto.textContent = "Redirigiendo a tu panel...";
       }
 
       if (!accionAuthEnProceso && !redireccionando) {

@@ -5,6 +5,7 @@ import {
   obtenerMisFavoritos,
   eliminarTutorFavorito,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nombreUsuario = document.querySelector("#nombreUsuario");
@@ -125,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tutorId = boton.dataset.tutorId;
 
         if (!tutorId) {
-          alert("No se encontró el ID del tutor.");
+          mostrarAviso("No se encontró el ID del tutor.", "error");
           return;
         }
 
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error al eliminar favorito:", error);
           boton.disabled = false;
           boton.textContent = "Eliminar favorito";
-          alert("No se pudo eliminar el tutor favorito.");
+          mostrarAviso("No se pudo eliminar el tutor favorito.", "error");
         }
       });
     });
@@ -196,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../index.html";
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
-        alert("No se pudo cerrar sesión.");
+        mostrarAviso("No se pudo cerrar sesión.", "error");
       }
     });
   }

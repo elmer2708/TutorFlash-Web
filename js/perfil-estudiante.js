@@ -4,6 +4,8 @@ import {
   obtenerPerfilUsuarioActual,
   actualizarPerfilUsuarioActual,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
+import { validarCelularPeru } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -174,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
 
     if (!usuarioActual) {
-      alert("Primero debes iniciar sesión.");
+      mostrarAviso("Primero debes iniciar sesión.", "advertencia");
       return;
     }
 
@@ -190,9 +192,19 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (telefono) {
+      try {
+        validarCelularPeru(telefono, "celular");
+      } catch (error) {
+        mostrarEstado(error.message, "is-error");
+        telefonoPerfil?.focus();
+        return;
+      }
+    }
+
     const datosPerfil = {
       nombre,
-      telefono,
+      telefono: telefono ? validarCelularPeru(telefono, "celular") : "",
       nivelAcademico,
       distrito,
       cursosInteres,
@@ -253,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "../index.html";
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
-      alert("No se pudo cerrar sesión.");
+      mostrarAviso("No se pudo cerrar sesión.", "error");
     }
   });
 
