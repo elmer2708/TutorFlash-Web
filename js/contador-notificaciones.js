@@ -60,10 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const estadoPago = normalizarTexto(sesion.estadoPago, "pendiente");
       const estadoClase = normalizarTexto(sesion.estadoClase, "pendiente");
       const enlaceClase = String(sesion.enlaceClase || "").trim();
-      const reservaFinalizada =
-        estado === "realizada" ||
-        estado === "cancelada" ||
-        estado === "rechazada";
+      const reservaFinalizada = [
+        "finalizada",
+        "rechazada",
+        "cancelada_estudiante",
+        "cancelada_tutor",
+        "expirada",
+      ].includes(estado);
       const claseLista = estadoClase === "programada" || Boolean(enlaceClase);
 
       if (estadoPago === "rechazado") {
@@ -82,8 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
         contarSiNoLeida(`${idSesion}-clase-pendiente`);
       }
 
-      if ((estado === "aceptada" || estado === "confirmada") && !reservaFinalizada) {
-        contarSiNoLeida(`${idSesion}-reserva-confirmada`);
+      if (estado === "aceptada" && !reservaFinalizada) {
+        contarSiNoLeida(`${idSesion}-reserva-aceptada`);
       } else if (estado === "pendiente") {
         contarSiNoLeida(`${idSesion}-reserva-pendiente`);
       }

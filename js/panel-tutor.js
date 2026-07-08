@@ -76,9 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const etiquetas = {
       pendiente: "Pendiente",
       aceptada: "Aceptada",
-      realizada: "Realizada",
+      en_curso: "En curso",
+      finalizada: "Finalizada",
       rechazada: "Rechazada",
-      cancelada: "Cancelada",
+      cancelada_estudiante: "Cancelada por estudiante",
+      cancelada_tutor: "Cancelada por tutor",
+      expirada: "No atendida",
     };
 
     return etiquetas[estadoNormalizado] || estado || "Pendiente";
@@ -261,18 +264,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const realizadas = reservas.filter(
-      (reserva) => normalizarEstado(reserva.estado) === "realizada",
+      (reserva) => normalizarEstado(reserva.estado) === "finalizada",
     );
 
     const pagosRevision = reservas.filter((reserva) => {
-      return String(reserva.estadoPago || "pendiente").toLowerCase().trim() ===
-        "en_revision";
+      return (
+        String(reserva.estadoPago || "pendiente")
+          .toLowerCase()
+          .trim() === "en_revision"
+      );
     }).length;
 
     const ingresosConfirmados = reservas
       .filter((reserva) => {
-        return String(reserva.estadoPago || "").toLowerCase().trim() ===
-          "confirmado";
+        return (
+          String(reserva.estadoPago || "")
+            .toLowerCase()
+            .trim() === "confirmado"
+        );
       })
       .reduce((total, reserva) => total + convertirNumero(reserva.total), 0);
 
@@ -293,8 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
       (reserva) => normalizarEstado(reserva.estado) === "pendiente",
     ).length;
     const pagosRevision = reservas.filter((reserva) => {
-      return String(reserva.estadoPago || "").toLowerCase().trim() ===
-        "en_revision";
+      return (
+        String(reserva.estadoPago || "")
+          .toLowerCase()
+          .trim() === "en_revision"
+      );
     }).length;
 
     const items = [
@@ -353,7 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return (
           fechaHora &&
           fechaHora >= ahora &&
-          (estado === "pendiente" || estado === "aceptada")
+          ["pendiente", "aceptada", "en_curso"].includes(estado)
         );
       })
       .sort((a, b) => obtenerFechaHora(a) - obtenerFechaHora(b))[0];
@@ -400,8 +412,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (filtro === "pago-revision") {
       return reservasActuales.filter((reserva) => {
-        return String(reserva.estadoPago || "").toLowerCase().trim() ===
-          "en_revision";
+        return (
+          String(reserva.estadoPago || "")
+            .toLowerCase()
+            .trim() === "en_revision"
+        );
       });
     }
 
@@ -429,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const enlaceClase = reserva.enlaceClase || "";
     const tieneEnlace = Boolean(enlaceClase);
 
-    if (estado !== "aceptada" && estado !== "realizada") {
+    if (!["aceptada", "en_curso", "finalizada"].includes(estado)) {
       return `
       <div class="clase-virtual-box clase-pendiente">
         <div class="clase-virtual-header">
@@ -520,12 +535,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const prioridadEstado = {
-        pendiente: 3,
-        aceptada: 2,
-        confirmada: 2,
-        realizada: 1,
-        cancelada: 0,
-        rechazada: 0,
+        pendiente: 5,
+        aceptada: 4,
+        en_curso: 3,
+        finalizada: 2,
+        rechazada: 1,
+        cancelada_estudiante: 0,
+        cancelada_tutor: 0,
+        expirada: 0,
       };
 
       return (
@@ -634,16 +651,32 @@ document.addEventListener("DOMContentLoaded", () => {
       <button class="btn-accion btn-rechazar" data-id="${reserva.id}" data-estado="rechazada">
         Rechazar
       </button>
+
+      <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada_tutor">
+        Cancelar
+      </button>
     `;
     }
 
     if (estado === "aceptada") {
       return `
-      <button class="btn-accion btn-realizada" data-id="${reserva.id}" data-estado="realizada">
-        Marcar realizada
+      <button class="btn-accion btn-realizada" data-id="${reserva.id}" data-estado="en_curso">
+        Iniciar sesión
       </button>
 
-      <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada">
+      <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada_tutor">
+        Cancelar
+      </button>
+    `;
+    }
+
+    if (estado === "en_curso") {
+      return `
+      <button class="btn-accion btn-realizada" data-id="${reserva.id}" data-estado="finalizada">
+        Marcar como realizada
+      </button>
+
+      <button class="btn-accion btn-cancelar" data-id="${reserva.id}" data-estado="cancelada_tutor">
         Cancelar
       </button>
     `;
@@ -714,7 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const realizadas = ordenarReservasPorFechaHora(
       reservas.filter(
-        (reserva) => normalizarEstado(reserva.estado) === "realizada",
+        (reserva) => normalizarEstado(reserva.estado) === "finalizada",
       ),
       "desc",
     );
@@ -731,14 +764,14 @@ document.addEventListener("DOMContentLoaded", () => {
     listaHistorialTutor.innerHTML = realizadas
       .map((reserva) => {
         return `
-        <article class="reserva-card reserva-realizada">
+        <article class="reserva-card reserva-finalizada">
           <div>
             <div class="reserva-card-header">
               <h3>${limpiarTexto(reserva.curso || "Curso no indicado")}</h3>
 
-              <span class="estado-pill estado-realizada">
-                Realizada
-              </span>
+              <span class="estado-pill estado-finalizada">
+  Finalizada
+</span>
             </div>
 
             <div class="reserva-grid">
@@ -974,8 +1007,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const estadosPermitidosDesdePanel = [
         "aceptada",
         "rechazada",
-        "realizada",
-        "cancelada",
+        "en_curso",
+        "finalizada",
+        "cancelada_tutor",
       ];
 
       if (!reservaId || !estadosPermitidosDesdePanel.includes(nuevoEstado)) {
@@ -986,8 +1020,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const mensajesConfirmacion = {
         aceptada: "¿Deseas aceptar esta reserva?",
         rechazada: "¿Deseas rechazar esta reserva?",
-        realizada: "¿Deseas marcar esta sesión como realizada?",
-        cancelada: "¿Deseas cancelar esta reserva?",
+        en_curso: "¿Deseas iniciar esta sesión?",
+        finalizada: "¿Deseas marcar esta sesión como realizada?",
+        cancelada_tutor: "¿Deseas cancelar esta reserva?",
       };
 
       const confirmarCambio = confirm(
@@ -1044,4 +1079,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   validarAccesoTutor();
 });
-

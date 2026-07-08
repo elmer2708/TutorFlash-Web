@@ -35,6 +35,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const proximaFecha = document.querySelector("#proximaFecha");
   const proximaHora = document.querySelector("#proximaHora");
   const proximaEstado = document.querySelector("#proximaEstado");
+  const ESTADOS_ACTIVOS = ["pendiente", "aceptada", "en_curso"];
+  const ESTADOS_CERRADOS = [
+    "finalizada",
+    "rechazada",
+    "cancelada_estudiante",
+    "cancelada_tutor",
+    "expirada",
+  ];
+
+  const textosEstado = {
+    pendiente: "Pendiente",
+    aceptada: "Aceptada",
+    en_curso: "En curso",
+    finalizada: "Finalizada",
+    rechazada: "Rechazada",
+    cancelada_estudiante: "Cancelada por estudiante",
+    cancelada_tutor: "Cancelada por tutor",
+    expirada: "No atendida",
+  };
 
   function obtenerNombreUsuario(usuario, perfil) {
     return (
@@ -58,17 +77,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function normalizarEstado(estado) {
-    const estadoNormalizado = String(estado || "pendiente")
+    return String(estado || "pendiente")
       .toLowerCase()
       .trim();
+  }
 
-    if (estadoNormalizado === "confirmada") return "aceptada";
-    if (estadoNormalizado === "confirmado") return "aceptada";
-    if (estadoNormalizado === "aceptado") return "aceptada";
-    if (estadoNormalizado === "completada") return "realizada";
-    if (estadoNormalizado === "completado") return "realizada";
-
-    return estadoNormalizado;
+  function obtenerTextoEstado(estado) {
+    const estadoNormalizado = normalizarEstado(estado);
+    return textosEstado[estadoNormalizado] || "Pendiente";
   }
 
   function formatearFecha(fecha) {
@@ -168,8 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
       (sesion) => normalizarEstado(sesion.estado) === "aceptada",
     ).length;
 
-    const realizadas = sesiones.filter(
-      (sesion) => normalizarEstado(sesion.estado) === "realizada",
+    const finalizadas = sesiones.filter(
+      (sesion) => normalizarEstado(sesion.estado) === "finalizada",
     ).length;
 
     const pagosPendientes = sesiones.filter((sesion) => {
@@ -179,14 +195,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .trim();
 
       return (
-        !["cancelada", "rechazada", "realizada"].includes(estado) &&
+        !ESTADOS_CERRADOS.includes(estado) &&
         (estadoPago === "pendiente" || estadoPago === "rechazado")
       );
     }).length;
 
     if (totalPendientes) totalPendientes.textContent = pendientes;
     if (totalAceptadas) totalAceptadas.textContent = aceptadas;
-    if (totalRealizadas) totalRealizadas.textContent = realizadas;
+    if (totalRealizadas) totalRealizadas.textContent = finalizadas;
     if (totalInvertido) {
       totalInvertido.textContent = pagosPendientes;
     }
@@ -206,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return (
           sesion.fechaHora &&
           sesion.fechaHora >= ahora &&
-          ["pendiente", "aceptada"].includes(estado)
+          ESTADOS_ACTIVOS.includes(estado)
         );
       })
       .sort((a, b) => a.fechaHora - b.fechaHora);
@@ -245,8 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (proximaEstado) {
-      proximaEstado.textContent =
-        estado.charAt(0).toUpperCase() + estado.slice(1);
+      proximaEstado.textContent = obtenerTextoEstado(estado);
     }
   }
 

@@ -1036,6 +1036,107 @@ select:disabled {
   }
 }
 
+/* Header reutilizable superior */
+.tf-app-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 160;
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 12px 28px rgba(7, 27, 61, 0.1);
+}
+
+body.tf-has-app-header {
+  padding-top: 60px;
+}
+
+.tf-app-header .tf-menu-toggle {
+  position: static;
+  z-index: auto;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 14px;
+  background: #f5b700;
+  color: #0c2340;
+  font-size: 1.28rem;
+  font-weight: 900;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.tf-app-header-brand {
+  color: #071b3d;
+  font-size: 1.08rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.tf-app-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tf-app-header .tutor-user-area,
+.tf-app-header .admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.tf-has-app-header .tutor-sidebar,
+body.tf-has-app-header .perfil-sidebar,
+body.tf-has-app-header .disponibilidad-sidebar {
+  top: 60px;
+  height: calc(100vh - 60px);
+}
+
+body.tf-has-app-header .tutor-topbar {
+  display: none;
+}
+
+body.tf-has-app-header .tutor-sidebar,
+body.tf-has-app-header .perfil-sidebar,
+body.tf-has-app-header .disponibilidad-sidebar {
+  top: 60px;
+  height: calc(100vh - 60px);
+}
+
+body.tf-has-app-header .tutor-main,
+body.tf-has-app-header .perfil-main,
+body.tf-has-app-header .disponibilidad-main {
+  padding-top: 16px;
+}
+
+@media (max-width: 620px) {
+  .tf-app-header {
+    grid-template-columns: auto minmax(96px, 1fr) auto;
+    gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .tf-app-header .tf-user-meta small {
+    display: none;
+  }
+
+  .tf-app-header .tf-user-chip {
+    width: auto;
+    max-width: 150px;
+    padding-right: 8px;
+  }
+}
+
 /* Portal tutor unificado */
 .oculto {
   display: none !important;
@@ -1371,4 +1472,19 @@ select:disabled {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+body.tf-has-app-header .tf-app-header .tf-menu-toggle {
+  position: static;
+  display: grid;
+}
+
+body.tf-has-app-header .tutor-topbar {
+  display: none;
+}
+
+body.tf-has-app-header .tutor-main,
+body.tf-has-app-header .perfil-main,
+body.tf-has-app-header .disponibilidad-main {
+  padding-top: 16px;
 }

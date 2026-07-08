@@ -285,19 +285,27 @@ body {
   border: 1px solid #86efac;
 }
 
+.estado-en_curso {
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+}
+
 .estado-rechazada {
   background: #fee2e2;
   color: #991b1b;
   border: 1px solid #fecaca;
 }
 
-.estado-realizada {
+.estado-finalizada {
   background: #dbeafe;
   color: #1e40af;
   border: 1px solid #bfdbfe;
 }
 
-.estado-cancelada {
+.estado-cancelada_estudiante,
+.estado-cancelada_tutor,
+.estado-expirada {
   background: #f1f5f9;
   color: #475569;
   border: 1px solid #cbd5e1;
@@ -393,6 +401,17 @@ body {
   background: #fff8e8;
   color: #071b3d;
   border: 1px solid rgba(7, 27, 61, 0.1);
+}
+
+.sesion-action-btn.danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.sesion-action-btn.danger:hover {
+  background: #fecaca;
+  box-shadow: 0 12px 22px rgba(153, 27, 27, 0.12);
 }
 
 /* VACÍO */

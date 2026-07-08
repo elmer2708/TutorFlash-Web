@@ -92,6 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  function actualizarFormularioChat(habilitado) {
+    if (chatTexto) chatTexto.disabled = !habilitado;
+    if (chatEnviar) chatEnviar.disabled = !habilitado;
+  }
+
   function pintarEstadoInicialChat(resumen, contenedor) {
     if (!resumen.tieneReservas) {
       pintarEstadoChat(
@@ -161,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (chatTitulo) chatTitulo.textContent = "Aún no hay chat abierto";
         if (chatCurso) chatCurso.textContent = "Selecciona una conversación";
         pintarEstadoInicialChat(resumen, chatMensajes);
+        actualizarFormularioChat(false);
       }
     }
   }
@@ -174,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (chatTitulo) chatTitulo.textContent = obtenerNombreChat(chatActivo);
     if (chatCurso) chatCurso.textContent = chatActivo.curso || "Tutoria";
+    actualizarFormularioChat(true);
 
     const mensajes = await obtenerMensajesChat(chatActivo.id);
     await marcarChatLeido(chatActivo.id);
@@ -231,38 +238,40 @@ document.addEventListener("DOMContentLoaded", () => {
     const lista = panel.querySelector(".tf-mini-chat-list");
     const cerrar = panel.querySelector(".tf-mini-chat-close");
 
+    async function cargarMiniChat() {
+      try {
+        const resumen = await obtenerResumenChats();
+        pintarLista(lista, resumen.chats, true, resumen);
+      } catch (error) {
+        if (esErrorSesion(error)) {
+          pintarEstadoChat(lista, "Inicia sesion para ver tus conversaciones.");
+          return;
+        }
+
+        if (esErrorRol(error)) {
+          pintarEstadoChat(
+            lista,
+            "No se pudo detectar tu rol.",
+            "Ingresa nuevamente para cargar tus conversaciones.",
+          );
+          return;
+        }
+
+        console.error("Error al cargar mini chat:", error);
+        pintarEstadoChat(lista, obtenerMensajeCargaChat(error));
+      }
+    }
+
     boton.addEventListener("click", async () => {
       panel.classList.toggle("oculto");
 
       if (!panel.classList.contains("oculto")) {
-        try {
-          const resumen = await obtenerResumenChats();
-          pintarLista(lista, resumen.chats, true, resumen);
-        } catch (error) {
-          if (esErrorSesion(error)) {
-            pintarEstadoChat(
-              lista,
-              "Inicia sesion para ver tus conversaciones.",
-            );
-            return;
-          }
-
-          if (esErrorRol(error)) {
-            pintarEstadoChat(
-              lista,
-              "No se pudo detectar tu rol.",
-              "Ingresa nuevamente para cargar tus conversaciones.",
-            );
-            return;
-          }
-
-          console.error("Error al cargar mini chat:", error);
-          pintarEstadoChat(lista, obtenerMensajeCargaChat(error));
-        }
+        await cargarMiniChat();
       }
     });
 
     cerrar?.addEventListener("click", () => panel.classList.add("oculto"));
+    cargarMiniChat();
   }
 
   listaConversaciones?.addEventListener("click", async (event) => {
@@ -319,6 +328,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
+      actualizarFormularioChat(false);
+
       if (esPaginaChat) {
         await cargarChats();
       } else {
@@ -331,6 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
             listaConversaciones,
             "Inicia sesion para ver tus conversaciones.",
           );
+          pintarEstadoChat(
+            chatMensajes,
+            "Inicia sesion para ver tus conversaciones.",
+          );
           return;
         }
 
@@ -340,10 +355,17 @@ document.addEventListener("DOMContentLoaded", () => {
             "No se pudo detectar tu rol.",
             "Ingresa nuevamente para cargar tus conversaciones.",
           );
+          pintarEstadoChat(
+            chatMensajes,
+            "No se pudo detectar tu rol.",
+            "Ingresa nuevamente para cargar tus conversaciones.",
+          );
           return;
         }
 
         console.error("Error al iniciar chat:", error);
+        pintarEstadoChat(listaConversaciones, obtenerMensajeCargaChat(error));
+        pintarEstadoChat(chatMensajes, obtenerMensajeCargaChat(error));
         mostrarAviso(obtenerMensajeCargaChat(error), "error");
       }
     }

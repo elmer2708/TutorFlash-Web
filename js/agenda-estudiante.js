@@ -7,6 +7,18 @@ import {
 import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const ESTADOS_ACTIVOS = ["pendiente", "aceptada", "en_curso"];
+  const textosEstadoReserva = {
+    pendiente: "Pendiente",
+    aceptada: "Aceptada",
+    en_curso: "En curso",
+    finalizada: "Finalizada",
+    rechazada: "Rechazada",
+    cancelada_estudiante: "Cancelada por estudiante",
+    cancelada_tutor: "Cancelada por tutor",
+    expirada: "No atendida",
+  };
+
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
 
   const btnUsuario = document.querySelector("#btnUsuario");
@@ -64,36 +76,40 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function normalizarEstado(estado) {
-    const estadoNormalizado = String(estado || "pendiente")
+    return String(estado || "pendiente")
       .toLowerCase()
       .trim();
-
-    if (estadoNormalizado === "confirmada") return "aceptada";
-    if (estadoNormalizado === "confirmado") return "aceptada";
-    if (estadoNormalizado === "aceptado") return "aceptada";
-    if (estadoNormalizado === "completada") return "realizada";
-    if (estadoNormalizado === "completado") return "realizada";
-
-    return estadoNormalizado;
   }
 
   function formatearEstado(estado) {
-    const estadoNormalizado = normalizarEstado(estado).replaceAll("_", " ");
+    const estadoNormalizado = normalizarEstado(estado);
+
+    if (textosEstadoReserva[estadoNormalizado]) {
+      return textosEstadoReserva[estadoNormalizado];
+    }
+
+    const texto = estadoNormalizado.replaceAll("_", " ");
     return (
-      estadoNormalizado.charAt(0).toUpperCase() + estadoNormalizado.slice(1)
+      texto.charAt(0).toUpperCase() + texto.slice(1)
     );
   }
 
   function obtenerClaseEstado(estado) {
     const estadoNormalizado = normalizarEstado(estado);
 
-    if (estadoNormalizado === "aceptada" || estadoNormalizado === "realizada") {
+    if (
+      estadoNormalizado === "aceptada" ||
+      estadoNormalizado === "en_curso" ||
+      estadoNormalizado === "finalizada"
+    ) {
       return "is-ok";
     }
 
     if (
       estadoNormalizado === "rechazada" ||
-      estadoNormalizado === "cancelada"
+      estadoNormalizado === "cancelada_estudiante" ||
+      estadoNormalizado === "cancelada_tutor" ||
+      estadoNormalizado === "expirada"
     ) {
       return "is-danger";
     }
@@ -309,9 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const proximas = sesionesOrdenadas.filter((sesion) => {
       const estado = normalizarEstado(sesion.estado);
 
-      return (
-        sesion.fechaHora >= ahora && ["pendiente", "aceptada"].includes(estado)
-      );
+      return sesion.fechaHora >= ahora && ESTADOS_ACTIVOS.includes(estado);
     });
 
     const proxima = proximas[0];

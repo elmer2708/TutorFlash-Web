@@ -324,3 +324,76 @@ body {
     max-width: 88%;
   }
 }
+
+/* Header reutilizable superior */
+.tf-app-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 160;
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
+  box-shadow: 0 12px 28px rgba(7, 27, 61, 0.1);
+}
+
+body.tf-has-app-header {
+  padding-top: 60px;
+}
+
+.tf-app-header .tf-menu-toggle,
+.tf-app-header-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 14px;
+  border: 0;
+  background: #f4c542;
+  color: #081827;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tf-app-header .tf-menu-toggle {
+  width: 42px;
+  font-size: 1.28rem;
+}
+
+.tf-app-header-link {
+  padding: 0 14px;
+  background: #f8fafc;
+}
+
+.tf-app-header-brand {
+  color: #071b3d;
+  font-size: 1.08rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.tf-app-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+body.tf-has-app-header .chat-shell {
+  min-height: calc(100vh - 60px);
+}
+
+body.tf-has-app-header .chat-layout {
+  min-height: calc(100vh - 108px);
+}
+
+@media (max-width: 760px) {
+  body.tf-has-app-header .chat-layout {
+    min-height: calc(100vh - 60px);
+  }
+}

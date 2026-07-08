@@ -204,10 +204,13 @@ document.addEventListener("DOMContentLoaded", () => {
         .toLowerCase()
         .trim();
       const enlaceClase = String(sesion.enlaceClase || "").trim();
-      const reservaFinalizada =
-        estado === "realizada" ||
-        estado === "cancelada" ||
-        estado === "rechazada";
+      const reservaFinalizada = [
+        "finalizada",
+        "rechazada",
+        "cancelada_estudiante",
+        "cancelada_tutor",
+        "expirada",
+      ].includes(estado);
       const claseLista = estadoClase === "programada" || Boolean(enlaceClase);
 
       function agregarNotificacion(sufijo, datos) {
@@ -254,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (claseLista && !reservaFinalizada) {
         agregarNotificacion("clase-enlace", {
-          tipo: "confirmada",
+          tipo: "clase",
           prioridad: 4,
           icono: "🔗",
           titulo: "Tu clase virtual ya tiene enlace",
@@ -270,13 +273,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      if ((estado === "aceptada" || estado === "confirmada") && !reservaFinalizada) {
-        agregarNotificacion("reserva-confirmada", {
-          tipo: "confirmada",
+      if (estado === "aceptada" && !reservaFinalizada) {
+        agregarNotificacion("reserva-aceptada", {
+          tipo: "aceptada",
           prioridad: 5,
           icono: "✅",
-          titulo: "Tu tutoría fue confirmada",
-          detalle: `${curso} con ${tutor} está confirmada para el ${formatearFecha(fecha)}.`,
+          titulo: "Tu tutoría fue aceptada",
+          detalle: `${curso} con ${tutor} está aceptada para el ${formatearFecha(fecha)}.`,
         });
       } else if (estado === "pendiente") {
         agregarNotificacion("reserva-pendiente", {

@@ -8,9 +8,17 @@ import {
 import { mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const nombreUsuario = document.querySelector("#nombreUsuario");
-  const avatarUsuario = document.querySelector("#avatarUsuario");
-  const botonCerrarSesion = document.querySelector("#cerrarSesion");
+  const nombreUsuario = document.querySelector("#nombreUsuarioTop");
+  const avatarUsuario = document.querySelector("#avatarIniciales");
+  const avatarUsuarioMenu = document.querySelector("#avatarInicialesMenu");
+  const saludoUsuarioMenu = document.querySelector("#saludoUsuarioMenu");
+  const correoUsuarioMenu = document.querySelector("#correoUsuarioMenu");
+  const botonCerrarSesion = document.querySelector("#btnCerrarSesionPortal");
+
+  const btnUsuario = document.querySelector("#btnUsuario");
+  const menuUsuario = document.querySelector("#menuUsuario");
+  const cerrarMenuUsuario = document.querySelector("#cerrarMenuUsuario");
+
   const listaFavoritos = document.querySelector("#listaFavoritos");
   const estadoFavoritos = document.querySelector("#estadoFavoritos");
 
@@ -35,6 +43,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const texto = String(nombre || "E").trim();
     return texto.charAt(0).toUpperCase();
   }
+
+  function abrirCerrarMenuUsuario() {
+    if (!menuUsuario) return;
+    menuUsuario.classList.toggle("oculto");
+  }
+
+  function cerrarMenu() {
+    if (!menuUsuario) return;
+    menuUsuario.classList.add("oculto");
+  }
+
+  if (btnUsuario) {
+    btnUsuario.addEventListener("click", (evento) => {
+      evento.stopPropagation();
+      abrirCerrarMenuUsuario();
+    });
+  }
+
+  if (cerrarMenuUsuario) {
+    cerrarMenuUsuario.addEventListener("click", cerrarMenu);
+  }
+
+  document.addEventListener("click", (evento) => {
+    if (!menuUsuario || !btnUsuario) return;
+
+    const clicDentroMenu = menuUsuario.contains(evento.target);
+    const clicEnBoton = btnUsuario.contains(evento.target);
+
+    if (!clicDentroMenu && !clicEnBoton) {
+      cerrarMenu();
+    }
+  });
+
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape") {
+      cerrarMenu();
+    }
+  });
 
   function pintarFavoritos(favoritos) {
     if (!listaFavoritos) return;
@@ -97,10 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <div class="tf-tutor-actions">
-              <a 
-                href="buscar-tutor.html" 
-                class="tf-reserve-btn"
-              >
+              <a href="buscar-tutor.html" class="tf-reserve-btn">
                 Reservar tutoría
               </a>
 
@@ -141,7 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
           boton.textContent = "Eliminando...";
 
           await eliminarTutorFavorito(tutorId);
-
           await cargarFavoritos();
         } catch (error) {
           console.error("Error al eliminar favorito:", error);
@@ -153,19 +195,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function cargarUsuario() {
+  async function cargarUsuario(usuarioAuth) {
     try {
       const perfil = await obtenerPerfilUsuarioActual();
 
-      const nombre = perfil?.nombre || perfil?.displayName || "Estudiante";
+      const nombre =
+        perfil?.nombre ||
+        perfil?.displayName ||
+        usuarioAuth?.displayName ||
+        "Estudiante";
 
-      if (nombreUsuario) {
-        nombreUsuario.textContent = nombre;
-      }
+      const correo =
+        perfil?.correo ||
+        perfil?.email ||
+        usuarioAuth?.email ||
+        "Correo no registrado";
 
-      if (avatarUsuario) {
-        avatarUsuario.textContent = obtenerInicial(nombre);
-      }
+      const inicial = obtenerInicial(nombre);
+
+      if (nombreUsuario) nombreUsuario.textContent = nombre;
+      if (avatarUsuario) avatarUsuario.textContent = inicial;
+      if (avatarUsuarioMenu) avatarUsuarioMenu.textContent = inicial;
+      if (saludoUsuarioMenu) saludoUsuarioMenu.textContent = `Hola, ${nombre}`;
+      if (correoUsuarioMenu) correoUsuarioMenu.textContent = correo;
     } catch (error) {
       console.error("Error al cargar usuario:", error);
     }
@@ -204,11 +256,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observarUsuario(async (usuario) => {
     if (!usuario) {
-      window.location.href = "../cuenta.html";
+      window.location.href = "cuenta.html";
       return;
     }
 
-    await cargarUsuario();
+    await cargarUsuario(usuario);
     await cargarFavoritos();
   });
 });

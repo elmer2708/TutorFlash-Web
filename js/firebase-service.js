@@ -39,10 +39,12 @@ const ADMIN_EMAILS = ["admin@gmail.com"].map((correo) =>
 const ESTADOS_RESERVA_VALIDOS = [
   "pendiente",
   "aceptada",
+  "en_curso",
+  "finalizada",
   "rechazada",
-  "realizada",
-  "cancelada",
-  "confirmada",
+  "cancelada_estudiante",
+  "cancelada_tutor",
+  "expirada",
 ];
 
 function normalizarCorreo(correo) {
@@ -95,7 +97,9 @@ function validarUrlOpcional(valor, campo = "enlace") {
   if (!enlace) return "";
 
   if (/\s/.test(enlace) || !/^https?:\/\//i.test(enlace)) {
-    throw new Error(`El ${campo} debe empezar con http:// o https:// y no tener espacios.`);
+    throw new Error(
+      `El ${campo} debe empezar con http:// o https:// y no tener espacios.`,
+    );
   }
 
   return enlace;
@@ -124,7 +128,10 @@ export function observarUsuario(callback) {
 export async function enviarRestablecimientoPassword(correo) {
   const correoNormalizado = normalizarCorreo(correo);
 
-  if (!correoNormalizado || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoNormalizado)) {
+  if (
+    !correoNormalizado ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoNormalizado)
+  ) {
     throw new Error("Ingresa un correo válido para restablecer tu contraseña.");
   }
 
@@ -329,10 +336,7 @@ export async function guardarPostulacionTutor(postulacion) {
     "Describe brevemente tu experiencia.",
   );
 
-  const telefono = validarCelularPeruOpcional(
-    postulacion.telefono,
-    "celular",
-  );
+  const telefono = validarCelularPeruOpcional(postulacion.telefono, "celular");
   const cvUrl = validarUrlOpcional(postulacion.cvUrl, "enlace de CV");
 
   await addDoc(collection(db, "postulacionesTutores"), {
@@ -552,9 +556,7 @@ export async function obtenerTutoresActivos() {
         return {
           ...tutor,
           disponibilidadReal: disponibilidad,
-          disponibilidadResumen: formatearResumenDisponibilidad(
-            disponibilidad,
-          ),
+          disponibilidadResumen: formatearResumenDisponibilidad(disponibilidad),
         };
       } catch (error) {
         console.error("Error al cargar disponibilidad del tutor:", error);
@@ -662,16 +664,22 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
 
     const estadoActual = normalizarEstado(reserva.estado || "pendiente");
 
-    const estadosFinales = ["rechazada", "realizada", "cancelada"];
+    const estadosFinales = [
+      "finalizada",
+      "rechazada",
+      "cancelada_estudiante",
+      "cancelada_tutor",
+      "expirada",
+    ];
 
     if (estadosFinales.includes(estadoActual)) {
       throw new Error("Esta reserva ya no tiene acciones pendientes.");
     }
 
     const transicionesPermitidas = {
-      pendiente: ["aceptada", "rechazada", "cancelada"],
-      aceptada: ["realizada", "cancelada"],
-      confirmada: ["realizada", "cancelada"],
+      pendiente: ["aceptada", "rechazada", "cancelada_tutor", "expirada"],
+      aceptada: ["en_curso", "cancelada_tutor"],
+      en_curso: ["finalizada", "cancelada_tutor"],
     };
 
     const siguientesEstados = transicionesPermitidas[estadoActual] || [];
@@ -687,7 +695,9 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
 
     if (estadoNuevoNormalizado === "aceptada") {
       if (!datosPagoTutorSnap?.exists()) {
-        throw new Error("Completa tus datos de pago antes de aceptar reservas.");
+        throw new Error(
+          "Completa tus datos de pago antes de aceptar reservas.",
+        );
       }
 
       const datosPagoTutor = datosPagoTutorSnap.data();
@@ -698,7 +708,9 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
         datosPagoTutor.cci;
 
       if (!tieneDatosPago || !datosPagoTutor.titular) {
-        throw new Error("Completa tus datos de pago antes de aceptar reservas.");
+        throw new Error(
+          "Completa tus datos de pago antes de aceptar reservas.",
+        );
       }
 
       datosActualizados.datosPagoTutor = {
@@ -712,6 +724,45 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
     }
 
     transaction.update(reservaRef, datosActualizados);
+  });
+}
+
+export async function cancelarReservaEstudiante(reservaId) {
+  const usuario = obtenerUsuarioAutenticado(
+    "Debes iniciar sesión para cancelar una reserva.",
+  );
+
+  if (!reservaId) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  const reservaRef = doc(db, "reservas", reservaId);
+
+  await runTransaction(db, async (transaction) => {
+    const reservaSnap = await transaction.get(reservaRef);
+
+    if (!reservaSnap.exists()) {
+      throw new Error("La reserva ya no existe.");
+    }
+
+    const reserva = reservaSnap.data();
+
+    if (reserva.usuarioId !== usuario.uid) {
+      throw new Error("No puedes cancelar una reserva que no te pertenece.");
+    }
+
+    const estadoActual = normalizarEstado(reserva.estado || "pendiente");
+
+    if (estadoActual !== "pendiente") {
+      throw new Error("Solo puedes cancelar una reserva pendiente.");
+    }
+
+    transaction.update(reservaRef, {
+      estado: "cancelada_estudiante",
+      canceladaPor: "estudiante",
+      canceladaEn: serverTimestamp(),
+      actualizadoEn: serverTimestamp(),
+    });
   });
 }
 
@@ -945,14 +996,13 @@ export async function actualizarPerfilTutorActual(datosPerfil) {
   }
 
   if (Object.prototype.hasOwnProperty.call(datosLimpios, "cvUrl")) {
-    datosLimpios.cvUrl = validarUrlOpcional(
-      datosLimpios.cvUrl,
-      "enlace de CV",
-    );
+    datosLimpios.cvUrl = validarUrlOpcional(datosLimpios.cvUrl, "enlace de CV");
     datosLimpios.cvTipo = datosLimpios.cvUrl
       ? obtenerCvTipo(datosLimpios.cvUrl)
       : "";
-    datosLimpios.cvActualizadoEn = datosLimpios.cvUrl ? serverTimestamp() : null;
+    datosLimpios.cvActualizadoEn = datosLimpios.cvUrl
+      ? serverTimestamp()
+      : null;
   }
 
   if (Object.prototype.hasOwnProperty.call(datosLimpios, "estadoPublico")) {
@@ -1147,7 +1197,9 @@ export async function guardarDisponibilidadTutorActual(bloques) {
     }
 
     if (dia !== diaFecha) {
-      throw new Error(`El día del bloque ${index + 1} no coincide con la fecha.`);
+      throw new Error(
+        `El día del bloque ${index + 1} no coincide con la fecha.`,
+      );
     }
 
     if (!formatoHora.test(horaInicio)) {
@@ -1273,7 +1325,7 @@ export async function obtenerReservasOcupadasPorTutorFecha(tutorId, fecha) {
 
   const resultado = await getDocs(consulta);
 
-  const estadosQueOcupan = ["pendiente", "aceptada", "confirmada"];
+  const estadosQueOcupan = ["pendiente", "aceptada", "en_curso"];
 
   return resultado.docs
     .map((documento) => ({
@@ -1499,7 +1551,9 @@ export async function obtenerReservasParaChat() {
     query(collection(db, "reservas"), where("tutorId", "==", usuario.uid)),
   ];
 
-  const resultados = await Promise.all(consultas.map((consulta) => getDocs(consulta)));
+  const resultados = await Promise.all(
+    consultas.map((consulta) => getDocs(consulta)),
+  );
   const reservas = new Map();
 
   resultados.forEach((resultado) => {
@@ -1507,7 +1561,14 @@ export async function obtenerReservasParaChat() {
       const data = documento.data();
       const estado = normalizarEstado(data.estado);
 
-      if (!["cancelada", "rechazada"].includes(estado)) {
+      if (
+        ![
+          "rechazada",
+          "cancelada_estudiante",
+          "cancelada_tutor",
+          "expirada",
+        ].includes(estado)
+      ) {
         reservas.set(documento.id, {
           id: documento.id,
           ...data,
@@ -1549,7 +1610,9 @@ function validarReservaParaChat(reserva) {
   }
 
   if (!estudianteId || !tutorId || !estudianteNombre || !tutorNombre) {
-    throw new Error("La reserva no tiene los datos necesarios para iniciar el chat.");
+    throw new Error(
+      "La reserva no tiene los datos necesarios para iniciar el chat.",
+    );
   }
 
   return {
@@ -1559,6 +1622,26 @@ function validarReservaParaChat(reserva) {
     estudianteNombre,
     tutorNombre,
   };
+}
+
+function obtenerParticipantesChat(chat) {
+  const participantes = Array.isArray(chat?.participantes)
+    ? chat.participantes.filter(Boolean)
+    : [];
+  const estudianteId = limpiarTextoSeguro(chat?.estudianteId);
+  const tutorId = limpiarTextoSeguro(chat?.tutorId);
+
+  [estudianteId, tutorId].forEach((participanteId) => {
+    if (participanteId && !participantes.includes(participanteId)) {
+      participantes.push(participanteId);
+    }
+  });
+
+  return participantes;
+}
+
+function usuarioParticipaEnChat(chat, usuarioId) {
+  return obtenerParticipantesChat(chat).includes(usuarioId);
 }
 
 export async function crearOObtenerChatDesdeReserva(reserva) {
@@ -1572,8 +1655,13 @@ export async function crearOObtenerChatDesdeReserva(reserva) {
     throw new Error("No se encontró la reserva para crear el chat.");
   }
 
-  if (datosReserva.estudianteId !== usuario.uid && datosReserva.tutorId !== usuario.uid) {
-    throw new Error("No puedes abrir un chat de una reserva que no te pertenece.");
+  if (
+    datosReserva.estudianteId !== usuario.uid &&
+    datosReserva.tutorId !== usuario.uid
+  ) {
+    throw new Error(
+      "No puedes abrir un chat de una reserva que no te pertenece.",
+    );
   }
 
   const chatId = datosReserva.reservaId;
@@ -1619,7 +1707,10 @@ export async function obtenerMisChats() {
   );
 
   const consultas = [
-    query(collection(db, "chats"), where("participantes", "array-contains", usuario.uid)),
+    query(
+      collection(db, "chats"),
+      where("participantes", "array-contains", usuario.uid),
+    ),
     query(collection(db, "chats"), where("estudianteId", "==", usuario.uid)),
     query(collection(db, "chats"), where("tutorId", "==", usuario.uid)),
   ];
@@ -1639,9 +1730,11 @@ export async function obtenerMisChats() {
 
   consultasExitosas.forEach((resultado) => {
     resultado.value.docs.forEach((documento) => {
+      const chat = documento.data();
       chats.set(documento.id, {
         id: documento.id,
-        ...documento.data(),
+        ...chat,
+        participantes: obtenerParticipantesChat(chat),
       });
     });
   });
@@ -1662,13 +1755,43 @@ async function obtenerRolChatActual(usuario) {
   const resultado = await getDocs(consulta);
 
   if (!resultado.empty) {
-    return normalizarEstado(resultado.docs[0].data().rol);
+    const rol = normalizarEstado(resultado.docs[0].data().rol);
+
+    if (["estudiante", "tutor"].includes(rol)) {
+      return rol;
+    }
   }
 
   const usuarioSnap = await getDoc(doc(db, "usuarios", usuario.uid));
 
   if (usuarioSnap.exists()) {
-    return normalizarEstado(usuarioSnap.data().rol);
+    const rol = normalizarEstado(usuarioSnap.data().rol);
+
+    if (["estudiante", "tutor"].includes(rol)) {
+      return rol;
+    }
+  }
+
+  const tutorActivo = await obtenerTutorActivoActual();
+
+  if (tutorActivo) {
+    return "tutor";
+  }
+
+  const reservas = await obtenerReservasParaChat();
+
+  if (reservas.some((reserva) => reserva.tutorId === usuario.uid)) {
+    return "tutor";
+  }
+
+  if (
+    reservas.some(
+      (reserva) =>
+        reserva.usuarioId === usuario.uid ||
+        reserva.estudianteId === usuario.uid,
+    )
+  ) {
+    return "estudiante";
   }
 
   return "";
@@ -1697,7 +1820,10 @@ export async function obtenerResumenChats() {
       return;
     }
 
-    console.error("No se pudo preparar un chat desde una reserva:", resultado.reason);
+    console.error(
+      "No se pudo preparar un chat desde una reserva:",
+      resultado.reason,
+    );
   });
 
   const chatsExistentes = await obtenerMisChats();
@@ -1737,8 +1863,14 @@ export async function obtenerMensajesChat(chatId) {
 
   const chat = chatSnap.data();
 
-  if (!Array.isArray(chat.participantes) || !chat.participantes.includes(usuario.uid)) {
+  if (!usuarioParticipaEnChat(chat, usuario.uid)) {
     throw new Error("No tienes permiso para ver este chat.");
+  }
+
+  const participantes = obtenerParticipantesChat(chat);
+
+  if (!Array.isArray(chat.participantes) && participantes.length) {
+    await setDoc(doc(db, "chats", chatId), { participantes }, { merge: true });
   }
 
   const consulta = query(
@@ -1780,11 +1912,12 @@ export async function enviarMensajeChat(chatId, texto) {
 
   const chat = chatSnap.data();
 
-  if (!Array.isArray(chat.participantes) || !chat.participantes.includes(usuario.uid)) {
+  if (!usuarioParticipaEnChat(chat, usuario.uid)) {
     throw new Error("No tienes permiso para enviar mensajes en este chat.");
   }
 
   const autorRol = chat.tutorId === usuario.uid ? "tutor" : "estudiante";
+  const participantes = obtenerParticipantesChat(chat);
 
   await addDoc(collection(db, "chats", chatId, "mensajes"), {
     texto: mensaje,
@@ -1800,6 +1933,7 @@ export async function enviarMensajeChat(chatId, texto) {
       ultimoMensaje: mensaje,
       ultimoAutorId: usuario.uid,
       actualizadoEn: serverTimestamp(),
+      participantes,
       leidosPor: {
         [usuario.uid]: serverTimestamp(),
       },

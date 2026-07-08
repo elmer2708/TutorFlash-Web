@@ -2,6 +2,7 @@ import {
   observarUsuario,
   obtenerMisSesiones,
   registrarPagoReserva,
+  cancelarReservaEstudiante,
 } from "./firebase-service.js";
 import {
   limitarTexto,
@@ -25,9 +26,21 @@ document.addEventListener("DOMContentLoaded", () => {
     "todas",
     "pendiente",
     "aceptada",
-    "realizada",
+    "en_curso",
+    "finalizada",
+    "canceladas",
+    "rechazada",
+    "no-atendida",
     "pago-pendiente",
   ];
+  const ESTADOS_CERRADOS = [
+    "finalizada",
+    "rechazada",
+    "cancelada_estudiante",
+    "cancelada_tutor",
+    "expirada",
+  ];
+  const ESTADOS_CANCELADOS = ["cancelada_estudiante", "cancelada_tutor"];
   const filtroUrl = new URLSearchParams(window.location.search).get("filtro");
   let filtroActivo = filtrosPermitidos.includes(filtroUrl || "")
     ? filtroUrl
@@ -71,15 +84,15 @@ document.addEventListener("DOMContentLoaded", () => {
       .toLowerCase()
       .trim();
 
-    if (estadoNormalizado === "confirmada") return "aceptada";
-    if (estadoNormalizado === "confirmado") return "aceptada";
-
     const estadosPermitidos = [
       "pendiente",
       "aceptada",
+      "en_curso",
+      "finalizada",
       "rechazada",
-      "realizada",
-      "cancelada",
+      "cancelada_estudiante",
+      "cancelada_tutor",
+      "expirada",
     ];
 
     if (!estadosPermitidos.includes(estadoNormalizado)) {
@@ -93,9 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const estados = {
       pendiente: "Pendiente",
       aceptada: "Aceptada",
+      en_curso: "En curso",
+      finalizada: "Finalizada",
       rechazada: "Rechazada",
-      realizada: "Realizada",
-      cancelada: "Cancelada",
+      cancelada_estudiante: "Cancelada por estudiante",
+      cancelada_tutor: "Cancelada por tutor",
+      expirada: "No atendida",
     };
 
     return estados[estado] || "Pendiente";
@@ -107,8 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
       aceptada: "El tutor aceptó tu reserva. Revisa la fecha y hora.",
       rechazada:
         "El tutor rechazó esta solicitud. Puedes reservar con otro tutor.",
-      realizada: "Esta sesión ya fue marcada como realizada.",
-      cancelada: "Esta sesión fue cancelada.",
+      en_curso: "Tu tutoría está en curso.",
+      finalizada: "Esta sesión ya fue finalizada.",
+      cancelada_estudiante: "Cancelaste esta reserva.",
+      cancelada_tutor: "El tutor canceló esta reserva.",
+      expirada: "Esta reserva no fue atendida a tiempo.",
     };
 
     return mensajes[estado] || "Tu solicitud está pendiente.";
@@ -279,14 +298,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return normalizarEstado(sesion.estado) === "aceptada";
     }).length;
 
-    const realizadas = sesiones.filter((sesion) => {
-      return normalizarEstado(sesion.estado) === "realizada";
+    const finalizadas = sesiones.filter((sesion) => {
+      return normalizarEstado(sesion.estado) === "finalizada";
     }).length;
 
     if (statTotalSesiones) statTotalSesiones.textContent = total;
     if (statPendientes) statPendientes.textContent = pendientes;
     if (statAceptadas) statAceptadas.textContent = aceptadas;
-    if (statRealizadas) statRealizadas.textContent = realizadas;
+    if (statRealizadas) statRealizadas.textContent = finalizadas;
   }
 
   function filtrarSesiones(sesiones) {
@@ -300,9 +319,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const estadoPago = obtenerEstadoPago(sesion);
 
         return (
-          !["cancelada", "rechazada", "realizada"].includes(estado) &&
+          !ESTADOS_CERRADOS.includes(estado) &&
           (estadoPago === "pendiente" || estadoPago === "rechazado")
         );
+      }
+
+      if (filtroActivo === "canceladas") {
+        return ESTADOS_CANCELADOS.includes(normalizarEstado(sesion.estado));
+      }
+
+      if (filtroActivo === "no-atendida") {
+        return normalizarEstado(sesion.estado) === "expirada";
       }
 
       return normalizarEstado(sesion.estado) === filtroActivo;
@@ -378,10 +405,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const estadoPago = obtenerEstadoPago(sesion);
     const datosPago = sesion.datosPagoTutor || {};
     const puedeRegistrar =
-      (estado === "aceptada" || estado === "confirmada") &&
+      (estado === "aceptada" || estado === "en_curso") &&
       (estadoPago === "pendiente" || estadoPago === "rechazado");
 
-    if (estado !== "aceptada" && estado !== "confirmada") {
+    if (estado !== "aceptada" && estado !== "en_curso") {
       return "";
     }
 
@@ -432,6 +459,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ${puedeRegistrar ? crearFormularioPago(sesion) : ""}
       </div>
+    `;
+  }
+
+  function crearAccionCancelar(sesion) {
+    if (normalizarEstado(sesion.estado) !== "pendiente") {
+      return "";
+    }
+
+    return `
+      <button
+        type="button"
+        class="sesion-action-btn danger"
+        data-cancelar-reserva="${limpiarTexto(sesion.id)}"
+      >
+        Cancelar reserva
+      </button>
     `;
   }
 
@@ -561,6 +604,8 @@ document.addEventListener("DOMContentLoaded", () => {
               <a href="buscar-tutor.html" class="sesion-action-btn secondary">
                 Reservar otra tutoría
               </a>
+
+              ${crearAccionCancelar(sesion)}
             </div>
 
             ${crearBloquePago(sesion)}
@@ -620,6 +665,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (listaMisSesiones) {
+    listaMisSesiones.addEventListener("click", async (event) => {
+      const boton = event.target.closest("[data-cancelar-reserva]");
+
+      if (!boton) return;
+
+      const reservaId = boton.dataset.cancelarReserva;
+
+      if (!reservaId) {
+        mostrarEstado("No se encontró la reserva seleccionada.");
+        return;
+      }
+
+      const confirmar = confirm("¿Deseas cancelar esta reserva pendiente?");
+
+      if (!confirmar) return;
+
+      const textoOriginal = boton.textContent;
+
+      try {
+        boton.disabled = true;
+        boton.textContent = "Cancelando...";
+
+        await cancelarReservaEstudiante(reservaId);
+        mostrarEstado("Reserva cancelada correctamente.");
+        await cargarSesiones();
+      } catch (error) {
+        console.error("Error al cancelar reserva:", error);
+        mostrarEstado(error.message || "No se pudo cancelar la reserva.");
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+      }
+    });
+
     listaMisSesiones.addEventListener("submit", async (event) => {
       const formulario = event.target.closest(".pago-form");
 
