@@ -1,16 +1,26 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Postulación Tutor | TutorFlash</title>
-    <link rel="stylesheet" href="../css/tutor.css" />
+    <title>Postulacin Tutor | TutorFlash</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="../css/tutor.css?v=tf-tutor-premium-v1" />
       <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css?v=tf-redesign2" />
   </head>
-  <body>
+  <body class="tf-tutor-page tf-tutor-public-page tf-tutor-page tf-tutor-public-page">
     <header class="tutor-header">
       <a href="../index.html" class="logo-link">
-        <span class="logo-icon">⚡</span>
+        <span class="logo-icon">?</span>
         <span>TutorFlash</span>
       </a>
 
@@ -29,12 +39,12 @@
           </button>
 
           <div class="tf-user-dropdown oculto" id="menuUsuarioTutor">
-            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">x</button>
+            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">×</button>
             <p class="tf-user-email" id="correoTutorMenu">correo@ejemplo.com</p>
             <div class="tf-user-dropdown-avatar" id="avatarTutorMenu">TF</div>
             <h3 id="saludoTutorMenu">Hola, tutor</h3>
             <a class="tf-user-dropdown-btn" href="perfil-tutor.html">Ver perfil tutor</a>
-            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesion</button>
+            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesión</button>
           </div>
         </div>
       </nav>
@@ -43,19 +53,19 @@
     <main>
       <section class="tutor-hero">
         <div class="tutor-hero-content">
-          <span class="tutor-label">Zona de postulación</span>
+          <span class="tutor-label">Zona de postulacin</span>
 
           <h1>Postula como tutor en TutorFlash</h1>
 
           <p>
-            Completa tu solicitud para enseñar en TutorFlash. El administrador
-            revisará tu información y, si eres aprobado, tendrás acceso a tu
+            Completa tu solicitud para ensear en TutorFlash. El administrador
+            revisar tu informacin y, si eres aprobado, tendrs acceso a tu
             panel de tutor.
           </p>
 
           <div class="hero-actions">
             <a href="#formularioTutor" class="btn-principal"
-              >Completar postulación</a
+              >Completar postulacin</a
             >
             <a href="panel-tutor.html" class="btn-secundario"
               >Ir al panel tutor</a
@@ -71,7 +81,7 @@
           <h2 id="estadoTitulo">Validando tu acceso</h2>
 
           <p id="estadoDescripcion">
-            Inicia sesión para revisar si ya tienes una postulación registrada.
+            Inicia sesin para revisar si ya tienes una postulacin registrada.
           </p>
 
           <div class="estado-actions">
@@ -93,38 +103,38 @@
       <section class="tutor-section">
         <div class="section-heading">
           <span>Proceso</span>
-          <h2>¿Cómo funciona la postulación?</h2>
+          <h2>Cmo funciona la postulacin?</h2>
         </div>
 
         <div class="steps-grid">
           <article>
             <span>01</span>
-            <h3>Envía tus datos</h3>
+            <h3>Enva tus datos</h3>
             <p>
-              Completa el formulario con tu información, cursos, nivel y
+              Completa el formulario con tu informacin, cursos, nivel y
               experiencia.
             </p>
           </article>
 
           <article>
             <span>02</span>
-            <h3>Revisión del administrador</h3>
+            <h3>Revisin del administrador</h3>
             <p>
-              El administrador revisará tu solicitud desde el panel interno.
+              El administrador revisar tu solicitud desde el panel interno.
             </p>
           </article>
 
           <article>
             <span>03</span>
-            <h3>Aprobación</h3>
-            <p>Si eres aprobado, tu perfil se creará como tutor activo.</p>
+            <h3>Aprobacin</h3>
+            <p>Si eres aprobado, tu perfil se crear como tutor activo.</p>
           </article>
 
           <article>
             <span>04</span>
             <h3>Acceso al panel tutor</h3>
             <p>
-              Podrás ver reservas recibidas y gestionar tu actividad como tutor.
+              Podrs ver reservas recibidas y gestionar tu actividad como tutor.
             </p>
           </article>
         </div>
@@ -137,7 +147,7 @@
             <h2>Datos para postular</h2>
 
             <p>
-              Escribe tus datos con claridad. Esta información ayudará al
+              Escribe tus datos con claridad. Esta informacin ayudar al
               administrador a revisar tu perfil y decidir si puedes formar parte
               de TutorFlash.
             </p>
@@ -145,8 +155,8 @@
             <div class="info-box">
               <strong>Importante</strong>
               <p>
-                Crear una cuenta como tutor no significa aprobación automática.
-                Primero debes enviar tu postulación y esperar la revisión.
+                Crear una cuenta como tutor no significa aprobacin automtica.
+                Primero debes enviar tu postulacin y esperar la revisin.
               </p>
             </div>
           </div>
@@ -165,7 +175,7 @@
             </div>
 
             <div class="form-grupo">
-              <label for="correoTutor">Correo electrónico</label>
+              <label for="correoTutor">Correo electrnico</label>
               <input
                 type="email"
                 id="correoTutor"
@@ -175,7 +185,7 @@
             </div>
 
             <div class="form-grupo">
-              <label for="telefonoTutor">Teléfono o WhatsApp</label>
+              <label for="telefonoTutor">Telfono o WhatsApp</label>
               <input
                 type="tel"
                 id="telefonoTutor"
@@ -190,22 +200,22 @@
             </div>
 
             <div class="form-grupo">
-              <label for="cursosTutor">Cursos que puedes enseñar</label>
+              <label for="cursosTutor">Cursos que puedes ensear</label>
               <input
                 type="text"
                 id="cursosTutor"
-                placeholder="Ejemplo: Matemática, Física, Inglés"
+                placeholder="Ejemplo: Matemtica, Fsica, Ingls"
               />
             </div>
 
             <div class="form-doble">
               <div class="form-grupo">
-                <label for="nivelTutor">Nivel que puedes enseñar</label>
+                <label for="nivelTutor">Nivel que puedes ensear</label>
                 <select id="nivelTutor">
                   <option value="">Selecciona un nivel</option>
                   <option value="Escolar">Escolar</option>
                   <option value="Preuniversitario">Preuniversitario</option>
-                  <option value="Técnico">Técnico</option>
+                  <option value="Tcnico">Tcnico</option>
                   <option value="Universitario">Universitario</option>
                 </select>
               </div>
@@ -216,7 +226,7 @@
                 >
                 <select id="disponibilidadTutor">
                   <option value="">Selecciona tu disponibilidad</option>
-                  <option value="Mañana">Mañana</option>
+                  <option value="Maana">Maana</option>
                   <option value="Tarde">Tarde</option>
                   <option value="Noche">Noche</option>
                   <option value="Fines de semana">Fines de semana</option>
@@ -226,12 +236,12 @@
 
             <div class="form-grupo">
               <label for="experienciaTutor"
-                >Experiencia o presentación breve</label
+                >Experiencia o presentacin breve</label
               >
               <textarea
                 id="experienciaTutor"
                 rows="5"
-                placeholder="Cuenta brevemente qué cursos dominas, a qué estudiantes puedes ayudar y qué experiencia tienes."
+                placeholder="Cuenta brevemente qu cursos dominas, a qu estudiantes puedes ayudar y qu experiencia tienes."
               ></textarea>
             </div>
             <div class="form-grupo">
@@ -250,7 +260,7 @@
               id="btnEnviarPostulacion"
               class="btn-enviar-tutor"
             >
-              Enviar postulación
+              Enviar postulacin
             </button>
           </form>
         </div>
@@ -258,7 +268,7 @@
     </main>
 
     <footer class="tutor-footer">
-      <p>TutorFlash. Tutorías rápidas para estudiar mejor.</p>
+      <p>TutorFlash. Tutoras rpidas para estudiar mejor.</p>
 
       <div>
         <a href="../index.html">Volver a inicio</a>
@@ -266,6 +276,7 @@
         <a href="perfil-tutor.html">Mi perfil tutor</a>
       </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/tutor-account.js"></script>
     <script type="module" src="../js/tutor.js"></script>

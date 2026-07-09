@@ -1,11 +1,21 @@
-ï»¿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Panel Admin | TutorFlash</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
 
     <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css?v=tf-redesign2" />
   </head>
 
   <body>
@@ -15,7 +25,7 @@
           <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
         </a>
 
-        <nav class="admin-menu" aria-label="MenÃº administrador">
+        <nav class="admin-menu" aria-label="Menú administrador">
           <a href="admin.html" class="admin-menu-link sidebar-link active activo">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3z"></path><path d="M13 3h8v5h-8z"></path><path d="M13 10h8v11h-8z"></path><path d="M3 13h8v8H3z"></path></svg></span>
             <span class="sidebar-label">Dashboard</span>
@@ -32,7 +42,7 @@
 
         <div class="tf-sidebar-card admin-sidebar-card">
           <span>Panel admin</span>
-          <p>Revisa postulaciones y mantÃ©n TutorFlash ordenado.</p>
+          <p>Revisa postulaciones y mantén TutorFlash ordenado.</p>
         </div>
       </aside>
 
@@ -41,13 +51,13 @@
         <header class="admin-topbar">
           <div>
             <p class="admin-kicker">Panel administrador</p>
-            <h1>GestiÃ³n de tutores</h1>
+            <h1>Gestión de tutores</h1>
           </div>
 
           <div class="admin-topbar-actions">
             <div class="admin-topbar-info">
               <span id="estadoPanelBadge" class="panel-badge"> Cargando... </span>
-              <small id="ultimaActualizacion"> Sin actualizaciÃ³n </small>
+              <small id="ultimaActualizacion"> Sin actualización </small>
             </div>
 
             <div class="tf-user-area admin-user-area">
@@ -64,7 +74,7 @@
                 <p class="tf-user-email" id="correoAdminMenu">admin@tutorflash.com</p>
                 <div class="tf-user-dropdown-avatar" id="avatarAdminMenu">A</div>
                 <h3 id="saludoAdminMenu">Hola, Administrador</h3>
-                <button class="tf-user-dropdown-logout" id="btnCerrarSesionAdmin" type="button">Cerrar sesiÃ³n</button>
+                <button class="tf-user-dropdown-logout" id="btnCerrarSesionAdmin" type="button">Cerrar sesión</button>
               </div>
             </div>
           </div>
@@ -76,28 +86,28 @@
             <p>Total</p>
             <strong id="resumenTotal">0</strong>
             <span>Postulaciones</span>
-            <small>Ver detalle â†’</small>
+            <small>Ver detalle ?</small>
           </article>
 
           <article class="stat-card stat-pendiente stat-card-link" data-filtro-stat="pendiente">
             <p>Pendientes</p>
             <strong id="resumenPendientes">0</strong>
             <span>Por revisar</span>
-            <small>Ver detalle â†’</small>
+            <small>Ver detalle ?</small>
           </article>
 
           <article class="stat-card stat-aprobado stat-card-link" data-filtro-stat="aprobado">
             <p>Aprobadas</p>
             <strong id="resumenAprobadas">0</strong>
             <span>Tutores aceptados</span>
-            <small>Ver detalle â†’</small>
+            <small>Ver detalle ?</small>
           </article>
 
           <article class="stat-card stat-rechazado stat-card-link" data-filtro-stat="rechazado">
             <p>Rechazadas</p>
             <strong id="resumenRechazadas">0</strong>
             <span>No aceptadas</span>
-            <small>Ver detalle â†’</small>
+            <small>Ver detalle ?</small>
           </article>
         </section>
 
@@ -105,7 +115,7 @@
         <section class="admin-section">
           <div class="admin-section-header">
             <div>
-              <p class="admin-kicker">Centro de revisiÃ³n</p>
+              <p class="admin-kicker">Centro de revisión</p>
               <h2>Postulaciones de tutores</h2>
               <p>
                 Revisa los datos enviados por cada postulante antes de aprobarlo
@@ -159,13 +169,13 @@
             class="estado-vacio oculto"
             aria-label="Sin postulaciones"
           >
-            <div class="estado-vacio-icono">ðŸ“‹</div>
+            <div class="estado-vacio-icono">??</div>
 
-            <h3 id="estadoVacioTitulo">No hay postulaciones todavÃ­a</h3>
+            <h3 id="estadoVacioTitulo">No hay postulaciones todavía</h3>
 
             <p id="estadoVacioTexto">
-              Cuando un usuario se postule como tutor, su solicitud aparecerÃ¡ en
-              esta secciÃ³n para ser revisada.
+              Cuando un usuario se postule como tutor, su solicitud aparecerá en
+              esta sección para ser revisada.
             </p>
           </section>
 
@@ -177,6 +187,7 @@
         </section>
       </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/admin.js"></script>

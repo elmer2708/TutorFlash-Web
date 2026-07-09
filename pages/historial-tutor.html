@@ -1,13 +1,23 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Historial tutor | TutorFlash</title>
-    <link rel="stylesheet" href="../css/panel-tutor.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="../css/panel-tutor.css?v=tf-tutor-premium-v1" />
       <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css?v=tf-redesign2" />
   </head>
-  <body>
+  <body class="tf-tutor-page tf-tutor-history-page tf-tutor-page tf-tutor-history-page">
     <aside class="tutor-sidebar">
       <a href="../index.html" class="sidebar-logo" aria-label="TutorFlash">
         <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
@@ -47,7 +57,7 @@
       </nav>
 
       <div class="tf-sidebar-card tutor-sidebar-card">
-        <span>Consejo rapido</span>
+        <span>Consejo rápido</span>
         <p>Revisa tus tutorias finalizadas para llevar control de tu actividad.</p>
       </div>
     </aside>
@@ -56,7 +66,7 @@
       <header class="tutor-topbar">
         <div>
           <span class="tutor-topbar-label">Portal tutor</span>
-          <strong>Gestion de tutorias</strong>
+          <strong>Gestión de tutorias</strong>
         </div>
 
         <div class="tf-user-area tutor-user-area">
@@ -69,12 +79,12 @@
           </button>
 
           <div class="tf-user-dropdown oculto" id="menuUsuarioTutor">
-            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">x</button>
+            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">×</button>
             <p class="tf-user-email" id="correoTutorMenu">correo@ejemplo.com</p>
             <div class="tf-user-dropdown-avatar" id="avatarTutorMenu">TF</div>
             <h3 id="saludoTutorMenu">Hola, tutor</h3>
             <a class="tf-user-dropdown-btn" href="perfil-tutor.html">Ver perfil tutor</a>
-            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesion</button>
+            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesión</button>
           </div>
         </div>
       </header>
@@ -100,6 +110,7 @@
         </div>
       </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/tutor-account.js"></script>

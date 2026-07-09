@@ -1,3 +1,5 @@
+@import url("./tutorflash-theme.css");
+
 * {
   box-sizing: border-box;
 }
@@ -621,5 +623,686 @@ textarea:disabled {
 
   .pago-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.perfil-header {
+  min-height: 215px;
+  padding: clamp(26px, 4vw, 42px);
+}
+
+.perfil-layout {
+  gap: 24px;
+}
+
+.preview-card,
+.form-card,
+.pago-section {
+  padding: clamp(24px, 4vw, 34px);
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea,
+.pago-field input,
+.pago-field textarea {
+  border-color: var(--tf-borde);
+  background: #ffffff;
+}
+
+.form-grupo input,
+.form-grupo select,
+.pago-field input {
+  min-height: 56px;
+}
+
+.preview-price {
+  background: linear-gradient(180deg, #08234c 0%, var(--tf-azul-950) 100%);
+}
+
+@media (max-width: 620px) {
+  .perfil-header {
+    min-height: auto;
+  }
+}
+
+/* ===== Ajustes premium perfil tutor v4 ===== */
+
+.perfil-main {
+  width: calc(100% - 230px);
+  max-width: 1600px;
+}
+
+.perfil-header.perfil-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  margin-bottom: 22px;
+  border: 1px solid rgba(12, 35, 64, 0.1);
+  border-radius: 28px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.96) 58%, rgba(255,249,235,0.98) 100%),
+    radial-gradient(circle at right center, rgba(245, 183, 0, 0.12), transparent 40%);
+  box-shadow: 0 18px 36px rgba(7, 27, 61, 0.08);
+}
+
+.perfil-header.perfil-hero::before {
+  content: "";
+  position: absolute;
+  inset: 24px 26px 24px auto;
+  width: clamp(180px, 22vw, 290px);
+  background: url("../assets/img/icono-libros-birrete.png") center right / contain no-repeat;
+  opacity: 0.98;
+  pointer-events: none;
+}
+
+.perfil-header.perfil-hero::after {
+  content: "";
+  position: absolute;
+  top: 44px;
+  right: clamp(210px, 24vw, 340px);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #f5b700;
+  box-shadow:
+    -36px 84px 0 -5px rgba(245, 183, 0, 0.76),
+    52px 118px 0 -7px rgba(245, 183, 0, 0.76);
+}
+
+.perfil-header h1 {
+  max-width: 580px;
+}
+
+.perfil-header p {
+  max-width: 540px;
+  font-size: 1rem;
+}
+
+.perfil-layout {
+  grid-template-columns: minmax(310px, 0.84fr) minmax(0, 1.16fr);
+  gap: 24px;
+}
+
+.preview-card,
+.form-card,
+.pago-section {
+  border-color: rgba(12, 35, 64, 0.1);
+  box-shadow: 0 18px 36px rgba(7, 27, 61, 0.08);
+}
+
+.preview-card {
+  position: sticky;
+  top: 18px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.preview-card::before,
+.preview-card::after {
+  content: "✦";
+  position: absolute;
+  color: #f5b700;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.preview-card::before {
+  top: 86px;
+  left: 28px;
+}
+
+.preview-card::after {
+  top: 86px;
+  right: 28px;
+}
+
+.preview-label {
+  display: block;
+  text-align: center;
+}
+
+.avatar-preview {
+  margin: 18px auto 18px;
+  width: 104px;
+  height: 104px;
+  border-radius: 30px;
+  font-size: 2rem;
+  box-shadow: 0 16px 28px rgba(245, 183, 0, 0.28);
+}
+
+.preview-card h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.8rem, 2vw, 2.3rem);
+}
+
+.preview-card > p {
+  margin: 0 auto;
+  max-width: 360px;
+}
+
+.preview-tags {
+  display: grid;
+  gap: 12px;
+  margin: 26px 0 20px;
+}
+
+.preview-tags span {
+  position: relative;
+  justify-content: center;
+  min-height: 56px;
+  padding: 14px 16px 14px 48px;
+  border-radius: 999px;
+  background: #f3f7ff;
+  color: #184b9b;
+  font-size: 1rem;
+}
+
+.preview-tags span::before {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #2563eb;
+}
+
+#previewCursos::before {
+  content: "📘";
+}
+
+#previewNivel::before {
+  content: "🎓";
+}
+
+#previewModalidad::before {
+  content: "💻";
+}
+
+.preview-price {
+  margin: 22px auto;
+  max-width: 280px;
+  padding: 20px;
+  border-radius: 24px;
+  box-shadow: 0 16px 28px rgba(7, 27, 61, 0.18);
+}
+
+.preview-price strong {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(1.9rem, 2vw, 2.3rem);
+}
+
+.preview-info {
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.preview-info p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid rgba(12, 35, 64, 0.06);
+  text-align: left;
+}
+
+.preview-info strong {
+  font-size: 0.95rem;
+}
+
+.preview-info span {
+  justify-content: center;
+  min-height: 34px;
+  padding-inline: 12px;
+}
+
+.form-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+}
+
+.form-heading {
+  margin-bottom: 6px;
+}
+
+.form-heading h2 {
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.form-heading p:not(.mensaje-perfil):not(.pago-help) {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.mensaje-perfil,
+.mensaje-datos-pago {
+  border: 1px solid rgba(37, 99, 235, 0.1);
+}
+
+.form-perfil {
+  gap: 18px;
+}
+
+.form-doble {
+  gap: 18px;
+}
+
+.form-grupo,
+.pago-field {
+  gap: 8px;
+}
+
+.form-grupo label,
+.pago-field label {
+  color: #0c2340;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea,
+.pago-field input,
+.pago-field textarea {
+  border-radius: 18px;
+  padding: 15px 16px;
+  background: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+}
+
+.form-grupo textarea,
+.pago-field textarea {
+  min-height: 128px;
+}
+
+.form-grupo input::placeholder,
+.form-grupo textarea::placeholder,
+.pago-field input::placeholder,
+.pago-field textarea::placeholder {
+  color: #94a3b8;
+}
+
+.btn-guardar {
+  min-height: 56px;
+  background: linear-gradient(180deg, #0d2f66 0%, #081f46 100%);
+  color: #ffffff;
+  box-shadow: 0 16px 28px rgba(7, 27, 61, 0.16);
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background: linear-gradient(180deg, #133a7a 0%, #0a285a 100%);
+}
+
+.pago-section {
+  gap: 20px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.pago-grid {
+  gap: 16px;
+}
+
+.pago-help {
+  margin-top: 8px;
+}
+
+.tf-mobile-sidebar-logout {
+  display: none;
+}
+
+@media (max-width: 1280px) {
+  .perfil-header.perfil-hero::before {
+    width: 220px;
+  }
+
+  .perfil-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-card {
+    position: static;
+  }
+}
+
+@media (max-width: 1080px) {
+  .perfil-main {
+    width: calc(100% - 230px);
+  }
+
+  .perfil-header.perfil-hero::before,
+  .perfil-header.perfil-hero::after {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .perfil-main {
+    width: 100%;
+  }
+
+  .preview-card {
+    text-align: center;
+  }
+
+  .preview-info p {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .tf-mobile-sidebar-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 12px;
+    border: 0;
+    border-radius: 999px;
+    padding: 14px 16px;
+    background: #ffffff;
+    color: #0c2340;
+    font-weight: 900;
+    box-shadow: 0 12px 24px rgba(7, 27, 61, 0.14);
+  }
+}
+
+@media (max-width: 620px) {
+  .perfil-main {
+    padding-inline: 14px;
+  }
+
+  .perfil-header.perfil-hero {
+    min-height: auto;
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+
+  .perfil-header h1 {
+    font-size: clamp(1.8rem, 9vw, 2.5rem);
+  }
+
+  .preview-card,
+  .form-card,
+  .pago-section {
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+
+  .preview-card::before,
+  .preview-card::after {
+    display: none;
+  }
+
+  .preview-price {
+    max-width: 100%;
+  }
+
+  .preview-tags span {
+    font-size: 0.95rem;
+  }
+}
+
+
+/* ===== Perfil tutor fix v5: similar a perfil estudiante + íconos ===== */
+
+.perfil-main {
+  width: calc(100% - 254px) !important;
+  max-width: 1540px !important;
+}
+
+.form-heading .tf-tutor-section-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.form-heading h2 {
+  margin-top: 8px !important;
+  color: #061a3a !important;
+  font-size: clamp(2.25rem, 3.4vw, 3.6rem) !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.tf-profile-intro {
+  margin: 8px 0 12px !important;
+  color: #64748b !important;
+  font-weight: 800 !important;
+}
+
+.form-card,
+.pago-section,
+.preview-card {
+  border-radius: 28px !important;
+}
+
+/* Labels con íconos */
+.form-grupo label,
+.pago-field label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  color: #061a3a !important;
+  font-weight: 900 !important;
+}
+
+.form-grupo label::before,
+.pago-field label::before {
+  font-family: "bootstrap-icons" !important;
+  display: inline-grid !important;
+  width: 22px !important;
+  height: 22px !important;
+  place-items: center !important;
+  flex: 0 0 22px !important;
+  color: #123b83 !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+}
+
+/* Datos personales */
+label[for="nombreTutorPerfil"]::before { content: "\F4D7"; }
+label[for="correoTutorPerfil"]::before { content: "\F32F"; }
+label[for="presentacionTutorPerfil"]::before { content: "\F4CB"; }
+label[for="experienciaTutorPerfil"]::before { content: "\F3E7"; }
+label[for="cursosTutorPerfil"]::before { content: "\F194"; }
+label[for="nivelTutorPerfil"]::before { content: "\F6FD"; }
+label[for="modalidadTutorPerfil"]::before { content: "\F5D0"; }
+label[for="precioTutorPerfil"]::before { content: "\F63D"; }
+label[for="disponibilidadTutorPerfil"]::before { content: "\F1F5"; }
+label[for="distritoTutorPerfil"]::before { content: "\F3E8"; }
+label[for="cvUrlTutorPerfil"]::before { content: "\F470"; }
+label[for="estadoPublicoTutorPerfil"]::before { content: "\F26A"; }
+
+/* Pagos */
+label[for="pagoYape"]::before { content: "\F5D1"; }
+label[for="pagoPlin"]::before { content: "\F5D1"; }
+label[for="pagoBanco"]::before { content: "\F62A"; }
+label[for="pagoCci"]::before { content: "\F2C2"; }
+label[for="pagoTitular"]::before { content: "\F4D7"; }
+label[for="pagoInstrucciones"]::before { content: "\F4CB"; }
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea,
+.pago-field input,
+.pago-field textarea {
+  border-radius: 18px !important;
+  border: 1px solid rgba(191, 204, 224, .96) !important;
+  background: #ffffff !important;
+  color: #061a3a !important;
+  font-size: 1rem !important;
+}
+
+.form-grupo input,
+.form-grupo select,
+.pago-field input {
+  min-height: 58px !important;
+}
+
+.form-grupo textarea,
+.pago-field textarea {
+  min-height: 135px !important;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus,
+.pago-field input:focus,
+.pago-field textarea:focus {
+  border-color: #ffc72c !important;
+  box-shadow: 0 0 0 4px rgba(255, 199, 44, .20) !important;
+}
+
+.btn-guardar {
+  min-height: 58px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, #082b61, #061a3a) !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+}
+
+/* Vista previa más como la tarjeta estudiante */
+.preview-card {
+  text-align: center !important;
+}
+
+.preview-label {
+  text-align: center !important;
+}
+
+.avatar-preview {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: linear-gradient(180deg, #ffc72c, #f4b400) !important;
+  color: #061a3a !important;
+}
+
+.preview-tags span {
+  min-height: 52px !important;
+  justify-content: center !important;
+  padding-left: 16px !important;
+  gap: 10px !important;
+}
+
+.preview-tags span::before {
+  position: static !important;
+  transform: none !important;
+  font-family: "bootstrap-icons" !important;
+  color: #2563eb !important;
+  font-size: 1.08rem !important;
+}
+
+#previewCursos::before { content: "\F194" !important; }
+#previewNivel::before { content: "\F6FD" !important; }
+#previewModalidad::before { content: "\F5D0" !important; }
+
+.preview-info p {
+  border-radius: 18px !important;
+  background: #f8fbff !important;
+}
+
+/* Mi cuenta tutor como estudiante */
+.tf-user-dropdown {
+  width: min(360px, calc(100vw - 32px)) !important;
+  padding: 24px 18px 20px !important;
+  border-radius: 28px !important;
+  text-align: center !important;
+  z-index: 9999 !important;
+}
+
+.tf-user-dropdown-close {
+  top: 12px !important;
+  right: 14px !important;
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+}
+
+.tf-user-email {
+  margin: 10px auto 14px !important;
+  color: #64748b !important;
+  text-align: center !important;
+}
+
+.tf-user-dropdown-avatar,
+.tf-user-avatar {
+  background: linear-gradient(180deg, #ffc72c, #f4b400) !important;
+  color: #061a3a !important;
+}
+
+.tf-user-dropdown-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  margin: 0 auto 14px !important;
+  font-size: 1.25rem !important;
+}
+
+.tf-user-dropdown h3 {
+  max-width: 260px !important;
+  margin: 0 auto 16px !important;
+  color: #061a3a !important;
+  font-size: 1.45rem !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+}
+
+.tf-user-dropdown-btn {
+  background: #eef4ff !important;
+  color: #061a3a !important;
+}
+
+.tf-user-dropdown-logout {
+  background: #061a3a !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 900px) {
+  .perfil-main {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .form-heading h2 {
+    font-size: 2rem !important;
+  }
+
+  .form-card,
+  .pago-section,
+  .preview-card {
+    border-radius: 24px !important;
+  }
+}
+
+/* =====================================================
+   FIX: Cerrar sesión del sidebar solo en móvil
+===================================================== */
+@media (min-width: 901px) {
+  .tf-mobile-sidebar-logout {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  body.tf-sidebar-open .tf-mobile-sidebar-logout {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  body:not(.tf-sidebar-open) .tf-mobile-sidebar-logout {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }

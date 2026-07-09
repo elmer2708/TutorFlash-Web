@@ -1,114 +1,78 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mis sesiones | TutorFlash</title>
-
-    <link rel="stylesheet" href="../css/estudiante.css" />
-    <link rel="stylesheet" href="../css/sesiones.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v8-dropdown-email" />
+    <link rel="stylesheet" href="../css/sesiones.css?v=tf-sesiones-premium-v2" />
     <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
   </head>
 
-  <body>
+  <body class="tf-student-page tf-sesiones-page">
     <main class="tf-student-layout">
       <aside class="tf-sidebar">
-        <div class="tf-sidebar-logo">
-          <img
-            src="../assets/img/logo-tutorflash-transparente.png"
-            alt="TutorFlash"
-          />
-        </div>
+        <a href="../index.html" class="tf-sidebar-logo">
+          <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
+        </a>
 
         <nav class="tf-sidebar-menu">
           <a href="estudiante.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M3 10.5 12 3l9 7.5"></path>
-                <path d="M5 10v10h14V10"></path>
-                <path d="M9 20v-6h6v6"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
             </span>
             <span class="sidebar-label">Panel</span>
           </a>
 
           <a href="agenda-estudiante.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="4" width="18" height="17" rx="3"></rect>
-                <path d="M8 2v4"></path>
-                <path d="M16 2v4"></path>
-                <path d="M3 10h18"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path></svg>
             </span>
             <span class="sidebar-label">Mi agenda</span>
           </a>
 
           <a href="buscar-tutor.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7"></circle>
-                <path d="m20 20-3.5-3.5"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
             </span>
             <span class="sidebar-label">Buscar tutor</span>
           </a>
 
           <a href="tutores.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </span>
             <span class="sidebar-label">Tutores</span>
           </a>
 
           <a href="favoritos.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="m12 17.3-6.2 3.6 1.7-7-5.4-4.7 7.1-.6L12 2l2.8 6.6 7.1.6-5.4 4.7 1.7 7z"
-                ></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.6 1.7-7-5.4-4.7 7.1-.6L12 2l2.8 6.6 7.1.6-5.4 4.7 1.7 7z"></path></svg>
             </span>
             <span class="sidebar-label">Favoritos</span>
           </a>
 
           <a href="notificaciones.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
-                ></path>
-                <path d="M10 21h4"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
             </span>
             <span class="sidebar-label">Notificaciones</span>
           </a>
 
           <a href="sesiones.html" class="sidebar-link active is-active">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M8 6h13"></path>
-                <path d="M8 12h13"></path>
-                <path d="M8 18h13"></path>
-                <path d="M3 6h.01"></path>
-                <path d="M3 12h.01"></path>
-                <path d="M3 18h.01"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
             </span>
             <span class="sidebar-label">Mis sesiones</span>
           </a>
 
           <a href="perfil-estudiante.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"></circle>
-                <path d="M4 21a8 8 0 0 1 16 0"></path>
-              </svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
             </span>
             <span class="sidebar-label">Mi perfil</span>
           </a>
@@ -116,73 +80,95 @@
 
         <div class="tf-sidebar-card">
           <span>Consejo rápido</span>
-          <p>
-            Revisa el estado de tus tutorías, pagos y enlaces virtuales antes de
-            cada clase.
-          </p>
+          <p>Revisa el estado de tus tutorías, pagos y enlaces virtuales antes de cada clase.</p>
         </div>
       </aside>
 
       <section class="tf-student-main">
         <header class="tf-topbar">
-          <div>
+          <div class="tf-topbar-copy">
             <span class="tf-page-label">Mis sesiones</span>
             <h1>Mis tutorías reservadas</h1>
           </div>
 
           <div class="tf-topbar-actions">
-            <a
-              id="btnNotificaciones"
-              href="notificaciones.html"
-              class="tf-notification-btn"
-              title="Notificaciones"
-            >
-              🔔
-              <span class="tf-notification-dot" id="contadorNotificaciones"
-                >0</span
-              >
+            <a id="btnNotificaciones" href="notificaciones.html" class="tf-notification-btn" title="Notificaciones">
+              <span class="tf-svg-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+              </span>
+              <span class="tf-notification-dot" id="contadorNotificaciones">0</span>
             </a>
+
+            <div class="tf-user-area">
+              <button class="tf-user-chip" id="btnUsuario" type="button">
+                <span class="tf-user-avatar" id="avatarIniciales">U</span>
+                <span class="tf-user-meta">
+                  <strong id="nombreUsuarioTop">Verificando...</strong>
+                  <small>Mi cuenta</small>
+                </span>
+              </button>
+
+              <div class="tf-user-dropdown oculto" id="menuUsuario">
+                <button class="tf-user-dropdown-close" id="cerrarMenuUsuario" type="button">×</button>
+                <p class="tf-user-email" id="correoUsuarioMenu">correo@ejemplo.com</p>
+                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">U</div>
+                <h3 id="saludoUsuarioMenu">Hola, estudiante</h3>
+                <a class="tf-user-dropdown-btn" href="perfil-estudiante.html">Ver perfil del estudiante</a>
+                <button class="tf-user-dropdown-logout" id="btnCerrarSesionPortal" type="button">Cerrar sesión</button>
+              </div>
+            </div>
           </div>
         </header>
 
         <section class="tf-sessions-hero">
-          <div>
-            <span class="tf-hero-pill">Panel de seguimiento</span>
+          <div class="tf-sessions-hero-copy">
+            <span class="tf-hero-pill"><i class="bi bi-lightning-charge-fill"></i> Panel de seguimiento</span>
             <h2>Controla tus clases desde un solo lugar</h2>
-            <p>
-              Aquí puedes revisar tus reservas, el estado de pago, la modalidad
-              de clase y el enlace virtual cuando el tutor lo asigne.
-            </p>
+            <p>Aquí puedes revisar tus reservas, el estado de pago, la modalidad de clase y el enlace virtual cuando el tutor lo asigne.</p>
           </div>
 
-          <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
-            Reservar nueva tutoría
-          </a>
+          <div class="tf-sessions-hero-visual" aria-hidden="true"></div>
+
+          <div class="tf-sessions-hero-action">
+            <a href="buscar-tutor.html" class="tf-btn tf-btn-primary tf-hero-main-btn">Reservar nueva tutoría <i class="bi bi-arrow-right"></i></a>
+          </div>
         </section>
 
         <section class="tf-session-stats">
-          <article class="tf-session-stat-card">
-            <span>Total</span>
-            <strong id="statTotalSesiones">0</strong>
-            <p>Sesiones registradas</p>
+          <article class="tf-session-stat-card stat-total">
+            <div class="tf-session-stat-icon"><i class="bi bi-people"></i></div>
+            <div class="tf-session-stat-content">
+              <span>Total</span>
+              <strong id="statTotalSesiones">0</strong>
+              <p>Sesiones registradas</p>
+            </div>
           </article>
 
-          <article class="tf-session-stat-card">
-            <span>Pendientes</span>
-            <strong id="statPendientes">0</strong>
-            <p>Esperando respuesta</p>
+          <article class="tf-session-stat-card stat-pendiente">
+            <div class="tf-session-stat-icon"><i class="bi bi-clock-history"></i></div>
+            <div class="tf-session-stat-content">
+              <span>Pendientes</span>
+              <strong id="statPendientes">0</strong>
+              <p>Esperando respuesta</p>
+            </div>
           </article>
 
-          <article class="tf-session-stat-card">
-            <span>Aceptadas</span>
-            <strong id="statAceptadas">0</strong>
-            <p>Listas para realizar</p>
+          <article class="tf-session-stat-card stat-aceptada">
+            <div class="tf-session-stat-icon"><i class="bi bi-check-circle"></i></div>
+            <div class="tf-session-stat-content">
+              <span>Aceptadas</span>
+              <strong id="statAceptadas">0</strong>
+              <p>Listas para realizar</p>
+            </div>
           </article>
 
-          <article class="tf-session-stat-card">
-            <span>Finalizadas</span>
-            <strong id="statRealizadas">0</strong>
-            <p>Clases finalizadas</p>
+          <article class="tf-session-stat-card stat-finalizada">
+            <div class="tf-session-stat-icon"><i class="bi bi-calendar2-check"></i></div>
+            <div class="tf-session-stat-content">
+              <span>Finalizadas</span>
+              <strong id="statRealizadas">0</strong>
+              <p>Clases finalizadas</p>
+            </div>
           </article>
         </section>
 
@@ -191,22 +177,15 @@
             <div>
               <span>Historial de tutorías</span>
               <h2>Mis sesiones</h2>
+              <p id="estadoSesiones" class="auth-mensaje">Verificando sesión...</p>
             </div>
 
-            <a href="buscar-tutor.html" class="tf-link-action">
-              Buscar otro tutor
-            </a>
+            <a href="buscar-tutor.html" class="tf-link-action"><i class="bi bi-person-plus"></i> Buscar otro tutor</a>
           </div>
 
           <div class="tf-session-toolbar">
-            <p id="estadoSesiones" class="auth-mensaje">
-              Verificando sesión...
-            </p>
-
             <div class="tf-session-filters" aria-label="Filtros de sesiones">
-              <button type="button" class="is-active" data-filtro="todas">
-                Todas
-              </button>
+              <button type="button" class="is-active" data-filtro="todas">Todas</button>
               <button type="button" data-filtro="pendiente">Pendientes</button>
               <button type="button" data-filtro="aceptada">Aceptadas</button>
               <button type="button" data-filtro="en_curso">En curso</button>
@@ -226,6 +205,7 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/sesiones.js"></script>

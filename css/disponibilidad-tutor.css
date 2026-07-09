@@ -1,3 +1,5 @@
+@import url("./tutorflash-theme.css");
+
 * {
   box-sizing: border-box;
 }
@@ -597,4 +599,56 @@ select:disabled {
   .btn-eliminar {
     width: 100%;
   }
+}
+
+.disponibilidad-header {
+  min-height: 215px;
+  padding: clamp(26px, 4vw, 42px);
+}
+
+.disponibilidad-layout {
+  gap: 24px;
+}
+
+.info-card,
+.form-card {
+  padding: clamp(24px, 4vw, 34px);
+}
+
+.form-grupo input,
+.form-grupo select {
+  min-height: 56px;
+  border-color: var(--tf-borde);
+  background: #ffffff;
+}
+
+.bloque-card {
+  background: #ffffff;
+  border-color: var(--tf-borde);
+}
+
+@media (max-width: 620px) {
+  .disponibilidad-header {
+    min-height: auto;
+  }
+}
+
+/* Disponibilidad tutor - ajustes premium V1 */
+body.tf-tutor-availability-page .disponibilidad-layout {
+  display: grid !important;
+  grid-template-columns: minmax(300px, .38fr) minmax(0, .62fr) !important;
+  gap: 16px !important;
+}
+body.tf-tutor-availability-page .form-horario {
+  display: grid !important;
+  gap: 14px !important;
+}
+body.tf-tutor-availability-page .horarios-lista,
+body.tf-tutor-availability-page #listaDisponibilidades,
+body.tf-tutor-availability-page #listaHorariosTutor {
+  display: grid !important;
+  gap: 12px !important;
+}
+@media (max-width: 1050px) {
+  body.tf-tutor-availability-page .disponibilidad-layout { grid-template-columns: 1fr !important; }
 }

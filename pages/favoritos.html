@@ -1,27 +1,36 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash | Favoritos</title>
 
-    <link rel="stylesheet" href="../css/estudiante.css" />
-    <link rel="stylesheet" href="../css/buscar-tutor.css" />
-      <link rel="stylesheet" href="../css/chat.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v9-menu-close" />
+    <link rel="stylesheet" href="../css/buscar-tutor.css?v=tf-buscar-v10-sidebar-dropdown" />
+    <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
+    <link rel="stylesheet" href="../css/favoritos.css?v=tf-favoritos-v2-sidebar-dropdown" />
   </head>
 
-  <body>
+  <body class="tf-student-page tf-favorites-page">
     <div class="tf-student-layout">
       <!-- MENÚ LATERAL -->
-      <aside class="tf-sidebar">
-        <a href="../index.html" class="tf-sidebar-logo">
-          <img
-            src="../assets/img/logo-tutorflash-transparente.png"
-            alt="TutorFlash"
-          />
+      <aside class="tf-sidebar" aria-label="Menú del estudiante">
+        <a href="../index.html" class="tf-sidebar-logo" aria-label="Ir al inicio de TutorFlash">
+          <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
         </a>
 
-                <nav class="tf-sidebar-menu">
+        <nav class="tf-sidebar-menu">
           <a href="estudiante.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
@@ -77,12 +86,11 @@
             </span>
             <span class="sidebar-label">Mi perfil</span>
           </a>
-
         </nav>
 
         <div class="tf-sidebar-card">
-          <span>Consejo rápido</span>
-          <p>Guarda tus tutores favoritos para encontrarlos más rápido.</p>
+          <span><i class="bi bi-star-fill"></i> Consejo rápido</span>
+          <p>Guarda tutores para reservar más rápido cuando necesites reforzar un curso.</p>
         </div>
       </aside>
 
@@ -90,9 +98,10 @@
       <div class="tf-student-main">
         <!-- TOPBAR -->
         <header class="tf-topbar">
-          <div>
+          <div class="tf-topbar-greeting">
             <span class="tf-page-label">Favoritos</span>
             <h1 id="tituloBienvenida">Mis tutores favoritos ⭐</h1>
+            <p>Encuentra rápido a los tutores que guardaste.</p>
           </div>
 
           <div class="tf-topbar-actions">
@@ -102,15 +111,13 @@
                 href="notificaciones.html"
                 class="tf-notification-btn"
                 title="Notificaciones"
+                aria-label="Ver notificaciones"
               >
-                🔔
+                <i class="bi bi-bell"></i>
                 <span class="tf-notification-dot" id="contadorNotificaciones">0</span>
               </a>
 
-              <div
-                class="tf-notifications-panel oculto"
-                id="panelNotificaciones"
-              >
+              <div class="tf-notifications-panel oculto" id="panelNotificaciones">
                 <div class="tf-notifications-header">
                   <strong>Notificaciones</strong>
                   <button id="cerrarNotificaciones" type="button">×</button>
@@ -118,20 +125,17 @@
 
                 <div class="tf-notification-list">
                   <article class="tf-notification-item">
-                    <strong>⭐ Favoritos</strong>
+                    <strong>Favoritos</strong>
                     <p>Aquí aparecerán los tutores que guardes.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>🟢 Estado en línea</strong>
-                    <p>
-                      Más adelante podrás ver si tu tutor favorito está
-                      conectado.
-                    </p>
+                    <strong>Estado en línea</strong>
+                    <p>Más adelante podrás ver si tu tutor favorito está conectado.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>📅 Reserva rápida</strong>
+                    <strong>Reserva rápida</strong>
                     <p>Podrás reservar nuevamente con tus tutores favoritos.</p>
                   </article>
                 </div>
@@ -147,24 +151,16 @@
                   <strong id="nombreUsuarioTop">Verificando...</strong>
                   <small>Mi cuenta</small>
                 </span>
+
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
               </button>
 
               <div class="tf-user-dropdown oculto" id="menuUsuario">
-                <button
-                  class="tf-user-dropdown-close"
-                  id="cerrarMenuUsuario"
-                  type="button"
-                >
-                  ×
-                </button>
+                <button class="tf-user-dropdown-close" id="cerrarMenuUsuario" type="button">×</button>
 
-                <p class="tf-user-email" id="correoUsuarioMenu">
-                  correo@ejemplo.com
-                </p>
+                <p class="tf-user-email" id="correoUsuarioMenu">correo@ejemplo.com</p>
 
-                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">
-                  U
-                </div>
+                <div class="tf-user-dropdown-avatar" id="avatarInicialesMenu">U</div>
 
                 <h3 id="saludoUsuarioMenu">Hola, estudiante</h3>
 
@@ -172,11 +168,7 @@
                   Ver perfil del estudiante
                 </a>
 
-                <button
-                  class="tf-user-dropdown-logout"
-                  id="btnCerrarSesionPortal"
-                  type="button"
-                >
+                <button class="tf-user-dropdown-logout" id="btnCerrarSesionPortal" type="button">
                   Cerrar sesión
                 </button>
               </div>
@@ -185,36 +177,47 @@
         </header>
 
         <main>
-          <!-- INTRO -->
-          <section class="tf-search-hero">
-            <div>
-              <span class="tf-label">Tutores favoritos</span>
-              <h2>Guarda tus tutores preferidos</h2>
+          <!-- HERO FAVORITOS -->
+          <section class="tf-favorites-hero">
+            <div class="tf-favorites-hero-copy">
+              <span class="tf-label"><i class="bi bi-star-fill"></i> Tutores guardados</span>
+              <h2>Reserva otra vez con tus tutores de confianza</h2>
               <p>
-                Aquí podrás ver los tutores que guardes como favoritos para
-                reservar nuevas clases con mayor rapidez.
+                Revisa tus favoritos, consulta sus datos principales y vuelve a reservar una clase sin buscarlos desde cero.
               </p>
-            </div>
 
-            <a href="tutores.html" class="tf-btn tf-btn-primary">
-              Ver tutores
-            </a>
-          </section>
-
-          <!-- LISTA DE FAVORITOS -->
-          <section class="tf-panel-section">
-            <div class="tf-section-header">
-              <div>
-                <span>Favoritos</span>
-                <h2>Mis tutores guardados</h2>
+              <div class="tf-favorites-actions">
+                <a href="tutores.html" class="tf-btn tf-btn-primary">
+                  <i class="bi bi-search"></i> Explorar tutores
+                </a>
+                <a href="buscar-tutor.html" class="tf-btn tf-btn-secondary">
+                  <i class="bi bi-lightning-charge"></i> Buscar por curso
+                </a>
               </div>
             </div>
 
-            <p id="estadoFavoritos" class="tf-section-subtitle">
-              Cargando favoritos...
-            </p>
+            <div class="tf-favorites-hero-card" aria-hidden="true">
+              <div class="tf-fav-card-icon"><i class="bi bi-star-fill"></i></div>
+              <strong>Favoritos</strong>
+              <span>Acceso rápido</span>
+            </div>
+          </section>
 
-            <div id="listaFavoritos" class="tf-tutors-grid">
+          <!-- LISTA DE FAVORITOS -->
+          <section class="tf-favorites-panel">
+            <div class="tf-favorites-panel-head">
+              <div>
+                <span class="tf-favorites-kicker">Mis tutores guardados</span>
+                <h2>Elige un tutor favorito para reservar</h2>
+                <p>
+                  Estos tutores se cargan desde tu cuenta. Puedes reservar una nueva tutoría o quitar un favorito cuando ya no lo necesites.
+                </p>
+              </div>
+
+              <span id="estadoFavoritos" class="tf-favorites-status">Cargando favoritos...</span>
+            </div>
+
+            <div id="listaFavoritos" class="tf-favorites-grid">
               <!-- Aquí se cargarán los favoritos reales -->
             </div>
           </section>
@@ -222,12 +225,10 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
-    <script type="module" src="../js/favoritos.js"></script>
-      <script type="module" src="../js/chat.js"></script>
+<script type="module" src="../js/favoritos.js"></script>
+    <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
-
-
-

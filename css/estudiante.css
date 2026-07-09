@@ -1,22 +1,53 @@
-/* ==============================
-   TUTORFLASH - PORTAL ESTUDIANTE
-   Etapa 14
-================================= */
+@import url("./tutorflash-theme.css");
+
+/* =====================================================
+   TutorFlash - Portal del estudiante premium
+   Solo visual: conserva IDs, rutas y lógica JS/Firebase.
+===================================================== */
 
 * {
   box-sizing: border-box;
+}
+
+:root {
+  --tf-azul-950: #061a3a;
+  --tf-azul-900: #0b1d3a;
+  --tf-azul-800: #102b57;
+  --tf-azul-600: #2563eb;
+  --tf-dorado: #f4b400;
+  --tf-dorado-2: #ffc72c;
+  --tf-fondo: #f3f7fc;
+  --tf-superficie: #ffffff;
+  --tf-texto: #061a3a;
+  --tf-texto-suave: #64748b;
+  --tf-borde: #dce7f3;
+  --tf-exito: #22c55e;
+  --tf-error: #ef4444;
+  --tf-radio: 26px;
+  --tf-sombra: 0 18px 46px rgba(6, 26, 58, 0.08);
+  --tf-sombra-fuerte: 0 28px 80px rgba(6, 26, 58, 0.13);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+html,
 body {
+  width: 100%;
+  min-height: 100%;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f7fb;
-  color: #102a43;
   overflow-x: hidden;
+}
+
+body.tf-student-page,
+body {
+  color: var(--tf-texto);
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(37, 99, 235, 0.12), transparent 28%),
+    radial-gradient(circle at 4% 8%, rgba(244, 180, 0, 0.12), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
 }
 
 button,
@@ -27,114 +58,153 @@ select {
 }
 
 a {
+  color: inherit;
   text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .oculto {
   display: none !important;
 }
 
-/* ==============================
-   LAYOUT GENERAL
-================================= */
+/* LAYOUT */
 
 .tf-student-layout {
-  min-height: 100vh;
+  width: min(100%, 1680px);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: 18px 20px;
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
+  grid-template-columns: 284px minmax(0, 1fr);
+  gap: 22px;
 }
 
-/* ==============================
-   SIDEBAR - VERSIÓN ELEGANTE
-================================= */
+/* SIDEBAR */
 
 .tf-sidebar {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  padding: 16px 14px;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(244, 185, 66, 0.1),
-      transparent 34%
-    ),
-    linear-gradient(180deg, #102a43 0%, #0b1f33 100%);
-  color: #f8fafc;
+  top: 18px;
+  height: calc(100dvh - 36px);
+  min-height: 640px;
+  padding: 24px 22px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 22px;
+  overflow: hidden;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(255, 199, 44, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 16%, rgba(37, 99, 235, 0.26), transparent 30%),
+    linear-gradient(180deg, #061a3a 0%, #08244d 54%, #061a3a 100%);
+  box-shadow: var(--tf-sombra-fuerte);
+}
+
+.tf-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: .28;
+  pointer-events: none;
+}
+
+.tf-sidebar > * {
+  position: relative;
+  z-index: 1;
 }
 
 .tf-sidebar-logo {
+  min-height: 62px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  min-height: auto;
-  margin-bottom: 8px;
+  gap: 14px;
   padding: 10px 12px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.065);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
 }
 
-/* El logo PNG oscuro no se aprecia bien sobre el sidebar azul.
-   Por eso se oculta solo en el sidebar y se usa una marca textual clara. */
 .tf-sidebar-logo img {
   display: none;
 }
 
 .tf-sidebar-logo::before {
   content: "";
-  display: block;
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  background-color: rgba(255, 255, 255, 0.08);
-  background-image: url("../assets/img/rayito-tutorflash.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 45px 45px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  border-radius: 18px;
+  background:
+    rgba(255, 255, 255, 0.08)
+    url("../assets/img/rayito-tutorflash.png") center / 48px 48px no-repeat;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 .tf-sidebar-logo::after {
   content: "TutorFlash";
-  color: #ffffff;
-  font-size: 1.08rem;
+  font-size: 1.35rem;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  color: #ffffff;
 }
 
 .tf-sidebar-menu {
   display: grid;
-  gap: 7px;
+  gap: 8px;
 }
 
-.sidebar-link {
-  text-decoration: none;
+.tf-sidebar-menu a {
+  position: relative;
+  min-height: 48px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.96rem;
+  font-weight: 900;
+  transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.tf-sidebar-menu a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.tf-sidebar-menu a.is-active,
+.tf-sidebar-menu a.active,
+.tf-sidebar-menu a.activo {
+  color: #fff8df;
+  background: rgba(244, 180, 0, 0.13);
+  border-color: rgba(244, 180, 0, 0.72);
+  box-shadow: inset 3px 0 0 var(--tf-dorado);
 }
 
 .sidebar-icon,
 .tf-svg-icon {
+  width: 22px;
+  height: 22px;
   display: inline-grid;
-  width: 20px;
-  height: 20px;
   place-items: center;
   flex: 0 0 auto;
 }
 
 .sidebar-icon svg,
 .tf-svg-icon svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 2.1;
+  stroke-width: 2.15;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -143,819 +213,732 @@ a {
   min-width: 0;
 }
 
-.tf-sidebar-menu a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 13px;
-  border-radius: 15px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: rgba(248, 250, 252, 0.82);
-  font-size: 0.93rem;
-  font-weight: 850;
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.tf-sidebar-menu a:hover {
-  background: rgba(255, 255, 255, 0.075);
-  color: #ffffff;
-  transform: translateX(2px);
-}
-
-.tf-sidebar-menu a.is-active,
-.tf-sidebar-menu a.active,
-.tf-sidebar-menu a.activo {
-  background: rgba(244, 185, 66, 0.16);
-  border-color: rgba(244, 185, 66, 0.32);
-  color: #fff7dc;
-  box-shadow: inset 4px 0 0 rgba(244, 185, 66, 0.72);
+.tf-sidebar-badge {
+  margin-left: auto;
+  min-width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--tf-azul-950);
+  background: linear-gradient(180deg, var(--tf-dorado-2), var(--tf-dorado));
+  font-size: .78rem;
+  font-weight: 900;
 }
 
 .tf-sidebar-card {
   margin-top: auto;
-  padding: 15px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.065);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  min-height: 210px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),
+    radial-gradient(circle at 78% 88%, rgba(255, 199, 44, 0.16), transparent 34%);
+}
+
+.tf-sidebar-card::after {
+  content: "";
+  flex: 1;
+  min-height: 96px;
+  margin-top: 10px;
+  background: url("../assets/img/icono-libro-planta.png") center bottom / contain no-repeat;
+  opacity: .96;
 }
 
 .tf-sidebar-card span {
-  display: block;
-  margin-bottom: 7px;
-  color: #f4b942;
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tf-dorado-2);
+  font-size: .98rem;
   font-weight: 900;
 }
 
 .tf-sidebar-card p {
-  margin: 0;
-  color: rgba(248, 250, 252, 0.78);
-  font-size: 0.86rem;
-  line-height: 1.48;
+  margin: 8px 0 0;
+  color: rgba(255,255,255,.82);
+  font-size: .92rem;
+  line-height: 1.55;
+  font-weight: 650;
 }
 
-/* ==============================
-   CONTENIDO PRINCIPAL
-================================= */
+/* MAIN */
 
 .tf-student-main {
   min-width: 0;
-  padding: 12px 18px;
+  padding: 0;
 }
 
-/* ==============================
-   TOPBAR
-================================= */
+.tf-student-main main {
+  display: grid;
+  gap: 18px;
+}
+
+.tf-topbar,
+.tf-welcome-card,
+.tf-next-card,
+.tf-stat-card,
+.tf-panel-section,
+.tf-user-dropdown,
+.tf-notifications-panel {
+  border: 1px solid rgba(220, 231, 243, 0.95);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--tf-sombra);
+  backdrop-filter: blur(14px);
+}
+
+/* TOPBAR */
 
 .tf-topbar {
+  min-height: 92px;
+  margin-bottom: 16px;
+  padding: 16px 18px 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 18px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.08);
+  border-radius: 24px;
 }
 
 .tf-page-label {
-  display: inline-block;
+  display: inline-flex;
   margin-bottom: 4px;
-  color: #f0a400;
-  font-size: 0.72rem;
-  font-weight: 900;
+  color: var(--tf-dorado);
   text-transform: uppercase;
-  letter-spacing: 0.9px;
+  letter-spacing: .12em;
+  font-size: .72rem;
+  font-weight: 900;
 }
 
 .tf-topbar h1 {
   margin: 0;
-  color: #071b3d;
-  font-size: 1.25rem;
+  color: var(--tf-azul-950);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
   line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.tf-topbar p {
+  margin: 3px 0 0;
+  color: var(--tf-texto-suave);
+  font-size: .9rem;
+  font-weight: 700;
 }
 
 .tf-topbar-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
-/* ==============================
-   NOTIFICACIONES
-================================= */
-
-.tf-notification-area {
+.tf-notification-area,
+.tf-user-area {
   position: relative;
 }
 
 .tf-notification-btn {
   position: relative;
-  width: 44px;
-  height: 44px;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  background: #fff8e8;
-  color: #071b3d;
-  font-size: 1.15rem;
-  box-shadow: 0 10px 22px rgba(7, 27, 61, 0.08);
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tf-borde);
+  border-radius: 17px;
+  color: var(--tf-azul-950);
+  background: #ffffff;
+  box-shadow: 0 12px 26px rgba(6,26,58,.06);
 }
 
 .tf-notification-dot {
   position: absolute;
-  top: 3px;
-  right: 3px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  top: -8px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
   display: grid;
   place-items: center;
+  border: 3px solid #ffffff;
   border-radius: 999px;
+  color: #ffffff;
   background: #ef4444;
-  color: white;
-  font-size: 0.68rem;
+  font-size: .72rem;
   font-weight: 900;
 }
 
+.tf-user-chip {
+  min-height: 58px;
+  padding: 7px 12px 7px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 20px;
+  color: var(--tf-azul-950);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tf-user-avatar,
+.tf-user-dropdown-avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(180deg, #0b2c66, #061a3a);
+  font-weight: 900;
+}
+
+.tf-user-avatar {
+  width: 54px;
+  height: 54px;
+  font-size: 1.25rem;
+  box-shadow: 0 14px 26px rgba(6,26,58,.16);
+}
+
+.tf-user-meta {
+  display: grid;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.tf-user-meta strong {
+  color: var(--tf-azul-950);
+  font-size: .98rem;
+  font-weight: 900;
+}
+
+.tf-user-meta small {
+  color: var(--tf-texto-suave);
+  font-weight: 700;
+}
+
+.tf-user-dropdown,
 .tf-notifications-panel {
   position: absolute;
-  top: calc(100% + 12px);
   right: 0;
-  z-index: 90;
-  width: min(340px, calc(100vw - 36px));
-  padding: 16px;
+  top: calc(100% + 12px);
+  z-index: 30;
+  width: min(330px, calc(100vw - 28px));
+  padding: 18px;
   border-radius: 22px;
-  background: white;
-  border: 1px solid rgba(7, 27, 61, 0.1);
-  box-shadow: 0 24px 70px rgba(7, 27, 61, 0.22);
+}
+
+.tf-user-dropdown-close,
+#cerrarNotificaciones {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  border: 0;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: var(--tf-azul-950);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.tf-user-email {
+  margin: 4px 0 12px;
+  color: var(--tf-texto-suave);
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.tf-user-dropdown-avatar {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+}
+
+.tf-user-dropdown h3 {
+  margin: 0 0 14px;
+  color: var(--tf-azul-950);
+  font-weight: 900;
+}
+
+.tf-user-dropdown-btn,
+.tf-user-dropdown-logout {
+  width: 100%;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.tf-user-dropdown-btn {
+  color: var(--tf-azul-950);
+  background: #eef5ff;
+}
+
+.tf-user-dropdown-logout {
+  margin-top: 10px;
+  border: 0;
+  color: #ffffff;
+  background: var(--tf-error);
 }
 
 .tf-notifications-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
 .tf-notifications-header strong {
-  color: #071b3d;
-  font-size: 1rem;
-}
-
-.tf-notifications-header button {
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  color: #334155;
-  font-size: 1.45rem;
+  color: var(--tf-azul-950);
   font-weight: 900;
 }
 
 .tf-notification-list {
   display: grid;
-  gap: 9px;
+  gap: 10px;
 }
 
 .tf-notification-item {
   padding: 12px;
   border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid rgba(7, 27, 61, 0.08);
+  background: #f8fbff;
+  border: 1px solid var(--tf-borde);
 }
 
 .tf-notification-item strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #071b3d;
-  font-size: 0.92rem;
+  color: var(--tf-azul-950);
 }
 
 .tf-notification-item p {
-  margin: 0;
-  color: #64748b;
-  font-size: 0.86rem;
-  line-height: 1.4;
+  margin: 4px 0 0;
+  color: var(--tf-texto-suave);
+  font-size: .88rem;
 }
 
-/* ==============================
-   AVATAR / USUARIO
-================================= */
-
-.tf-user-area {
-  position: relative;
-}
-
-.tf-user-chip {
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px 10px 5px 5px;
-  border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  color: #071b3d;
-}
-
-.tf-user-avatar {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #243f8f 0%, #152c68 100%);
-  color: white;
-  font-size: 0.95rem;
-  font-weight: 900;
-}
-
-.tf-user-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.tf-user-meta strong {
-  color: #071b3d;
-  font-size: 0.9rem;
-  font-weight: 900;
-}
-
-.tf-user-meta small {
-  color: #64748b;
-  font-size: 0.75rem;
-}
-
-.tf-user-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  z-index: 80;
-  width: min(330px, calc(100vw - 36px));
-  padding: 20px 16px 16px;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(7, 27, 61, 0.1);
-  box-shadow: 0 24px 70px rgba(7, 27, 61, 0.22);
-  text-align: center;
-}
-
-.tf-user-dropdown-close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  color: #334155;
-  font-size: 1.7rem;
-  font-weight: 900;
-}
-
-.tf-user-email {
-  margin: 4px 36px 16px;
-  color: #334155;
-  font-size: 0.9rem;
-  word-break: break-word;
-}
-
-.tf-user-dropdown-avatar {
-  width: 82px;
-  height: 82px;
-  margin: 0 auto 12px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #243f8f 0%, #152c68 100%);
-  color: white;
-  font-size: 1.7rem;
-  font-weight: 900;
-}
-
-.tf-user-dropdown h3 {
-  margin: 0 0 14px;
-  color: #071b3d;
-  font-size: 1.25rem;
-}
-
-.tf-user-dropdown-btn {
-  display: inline-flex;
-  justify-content: center;
-  width: 100%;
-  padding: 11px 15px;
-  border-radius: 999px;
-  border: 1px solid rgba(7, 27, 61, 0.18);
-  color: #071b3d;
-  font-weight: 900;
-  background: #f8fafc;
-}
-
-.tf-user-dropdown-btn:hover {
-  background: #fff8e8;
-}
-
-.tf-user-dropdown-logout {
-  width: 100%;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-  padding: 11px 15px;
-  border-radius: 999px;
-  background: #071b3d;
-  color: white;
-  font-weight: 900;
-}
-
-.tf-user-dropdown-logout:hover {
-  background: #123b5d;
-}
-
-/* ==============================
-   DASHBOARD PRINCIPAL
-================================= */
+/* DASHBOARD */
 
 .tf-dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
-  gap: 14px;
-  margin-bottom: 14px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, .95fr);
+  gap: 22px;
 }
 
 .tf-welcome-card,
 .tf-next-card,
 .tf-stat-card,
 .tf-panel-section {
-  background: white;
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+  border-radius: 26px;
 }
 
 .tf-welcome-card {
-  padding: 22px;
-  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  min-height: 318px;
+  padding: clamp(24px, 3vw, 34px);
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(260px, .72fr);
+  align-items: center;
+  gap: 18px;
   background:
-    radial-gradient(
-      circle at 12% 20%,
-      rgba(255, 198, 41, 0.25),
-      transparent 28%
-    ),
+    radial-gradient(circle at 86% 18%, rgba(255, 199, 44, .18), transparent 20%),
     linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
 }
 
+.tf-welcome-card::before,
+.tf-panel-section::after {
+  content: "✦";
+  position: absolute;
+  color: var(--tf-dorado);
+  font-size: 2rem;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.tf-welcome-card::before {
+  right: 46px;
+  top: 46px;
+}
+
 .tf-label {
-  display: inline-block;
-  padding: 7px 12px;
-  margin-bottom: 12px;
+  width: fit-content;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   border-radius: 999px;
-  background: rgba(255, 198, 41, 0.24);
-  color: #071b3d;
-  font-size: 0.78rem;
+  color: #b76b00;
+  background: rgba(244, 180, 0, .14);
+  font-size: .82rem;
   font-weight: 900;
 }
 
 .tf-welcome-card h2 {
-  max-width: 720px;
+  max-width: 520px;
   margin: 0;
-  color: #071b3d;
-  font-size: clamp(1.65rem, 3vw, 2.25rem);
-  line-height: 1.05;
-  letter-spacing: -0.5px;
+  color: var(--tf-azul-950);
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+  font-weight: 900;
 }
 
 .tf-welcome-card p {
-  max-width: 620px;
-  margin: 12px 0 0;
-  color: #64748b;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  max-width: 500px;
+  margin: 18px 0 0;
+  color: var(--tf-texto-suave);
+  font-size: 1rem;
+  line-height: 1.58;
+  font-weight: 700;
 }
 
 .tf-actions {
+  margin-top: 22px;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 12px;
 }
 
-.tf-btn {
+.tf-btn,
+.tf-link-action {
+  min-height: 48px;
+  padding: 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  cursor: pointer;
-  padding: 11px 17px;
-  border-radius: 999px;
-  font-size: 0.92rem;
+  gap: 9px;
+  border-radius: 15px;
   font-weight: 900;
-  transition: 0.2s ease;
-}
-
-.tf-btn:hover {
-  transform: translateY(-2px);
 }
 
 .tf-btn-primary {
-  background: #071b3d;
-  color: white;
-  box-shadow: 0 12px 22px rgba(7, 27, 61, 0.2);
+  color: #ffffff;
+  background: linear-gradient(180deg, #082b61, #061a3a);
+  box-shadow: 0 16px 28px rgba(6, 26, 58, .18);
 }
 
 .tf-btn-secondary {
-  background: #fff8e8;
-  color: #071b3d;
-  border: 1px solid rgba(7, 27, 61, 0.1);
+  color: var(--tf-azul-950);
+  background: #ffffff;
+  border: 1px solid var(--tf-borde);
 }
 
-/* ==============================
-   PRÓXIMA TUTORÍA
-================================= */
+.tf-welcome-visual {
+  min-height: 220px;
+  background: url("../assets/img/icono-libros-birrete.png") center / contain no-repeat;
+  filter: drop-shadow(0 24px 38px rgba(6, 26, 58, .12));
+}
 
 .tf-next-card {
-  padding: 16px 18px;
-  border-radius: 22px;
+  position: relative;
+  min-height: 318px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
 }
 
-.tf-next-card > span {
+.tf-next-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  color: var(--tf-dorado);
+  background: rgba(244, 180, 0, .12);
+  font-size: 1.8rem;
+}
+
+.tf-next-card > span,
+.tf-section-header span {
   display: inline-block;
-  margin-bottom: 8px;
-  color: #f0a400;
-  font-weight: 900;
+  margin-top: 10px;
+  color: var(--tf-dorado);
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.8px;
+  letter-spacing: .12em;
+  font-size: .8rem;
+  font-weight: 900;
 }
 
 .tf-next-card h3 {
-  margin: 0 0 10px;
-  color: #071b3d;
-  font-size: 1.15rem;
+  margin: 6px 0 16px;
+  color: var(--tf-azul-950);
+  font-size: 1.55rem;
+  font-weight: 900;
 }
 
 .tf-next-info {
   display: grid;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 10px;
 }
 
 .tf-next-info p {
   margin: 0;
-  color: #475569;
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tf-texto-suave);
+  font-weight: 750;
+}
+
+.tf-next-info i {
+  color: #6b7b93;
 }
 
 .tf-next-info strong {
-  color: #071b3d;
+  color: var(--tf-azul-950);
 }
 
 .tf-status-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 999px;
-  background: #fff3c4;
-  color: #795600;
-  font-size: 0.78rem;
+  color: #a15c00;
+  background: rgba(244, 180, 0, .16);
+  font-size: .82rem;
   font-weight: 900;
 }
 
 .tf-link-action {
-  display: inline-flex;
-  color: #071b3d;
-  font-size: 0.92rem;
-  font-weight: 900;
+  margin-top: auto;
+  color: var(--tf-azul-950);
+  background: #ffffff;
+  border: 1px solid var(--tf-borde);
 }
 
-.tf-link-action:hover {
-  color: #f0a400;
-}
-
-/* ==============================
-   RESUMEN
-================================= */
+/* STATS */
 
 .tf-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 18px;
 }
 
 .tf-stat-card {
-  padding: 15px 18px;
-  border-radius: 18px;
+  min-height: 142px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 16px;
+  align-items: start;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
 
+.tf-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tf-sombra-fuerte);
+}
+
+.tf-stat-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  font-size: 1.55rem;
+}
+
+.tf-stat-card.is-purple .tf-stat-icon { color: #6d28d9; background: #f1e9ff; }
+.tf-stat-card.is-green .tf-stat-icon { color: #16a34a; background: #dcfce7; }
+.tf-stat-card.is-blue .tf-stat-icon { color: var(--tf-azul-600); background: #eaf2ff; }
+.tf-stat-card.is-gold .tf-stat-icon { color: #d28b00; background: #fff4d6; }
+
 .tf-stat-card span {
-  display: block;
-  margin-bottom: 6px;
-  color: #64748b;
-  font-size: 0.9rem;
-  font-weight: 900;
+  color: var(--tf-texto-suave);
+  font-size: .85rem;
+  font-weight: 800;
 }
 
 .tf-stat-card strong {
   display: block;
-  color: #071b3d;
-  font-size: 1.55rem;
+  color: var(--tf-azul-950);
+  font-size: 1.65rem;
   line-height: 1;
+  font-weight: 900;
 }
 
 .tf-stat-card p {
-  margin: 6px 0 0;
-  color: #94a3b8;
-  font-size: 0.84rem;
-  font-weight: 700;
-}
-
-.tf-stat-link {
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.tf-stat-link:hover {
-  transform: translateY(-4px);
-  border-color: rgba(7, 27, 61, 0.16);
-  box-shadow: 0 18px 34px rgba(7, 27, 61, 0.11);
+  margin: 8px 0 12px;
+  color: var(--tf-texto-suave);
+  font-size: .9rem;
+  font-weight: 650;
 }
 
 .tf-stat-card small {
-  display: inline-flex;
-  margin-top: 10px;
-  color: #071b3d;
-  font-size: 0.78rem;
+  color: var(--tf-azul-600);
+  font-size: .86rem;
   font-weight: 900;
 }
 
-/* ==============================
-   ACCESOS RÁPIDOS
-================================= */
+/* SHORTCUTS */
 
 .tf-panel-section {
-  padding: 18px;
-  border-radius: 22px;
-  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+  padding: 24px;
 }
 
-.tf-section-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: end;
-  margin-bottom: 14px;
+.tf-panel-section::after {
+  right: 160px;
+  top: 22px;
 }
 
-.tf-section-header span {
-  color: #f0a400;
-  font-size: 0.78rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+.tf-panel-section::before {
+  content: "";
+  position: absolute;
+  right: 20px;
+  bottom: 8px;
+  width: 150px;
+  height: 126px;
+  background: url("../assets/img/icono-mochila-libros.png") center / contain no-repeat;
+  pointer-events: none;
 }
 
 .tf-section-header h2 {
-  margin: 5px 0 0;
-  color: #071b3d;
-  font-size: 1.7rem;
-  line-height: 1.1;
+  margin: 4px 0 18px;
+  color: var(--tf-azul-950);
+  font-size: 1.35rem;
+  font-weight: 900;
 }
 
 .tf-shortcuts {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  padding-right: 150px;
 }
 
 .tf-shortcuts a {
+  min-height: 74px;
+  padding: 14px;
   display: grid;
-  gap: 8px;
-  padding: 15px 16px;
-  border-radius: 18px;
-  background: #f8fafc;
-  color: #071b3d;
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  transition: 0.2s ease;
+  grid-template-columns: 38px 1fr;
+  column-gap: 12px;
+  align-items: center;
+  border: 1px solid var(--tf-borde);
+  border-radius: 17px;
+  background: #ffffff;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
 
 .tf-shortcuts a:hover {
-  transform: translateY(-3px);
-  background: #fffaf0;
-  box-shadow: 0 14px 28px rgba(7, 27, 61, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(6, 26, 58, .08);
+}
+
+.tf-shortcuts i {
+  grid-row: span 2;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--tf-azul-600);
+  background: #eef5ff;
+  font-size: 1.25rem;
 }
 
 .tf-shortcuts strong {
-  font-size: 0.95rem;
+  color: var(--tf-azul-950);
+  font-size: .92rem;
+  font-weight: 900;
 }
 
 .tf-shortcuts span {
-  color: #64748b;
-  font-size: 0.86rem;
-  line-height: 1.35;
+  color: var(--tf-texto-suave);
+  font-size: .78rem;
+  font-weight: 700;
 }
 
-/* ==============================
-   PANTALLAS CON POCA ALTURA
-================================= */
+/* RESPONSIVE */
 
-@media (max-height: 720px) {
+@media (max-width: 1320px) {
+  .tf-student-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px;
+  }
+
+  .tf-dashboard-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, .95fr);
+  }
+
+  .tf-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tf-shortcuts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .tf-student-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-sidebar {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: auto;
+    padding: 14px;
+    border-radius: 24px;
+  }
+
   .tf-sidebar-logo {
-    min-height: 58px;
+    min-height: 50px;
+  }
+
+  .tf-sidebar-logo::before {
+    width: 44px;
+    height: 44px;
+    background-size: 38px 38px;
+  }
+
+  .tf-sidebar-logo::after {
+    font-size: 1.15rem;
+  }
+
+  .tf-sidebar-menu {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .tf-sidebar-menu a {
-    padding: 9px 12px;
+    justify-content: center;
   }
 
-  .tf-topbar {
-    padding: 10px 16px;
-  }
-
-  .tf-welcome-card {
-    padding: 20px;
-  }
-
-  .tf-next-card {
-    padding: 14px 18px;
-  }
-
-  .tf-stat-card {
-    padding: 13px 16px;
-  }
-
-  .tf-panel-section {
-    padding: 16px 18px;
-  }
-}
-
-/* ==============================
-   RESPONSIVE
-================================= */
-
-@media (max-width: 1180px) {
-  .tf-student-layout {
-    grid-template-columns: 220px minmax(0, 1fr);
-  }
-
-  .tf-sidebar-logo img {
-    width: 140px;
+  .tf-sidebar-card {
+    display: none;
   }
 
   .tf-dashboard-grid {
     grid-template-columns: 1fr;
   }
 
-  .tf-stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .tf-welcome-card {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .6fr);
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 780px) {
   .tf-student-layout {
-    display: block;
+    padding: 10px;
+    gap: 12px;
   }
 
-  .tf-sidebar {
-    position: fixed;
-    inset: 0 auto 0 0;
-    z-index: 120;
-    width: min(82vw, 300px);
-    height: 100vh;
-    border-radius: 0 24px 24px 0;
-    transform: translateX(-105%);
-    transition: transform 0.24s ease;
-  }
-
-  body.tf-sidebar-open .tf-sidebar {
-    transform: translateX(0);
-  }
-
-  .tf-sidebar-menu {
-    grid-template-columns: 1fr;
-  }
-
-  .tf-sidebar-card {
-    margin-top: 0;
-  }
-
-  .tf-student-main {
-    padding: 16px;
-  }
-
-  .tf-stats-grid,
-  .tf-shortcuts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.tf-menu-toggle {
-  display: none;
-}
-
-.tf-sidebar-overlay {
-  display: none;
-}
-
-.tf-toast {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 220;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  width: min(420px, calc(100vw - 36px));
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(7, 27, 61, 0.1);
-  box-shadow: 0 18px 44px rgba(7, 27, 61, 0.18);
-  color: #071b3d;
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.tf-toast p {
-  margin: 0;
-  line-height: 1.45;
-  font-weight: 800;
-}
-
-.tf-toast-error,
-.tf-toast-advertencia {
-  border-left: 5px solid #ef4444;
-}
-
-.tf-toast-exito {
-  border-left: 5px solid #22c55e;
-}
-
-.tf-toast-info,
-.tf-toast-carga {
-  border-left: 5px solid #ffc629;
-}
-
-.tf-toast.is-hiding {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-@media (max-width: 980px) {
-  .tf-menu-toggle {
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    z-index: 140;
-    display: grid;
-    width: 44px;
-    height: 44px;
-    place-items: center;
-    border: none;
-    border-radius: 14px;
-    background: #f4b942;
-    color: #102a43;
-    font-size: 1.35rem;
-    font-weight: 900;
-    box-shadow: 0 12px 26px rgba(7, 27, 61, 0.18);
-  }
-
-  .tf-sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 110;
-    display: none;
-    background: rgba(7, 27, 61, 0.44);
-  }
-
-  body.tf-sidebar-open .tf-sidebar-overlay {
-    display: block;
-  }
-
-  .tf-student-main {
-    padding-top: 70px;
-  }
-}
-
-@media (max-width: 720px) {
   .tf-topbar {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
+    padding: 16px;
   }
 
   .tf-topbar-actions {
@@ -963,254 +946,2637 @@ a {
     justify-content: space-between;
   }
 
-  .tf-user-chip {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .tf-notifications-panel {
-    right: auto;
-    left: 0;
+  .tf-user-meta {
+    display: none;
   }
 
   .tf-sidebar-menu {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .tf-dashboard-grid,
   .tf-stats-grid,
   .tf-shortcuts {
     grid-template-columns: 1fr;
   }
 
-  .tf-actions {
-    flex-direction: column;
+  .tf-welcome-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
   }
 
-  .tf-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 430px) {
-  .tf-student-main {
-    padding: 12px;
-  }
-
-  .tf-topbar,
-  .tf-welcome-card,
-  .tf-next-card,
-  .tf-panel-section {
-    border-radius: 18px;
-  }
-
-  .tf-welcome-card h2 {
-    font-size: 1.8rem;
-  }
-
-  .tf-section-header h2 {
-    font-size: 1.45rem;
-  }
-}
-.tf-tutor-actions {
-  display: grid;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.tf-reserve-btn,
-.tf-remove-favorite-btn {
-  width: 100%;
-  border: none;
-  border-radius: 999px;
-  padding: 13px 18px;
-  font-weight: 800;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
-}
-
-.tf-reserve-btn {
-  display: inline-block;
-  background: #06162f;
-  color: #ffffff;
-  box-shadow: 0 12px 24px rgba(6, 22, 47, 0.18);
-}
-
-.tf-reserve-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 28px rgba(6, 22, 47, 0.24);
-}
-
-.tf-remove-favorite-btn {
-  background: #fff4f4;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
-}
-
-.tf-remove-favorite-btn:hover {
-  background: #fee2e2;
-  transform: translateY(-2px);
-}
-
-.tf-tutor-card__top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.tf-tutor-avatar {
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  background: #ffc928;
-  color: #06162f;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  font-weight: 900;
-  flex-shrink: 0;
-}
-.tf-icon-btn {
-  position: relative;
-}
-
-/* ==============================
-   AJUSTES FINALES - ESTUDIANTE
-================================= */
-
-.tf-stat-card,
-.tf-shortcuts a,
-.tf-user-chip,
-.tf-notification-btn,
-.tf-btn,
-.tf-reserve-btn,
-.tf-remove-favorite-btn {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.tf-stat-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.tf-favorite-btn.is-favorite {
-  background: #fff7d6;
-  border-color: rgba(244, 185, 66, 0.45);
-  color: #8a5a00;
-}
-
-@media (max-width: 980px) {
-  .tf-sidebar {
-    overflow-y: auto;
-  }
-}
-
-/* Header reutilizable superior */
-.tf-app-header {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 160;
-  min-height: 60px;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 18px;
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 12px 28px rgba(7, 27, 61, 0.1);
-}
-
-body.tf-has-app-header {
-  padding-top: 60px;
-}
-
-.tf-app-header .tf-menu-toggle {
-  position: static;
-  z-index: auto;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 0;
-  border-radius: 14px;
-  background: #f4b942;
-  color: #102a43;
-  font-size: 1.28rem;
-  font-weight: 900;
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.tf-app-header-brand {
-  color: #071b3d;
-  font-size: 1.08rem;
-  font-weight: 900;
-}
-
-.tf-app-header-actions,
-.tf-app-header-actions > * {
-  min-width: 0;
-}
-
-.tf-app-header-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.tf-app-header .tf-topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.tf-app-header-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  border-radius: 999px;
-  padding: 0 14px;
-  background: #f8fafc;
-  color: #071b3d;
-  font-weight: 900;
-}
-
-body.tf-has-app-header .tf-sidebar {
-  top: 60px;
-  height: calc(100vh - 60px);
-}
-
-body.tf-has-app-header .tf-topbar {
-  display: none;
-}
-
-body.tf-has-app-header .tf-student-main {
-  padding-top: 16px;
-}
-
-@media (max-width: 720px) {
-  .tf-app-header {
-    grid-template-columns: auto minmax(96px, 1fr) auto;
-    gap: 10px;
-    padding-inline: 12px;
-  }
-
-  .tf-app-header .tf-user-meta small,
-  .tf-app-header .tf-notifications-panel {
+  .tf-welcome-card::before,
+  .tf-panel-section::after {
     display: none;
   }
 
-  .tf-app-header .tf-user-chip {
-    width: auto;
-    max-width: 150px;
-    padding-right: 8px;
+  .tf-welcome-visual {
+    min-height: 160px;
   }
+
+  .tf-next-card {
+    min-height: auto;
+  }
+
+  .tf-shortcuts {
+    padding-right: 0;
+  }
+
+  .tf-panel-section::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .tf-sidebar-menu a {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: .82rem;
+  }
+
+  .sidebar-icon,
+  .tf-svg-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.15rem;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card,
+  .tf-stat-card,
+  .tf-panel-section {
+    border-radius: 20px;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.7rem;
+  }
+
+  .tf-actions,
+  .tf-cta-actions {
+    flex-direction: column;
+  }
+
+  .tf-btn,
+  .tf-link-action {
+    width: 100%;
+  }
+
+  .tf-stat-card {
+    grid-template-columns: 50px 1fr;
+    padding: 18px;
+  }
+
+  .tf-stat-icon {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+
+/* =====================================================
+   V2 - Portal estudiante multimonitor
+   Ajuste visual solamente. No toca JS ni Firebase.
+   Objetivo: aprovechar mejor PC, laptop, tablet y celular.
+===================================================== */
+
+/* Base desktop más controlada */
+.tf-student-layout {
+  width: min(100%, 1560px) !important;
+  padding: clamp(10px, 1.3vw, 18px) !important;
+  grid-template-columns: clamp(248px, 18vw, 284px) minmax(0, 1fr) !important;
+  gap: clamp(14px, 1.4vw, 22px) !important;
+}
+
+.tf-sidebar {
+  top: clamp(10px, 1.3vw, 18px) !important;
+  height: calc(100dvh - clamp(20px, 2.6vw, 36px)) !important;
+  min-height: 0 !important;
+  padding: clamp(16px, 1.5vw, 24px) !important;
+  gap: clamp(14px, 1.5vw, 22px) !important;
+}
+
+.tf-sidebar-logo {
+  min-height: clamp(54px, 5.8vh, 62px) !important;
+}
+
+.tf-sidebar-menu {
+  gap: clamp(6px, 1vh, 8px) !important;
+}
+
+.tf-sidebar-menu a {
+  min-height: clamp(42px, 5.8vh, 48px) !important;
+}
+
+.tf-sidebar-card {
+  min-height: clamp(150px, 23vh, 210px) !important;
+}
+
+.tf-sidebar-card::after {
+  min-height: clamp(70px, 11vh, 96px) !important;
+}
+
+/* Main más compacto y mejor distribuido */
+.tf-student-main main {
+  gap: clamp(12px, 1.4vw, 18px) !important;
+}
+
+.tf-topbar {
+  min-height: clamp(72px, 9vh, 92px) !important;
+  margin-bottom: clamp(10px, 1.2vw, 16px) !important;
+  padding: clamp(12px, 1.2vw, 16px) clamp(14px, 1.4vw, 24px) !important;
+}
+
+.tf-topbar h1 {
+  font-size: clamp(1.18rem, 1.6vw, 1.5rem) !important;
+}
+
+.tf-notification-btn {
+  width: clamp(46px, 5.7vh, 54px) !important;
+  height: clamp(46px, 5.7vh, 54px) !important;
+}
+
+.tf-user-chip {
+  min-height: clamp(50px, 6.5vh, 58px) !important;
+}
+
+.tf-user-avatar {
+  width: clamp(46px, 5.9vh, 54px) !important;
+  height: clamp(46px, 5.9vh, 54px) !important;
+}
+
+/* Dashboard: evitar que el texto se rompa palabra por palabra */
+.tf-dashboard-grid {
+  grid-template-columns: minmax(0, 1.38fr) minmax(300px, 0.82fr) !important;
+  gap: clamp(14px, 1.4vw, 22px) !important;
+}
+
+.tf-welcome-card {
+  min-height: clamp(238px, 34vh, 318px) !important;
+  padding: clamp(20px, 2vw, 34px) !important;
+  grid-template-columns: minmax(360px, 1.1fr) minmax(170px, 0.52fr) !important;
+  gap: clamp(12px, 1.6vw, 18px) !important;
+}
+
+.tf-welcome-card h2 {
+  max-width: 520px !important;
+  font-size: clamp(1.9rem, 2.7vw, 2.85rem) !important;
+  line-height: 1.05 !important;
+}
+
+.tf-welcome-card p {
+  max-width: 480px !important;
+  margin-top: clamp(10px, 1.4vw, 18px) !important;
+  font-size: clamp(0.88rem, 1vw, 1rem) !important;
+  line-height: 1.48 !important;
+}
+
+.tf-label {
+  margin-bottom: clamp(10px, 1.2vw, 16px) !important;
+  padding: 7px 13px !important;
+  font-size: 0.78rem !important;
+}
+
+.tf-actions {
+  margin-top: clamp(14px, 1.8vw, 22px) !important;
+}
+
+.tf-btn,
+.tf-link-action {
+  min-height: clamp(42px, 5.4vh, 48px) !important;
+  padding-inline: clamp(15px, 1.4vw, 20px) !important;
+}
+
+.tf-welcome-visual {
+  min-height: clamp(168px, 25vh, 220px) !important;
+  background-size: contain !important;
+}
+
+.tf-next-card {
+  min-height: clamp(238px, 34vh, 318px) !important;
+  padding: clamp(20px, 2vw, 26px) !important;
+}
+
+.tf-next-icon {
+  width: clamp(48px, 6.5vh, 58px) !important;
+  height: clamp(48px, 6.5vh, 58px) !important;
+  font-size: clamp(1.45rem, 2vw, 1.8rem) !important;
+}
+
+.tf-next-card h3 {
+  font-size: clamp(1.32rem, 1.8vw, 1.55rem) !important;
+  line-height: 1.12 !important;
+}
+
+/* Mantener 4 cards en monitores medianos como la referencia */
+.tf-stats-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: clamp(12px, 1.2vw, 18px) !important;
+}
+
+.tf-stat-card {
+  min-height: clamp(112px, 16vh, 142px) !important;
+  padding: clamp(15px, 1.4vw, 22px) !important;
+  grid-template-columns: clamp(44px, 5vw, 58px) 1fr !important;
+  gap: clamp(10px, 1.2vw, 16px) !important;
+}
+
+.tf-stat-icon {
+  width: clamp(42px, 5vw, 54px) !important;
+  height: clamp(42px, 5vw, 54px) !important;
+  font-size: clamp(1.25rem, 1.6vw, 1.55rem) !important;
+}
+
+.tf-stat-card strong {
+  font-size: clamp(1.25rem, 1.7vw, 1.65rem) !important;
+}
+
+.tf-stat-card p {
+  margin: 6px 0 8px !important;
+}
+
+/* Accesos rápidos en una fila cuando hay espacio */
+.tf-panel-section {
+  min-height: clamp(122px, 18vh, 160px) !important;
+  padding: clamp(18px, 1.6vw, 24px) !important;
+}
+
+.tf-panel-section::before {
+  width: clamp(105px, 10vw, 150px) !important;
+  height: clamp(88px, 8vw, 126px) !important;
+}
+
+.tf-panel-section::after {
+  right: clamp(125px, 12vw, 160px) !important;
+}
+
+.tf-shortcuts {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(9px, 1vw, 12px) !important;
+  padding-right: clamp(110px, 10vw, 150px) !important;
+}
+
+.tf-shortcuts a {
+  min-height: clamp(62px, 8.8vh, 74px) !important;
+  padding: clamp(10px, 1vw, 14px) !important;
+  grid-template-columns: clamp(32px, 3vw, 38px) 1fr !important;
+  column-gap: 10px !important;
+}
+
+.tf-shortcuts i {
+  width: clamp(32px, 3vw, 38px) !important;
+  height: clamp(32px, 3vw, 38px) !important;
+}
+
+.tf-shortcuts strong {
+  font-size: clamp(0.78rem, 0.9vw, 0.92rem) !important;
+}
+
+.tf-shortcuts span {
+  font-size: clamp(0.68rem, 0.75vw, 0.78rem) !important;
+}
+
+/* Laptop / monitor con poca altura */
+@media (min-width: 1081px) and (max-height: 790px) {
+  .tf-student-layout {
+    width: min(100%, 1500px) !important;
+    padding: 10px 14px !important;
+    grid-template-columns: 266px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .tf-sidebar {
+    top: 10px !important;
+    height: calc(100dvh - 20px) !important;
+    padding: 18px !important;
+    gap: 14px !important;
+    border-radius: 24px !important;
+  }
+
+  .tf-sidebar-logo {
+    min-height: 54px !important;
+  }
+
+  .tf-sidebar-logo::before {
+    width: 46px !important;
+    height: 46px !important;
+    background-size: 40px 40px !important;
+  }
+
+  .tf-sidebar-logo::after {
+    font-size: 1.16rem !important;
+  }
+
+  .tf-sidebar-menu a {
+    min-height: 42px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .tf-sidebar-card {
+    min-height: 154px !important;
+    padding: 14px !important;
+  }
+
+  .tf-sidebar-card p {
+    font-size: 0.82rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .tf-sidebar-card::after {
+    min-height: 64px !important;
+  }
+
+  .tf-topbar {
+    min-height: 72px !important;
+    margin-bottom: 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .tf-page-label {
+    font-size: 0.66rem !important;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.3rem !important;
+  }
+
+  .tf-topbar p {
+    font-size: 0.82rem !important;
+  }
+
+  .tf-dashboard-grid {
+    grid-template-columns: minmax(0, 1.48fr) minmax(300px, 0.82fr) !important;
+    gap: 14px !important;
+  }
+
+  .tf-welcome-card {
+    min-height: 238px !important;
+    padding: 22px !important;
+    grid-template-columns: minmax(380px, 1.18fr) minmax(150px, 0.45fr) !important;
+  }
+
+  .tf-label {
+    margin-bottom: 10px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .tf-welcome-card h2 {
+    max-width: 480px !important;
+    font-size: 2.15rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .tf-welcome-card p {
+    max-width: 450px !important;
+    margin-top: 10px !important;
+    font-size: 0.86rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .tf-actions {
+    margin-top: 14px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 160px !important;
+  }
+
+  .tf-next-card {
+    min-height: 238px !important;
+    padding: 20px !important;
+  }
+
+  .tf-next-icon {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 1.35rem !important;
+  }
+
+  .tf-next-card > span,
+  .tf-section-header span {
+    font-size: 0.7rem !important;
+  }
+
+  .tf-next-card h3 {
+    margin-bottom: 12px !important;
+    font-size: 1.35rem !important;
+  }
+
+  .tf-next-info {
+    gap: 8px !important;
+  }
+
+  .tf-next-info p {
+    font-size: 0.86rem !important;
+  }
+
+  .tf-stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 108px !important;
+    padding: 15px !important;
+  }
+
+  .tf-stat-card p {
+    font-size: 0.78rem !important;
+  }
+
+  .tf-stat-card small {
+    font-size: 0.76rem !important;
+  }
+
+  .tf-panel-section {
+    min-height: 118px !important;
+    padding: 17px 20px !important;
+  }
+
+  .tf-section-header h2 {
+    margin-bottom: 12px !important;
+    font-size: 1.12rem !important;
+  }
+
+  .tf-shortcuts {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 58px !important;
+  }
+}
+
+/* Monitores más estrechos: evitar desorden */
+@media (max-width: 1180px) {
+  .tf-student-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-sidebar {
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 14px !important;
+    border-radius: 24px !important;
+  }
+
+  .tf-sidebar-card {
+    display: none !important;
+  }
+
+  .tf-sidebar-menu {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .tf-sidebar-menu a {
+    justify-content: center !important;
+  }
+
+  .tf-dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-welcome-card {
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 0.45fr) !important;
+  }
+
+  .tf-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tf-shortcuts {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Tablet */
+@media (max-width: 780px) {
+  .tf-student-layout {
+    padding: 10px !important;
+    gap: 12px !important;
+  }
+
+  .tf-topbar {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    padding: 16px !important;
+  }
+
+  .tf-topbar-actions {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .tf-user-meta {
+    display: none !important;
+  }
+
+  .tf-sidebar-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tf-dashboard-grid,
+  .tf-stats-grid,
+  .tf-shortcuts {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-welcome-card {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
+
+  .tf-welcome-card::before,
+  .tf-panel-section::after {
+    display: none !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 150px !important;
+  }
+
+  .tf-next-card {
+    min-height: auto !important;
+  }
+
+  .tf-shortcuts {
+    padding-right: 0 !important;
+  }
+
+  .tf-panel-section::before {
+    display: none !important;
+  }
+}
+
+/* Celular */
+@media (max-width: 480px) {
+  .tf-sidebar-menu a {
+    min-height: 44px !important;
+    padding-inline: 10px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .sidebar-icon,
+  .tf-svg-icon {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.15rem !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card,
+  .tf-stat-card,
+  .tf-panel-section {
+    border-radius: 20px !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.7rem !important;
+  }
+
+  .tf-actions {
+    flex-direction: column !important;
+  }
+
+  .tf-btn,
+  .tf-link-action {
+    width: 100% !important;
+  }
+
+  .tf-stat-card {
+    grid-template-columns: 50px 1fr !important;
+    padding: 18px !important;
+  }
+
+  .tf-stat-icon {
+    width: 46px !important;
+    height: 46px !important;
+  }
+}
+
+
+/* =====================================================
+   V3 - Ajuste fino para mostrar “Accesos rápidos”
+   Objetivo: que el dashboard entre mejor en pantallas
+   de laptop/monitor con poca altura.
+===================================================== */
+
+/* Compactar un poco más sin perder el estilo premium */
+@media (min-width: 1081px) and (max-height: 840px) {
+  .tf-student-layout {
+    padding: 8px 14px !important;
+    gap: 14px !important;
+    grid-template-columns: 258px minmax(0, 1fr) !important;
+  }
+
+  .tf-student-main main {
+    gap: 10px !important;
+  }
+
+  .tf-sidebar {
+    top: 8px !important;
+    height: calc(100dvh - 16px) !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .tf-sidebar-logo {
+    min-height: 50px !important;
+  }
+
+  .tf-sidebar-logo::before {
+    width: 42px !important;
+    height: 42px !important;
+    background-size: 36px 36px !important;
+  }
+
+  .tf-sidebar-logo::after {
+    font-size: 1.08rem !important;
+  }
+
+  .tf-sidebar-menu {
+    gap: 5px !important;
+  }
+
+  .tf-sidebar-menu a {
+    min-height: 38px !important;
+    padding: 0 12px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .tf-sidebar-card {
+    min-height: 132px !important;
+    padding: 12px !important;
+  }
+
+  .tf-sidebar-card strong {
+    margin-bottom: 8px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .tf-sidebar-card p {
+    font-size: 0.76rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .tf-sidebar-card::after {
+    min-height: 54px !important;
+    background-size: contain !important;
+  }
+
+  .tf-topbar {
+    min-height: 62px !important;
+    margin-bottom: 8px !important;
+    padding: 10px 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .tf-page-label {
+    font-size: 0.62rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.18rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .tf-topbar p {
+    font-size: 0.76rem !important;
+  }
+
+  .tf-notification-btn {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .tf-user-chip {
+    min-height: 46px !important;
+  }
+
+  .tf-user-avatar {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .tf-dashboard-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(292px, 0.8fr) !important;
+    gap: 12px !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 205px !important;
+    padding: 18px 22px !important;
+    border-radius: 22px !important;
+  }
+
+  .tf-welcome-card {
+    grid-template-columns: minmax(360px, 1.22fr) minmax(140px, 0.42fr) !important;
+  }
+
+  .tf-label {
+    margin-bottom: 8px !important;
+    padding: 6px 12px !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .tf-welcome-card h2 {
+    max-width: 455px !important;
+    font-size: 1.9rem !important;
+    line-height: 1.03 !important;
+  }
+
+  .tf-welcome-card p {
+    max-width: 430px !important;
+    margin-top: 8px !important;
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .tf-actions {
+    margin-top: 10px !important;
+    gap: 10px !important;
+  }
+
+  .tf-btn,
+  .tf-link-action {
+    min-height: 38px !important;
+    padding-inline: 14px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 132px !important;
+    background-size: contain !important;
+  }
+
+  .tf-next-icon {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.24rem !important;
+  }
+
+  .tf-next-card > span {
+    margin-top: 10px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .tf-next-card h3 {
+    margin: 6px 0 9px !important;
+    font-size: 1.18rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-next-info {
+    gap: 6px !important;
+  }
+
+  .tf-next-info p {
+    font-size: 0.8rem !important;
+  }
+
+  .tf-next-card .tf-link-action {
+    margin-top: 10px !important;
+  }
+
+  .tf-stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 86px !important;
+    padding: 12px 14px !important;
+    grid-template-columns: 40px 1fr !important;
+    gap: 10px !important;
+    border-radius: 20px !important;
+  }
+
+  .tf-stat-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+    border-radius: 12px !important;
+  }
+
+  .tf-stat-card span {
+    font-size: 0.72rem !important;
+  }
+
+  .tf-stat-card strong {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+  }
+
+  .tf-stat-card p {
+    margin: 3px 0 5px !important;
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .tf-stat-card small {
+    font-size: 0.7rem !important;
+  }
+
+  .tf-panel-section {
+    min-height: 100px !important;
+    padding: 14px 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .tf-section-header span {
+    font-size: 0.66rem !important;
+  }
+
+  .tf-section-header h2 {
+    margin: 2px 0 10px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-shortcuts {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding-right: 124px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 50px !important;
+    padding: 8px 10px !important;
+    grid-template-columns: 30px 1fr !important;
+    column-gap: 8px !important;
+    border-radius: 14px !important;
+  }
+
+  .tf-shortcuts i {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 1rem !important;
+  }
+
+  .tf-shortcuts strong {
+    font-size: 0.72rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-shortcuts span {
+    font-size: 0.62rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-panel-section::before {
+    width: 112px !important;
+    height: 92px !important;
+    right: 14px !important;
+    bottom: 6px !important;
+    background-size: contain !important;
+  }
+
+  .tf-panel-section::after {
+    right: 118px !important;
+    top: 20px !important;
+  }
+}
+
+/* Pantallas muy bajas: prioridad máxima a que aparezcan accesos rápidos */
+@media (min-width: 1081px) and (max-height: 710px) {
+  .tf-sidebar-card {
+    display: none !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 188px !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.72rem !important;
+  }
+
+  .tf-welcome-card p {
+    display: none !important;
+  }
+
+  .tf-stats-grid {
+    gap: 8px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 78px !important;
+  }
+
+  .tf-panel-section {
+    min-height: 92px !important;
+  }
+}
+
+
+/* =====================================================
+   V4 - Mantener consejo rápido visible + menos scroll
+   Ajuste visual solamente. No toca JS ni Firebase.
+===================================================== */
+
+/* El consejo rápido ya no se oculta en pantallas bajas */
+@media (min-width: 1081px) and (max-height: 840px) {
+  .tf-sidebar-card {
+    display: block !important;
+    min-height: 118px !important;
+    padding: 10px 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .tf-sidebar-card strong {
+    margin-bottom: 5px !important;
+    font-size: 0.8rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-sidebar-card p {
+    max-width: 155px !important;
+    margin: 0 !important;
+    font-size: 0.68rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .tf-sidebar-card::after {
+    display: block !important;
+    width: 104px !important;
+    min-height: 56px !important;
+    right: 8px !important;
+    bottom: 5px !important;
+    background-size: contain !important;
+    opacity: 0.92 !important;
+  }
+}
+
+/* Pantallas MUY bajas: mostrar el consejo, pero mini */
+@media (min-width: 1081px) and (max-height: 710px) {
+  .tf-sidebar-card {
+    display: block !important;
+    min-height: 86px !important;
+    padding: 9px 10px !important;
+  }
+
+  .tf-sidebar-card strong {
+    font-size: 0.76rem !important;
+  }
+
+  .tf-sidebar-card p {
+    display: none !important;
+  }
+
+  .tf-sidebar-card::after {
+    width: 92px !important;
+    min-height: 58px !important;
+    right: 10px !important;
+    bottom: 3px !important;
+  }
+}
+
+/* Reducir un poco más el contenido principal para que entren los accesos */
+@media (min-width: 1081px) and (max-height: 840px) {
+  .tf-student-layout {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .tf-student-main main {
+    gap: 8px !important;
+  }
+
+  .tf-topbar {
+    min-height: 58px !important;
+    margin-bottom: 6px !important;
+    padding: 8px 15px !important;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.1rem !important;
+  }
+
+  .tf-topbar p {
+    font-size: 0.72rem !important;
+  }
+
+  .tf-notification-btn,
+  .tf-user-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .tf-user-chip {
+    min-height: 42px !important;
+  }
+
+  .tf-dashboard-grid {
+    gap: 10px !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 188px !important;
+    padding: 15px 18px !important;
+  }
+
+  .tf-label {
+    margin-bottom: 6px !important;
+    padding: 5px 11px !important;
+    font-size: 0.64rem !important;
+  }
+
+  .tf-welcome-card h2 {
+    max-width: 430px !important;
+    font-size: 1.68rem !important;
+    line-height: 1.03 !important;
+  }
+
+  .tf-welcome-card p {
+    max-width: 390px !important;
+    margin-top: 7px !important;
+    font-size: 0.74rem !important;
+    line-height: 1.24 !important;
+  }
+
+  .tf-actions {
+    margin-top: 8px !important;
+    gap: 8px !important;
+  }
+
+  .tf-btn,
+  .tf-link-action {
+    min-height: 34px !important;
+    padding-inline: 12px !important;
+    font-size: 0.76rem !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 122px !important;
+  }
+
+  .tf-next-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.12rem !important;
+  }
+
+  .tf-next-card h3 {
+    font-size: 1.06rem !important;
+    margin: 5px 0 7px !important;
+  }
+
+  .tf-next-info {
+    gap: 4px !important;
+  }
+
+  .tf-next-info p {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .tf-next-card .tf-link-action {
+    margin-top: 8px !important;
+  }
+
+  .tf-stats-grid {
+    gap: 8px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 76px !important;
+    padding: 10px 12px !important;
+    grid-template-columns: 34px 1fr !important;
+    gap: 8px !important;
+  }
+
+  .tf-stat-icon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 1rem !important;
+  }
+
+  .tf-stat-card span {
+    font-size: 0.66rem !important;
+  }
+
+  .tf-stat-card strong {
+    font-size: 1.02rem !important;
+  }
+
+  .tf-stat-card p {
+    margin: 2px 0 3px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .tf-stat-card small {
+    font-size: 0.64rem !important;
+  }
+
+  .tf-panel-section {
+    min-height: 86px !important;
+    padding: 12px 16px !important;
+  }
+
+  .tf-section-header span {
+    font-size: 0.62rem !important;
+  }
+
+  .tf-section-header h2 {
+    margin: 1px 0 8px !important;
+    font-size: 0.94rem !important;
+  }
+
+  .tf-shortcuts {
+    gap: 7px !important;
+    padding-right: 112px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 44px !important;
+    padding: 7px 9px !important;
+    grid-template-columns: 28px 1fr !important;
+  }
+
+  .tf-shortcuts i {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.94rem !important;
+  }
+
+  .tf-shortcuts strong {
+    font-size: 0.68rem !important;
+  }
+
+  .tf-shortcuts span {
+    display: none !important;
+  }
+
+  .tf-panel-section::before {
+    width: 100px !important;
+    height: 76px !important;
+    right: 10px !important;
+    bottom: 4px !important;
+  }
+
+  .tf-panel-section::after {
+    right: 105px !important;
+    top: 18px !important;
+  }
+}
+
+/* Si aún hay poco alto, reducir sin ocultar secciones */
+@media (min-width: 1081px) and (max-height: 710px) {
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 170px !important;
+  }
+
+  .tf-welcome-card p {
+    display: none !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.52rem !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 100px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 68px !important;
+  }
+
+  .tf-panel-section {
+    min-height: 78px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 40px !important;
+  }
+}
+
+
+/* =====================================================
+   V5 - Correcciones visuales portal estudiante
+   - Consejo rápido visible completo.
+   - Hero sin imagen duplicada/entrelazada.
+   - Sidebar sin badge amarillo estático.
+   - Menos scroll en monitores grandes y laptops.
+===================================================== */
+
+/* Quitar números/badges estáticos del menú lateral.
+   El badge real debe manejarse con JS en la campana/topbar. */
+.tf-sidebar-menu a[href*="notificaciones"] .tf-menu-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .sidebar-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .nav-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .badge,
+.tf-sidebar-menu a[href*="notificaciones"] .notification-count,
+.tf-sidebar-menu a[href*="notificaciones"] span:last-child:not(.sidebar-icon):not(.tf-svg-icon) {
+  display: none !important;
+}
+
+/* Consejo rápido: siempre con texto + imagen, pero compacto */
+.tf-sidebar-card {
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.tf-sidebar-card strong,
+.tf-sidebar-card p {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.tf-sidebar-card::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  right: 10px !important;
+  bottom: 8px !important;
+  width: 120px !important;
+  min-height: 86px !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: right bottom !important;
+  opacity: 0.95 !important;
+  z-index: 1 !important;
+}
+
+/* Hero: dejar una sola imagen de libros.
+   Si existe un <img> interno, se oculta para evitar imagen duplicada. */
+.tf-welcome-card img,
+.tf-welcome-visual img {
+  display: none !important;
+}
+
+.tf-welcome-card::before {
+  opacity: 1 !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center right !important;
+  pointer-events: none !important;
+}
+
+.tf-welcome-visual {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center right !important;
+}
+
+/* Desktop general: compactar un poco más sin esconder accesos */
+@media (min-width: 1081px) {
+  .tf-student-layout {
+    min-height: 100dvh !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .tf-student-main main {
+    gap: 8px !important;
+  }
+
+  .tf-topbar {
+    min-height: 58px !important;
+    margin-bottom: 6px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .tf-dashboard-grid {
+    gap: 10px !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 184px !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: clamp(1.62rem, 2.1vw, 2.2rem) !important;
+    line-height: 1.03 !important;
+  }
+
+  .tf-welcome-card p {
+    margin-top: 7px !important;
+    font-size: 0.76rem !important;
+    line-height: 1.26 !important;
+  }
+
+  .tf-actions {
+    margin-top: 8px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 118px !important;
+  }
+
+  .tf-next-card h3 {
+    font-size: 1.08rem !important;
+  }
+
+  .tf-stats-grid {
+    gap: 8px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 74px !important;
+    padding: 10px 12px !important;
+  }
+
+  .tf-stat-card p {
+    margin: 2px 0 3px !important;
+  }
+
+  .tf-panel-section {
+    min-height: 84px !important;
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+  }
+
+  .tf-section-header h2 {
+    margin-bottom: 8px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 42px !important;
+  }
+
+  .tf-shortcuts span {
+    display: none !important;
+  }
+}
+
+/* Pantalla grande: que se vea completo y con consejo */
+@media (min-width: 1400px) {
+  .tf-sidebar-card {
+    min-height: 140px !important;
+    padding: 13px 14px !important;
+  }
+
+  .tf-sidebar-card strong {
+    margin-bottom: 6px !important;
+    font-size: 0.86rem !important;
+  }
+
+  .tf-sidebar-card p {
+    max-width: 168px !important;
+    font-size: 0.74rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .tf-sidebar-card::after {
+    width: 118px !important;
+    min-height: 78px !important;
+  }
+}
+
+/* Laptop/monitor con poca altura: consejo mini pero con letras */
+@media (min-width: 1081px) and (max-height: 840px) {
+  .tf-sidebar {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    gap: 10px !important;
+  }
+
+  .tf-sidebar-menu a {
+    min-height: 36px !important;
+  }
+
+  .tf-sidebar-card {
+    min-height: 105px !important;
+    padding: 9px 11px !important;
+  }
+
+  .tf-sidebar-card strong {
+    margin-bottom: 4px !important;
+    font-size: 0.76rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-sidebar-card p {
+    display: block !important;
+    max-width: 146px !important;
+    font-size: 0.64rem !important;
+    line-height: 1.14 !important;
+  }
+
+  .tf-sidebar-card::after {
+    width: 92px !important;
+    min-height: 58px !important;
+    right: 8px !important;
+    bottom: 5px !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 176px !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.55rem !important;
+  }
+
+  .tf-welcome-card p {
+    display: block !important;
+    max-width: 380px !important;
+    font-size: 0.68rem !important;
+    line-height: 1.18 !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 102px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 66px !important;
+  }
+
+  .tf-panel-section {
+    min-height: 78px !important;
+  }
+}
+
+/* Altura muy baja: si aún hay scroll, solo reduce detalles, no quita consejo */
+@media (min-width: 1081px) and (max-height: 710px) {
+  .tf-topbar {
+    min-height: 52px !important;
+  }
+
+  .tf-topbar p,
+  .tf-page-label {
+    display: none !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 158px !important;
+  }
+
+  .tf-welcome-card p {
+    display: none !important;
+  }
+
+  .tf-sidebar-card {
+    min-height: 82px !important;
+  }
+
+  .tf-sidebar-card p {
+    display: block !important;
+    max-width: 128px !important;
+    font-size: 0.58rem !important;
+  }
+
+  .tf-sidebar-card::after {
+    width: 74px !important;
+    min-height: 48px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 38px !important;
+  }
+}
+
+
+/* =====================================================
+   V6 - Corrección Notificaciones + dropdown + consejo
+   Ajuste visual solamente. No toca JS ni Firebase.
+===================================================== */
+
+/* Restaurar palabra Notificaciones en el sidebar */
+.tf-sidebar-menu a[href*="notificaciones"] .sidebar-label,
+.tf-sidebar-menu a[href*="notificaciones"] span.sidebar-label,
+.tf-sidebar-menu a[href*="notificaciones"] span.sidebar-label:last-child:not(.sidebar-icon):not(.tf-svg-icon) {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ocultar solo el badge amarillo estático del sidebar */
+.tf-sidebar-menu a[href*="notificaciones"] .tf-sidebar-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .tf-menu-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .sidebar-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .nav-badge,
+.tf-sidebar-menu a[href*="notificaciones"] .badge-menu {
+  display: none !important;
+}
+
+/* El contador real se mantiene en la campana del header */
+.tf-notification-dot {
+  display: grid !important;
+}
+
+/* Dropdown de usuario y panel de notificaciones por encima de todas las cards */
+.tf-student-main,
+.tf-student-main main,
+.tf-topbar,
+.tf-topbar-actions,
+.tf-notification-area,
+.tf-user-area {
+  overflow: visible !important;
+}
+
+.tf-topbar {
+  position: relative !important;
+  z-index: 500 !important;
+}
+
+.tf-user-area,
+.tf-notification-area {
+  z-index: 700 !important;
+}
+
+.tf-user-dropdown,
+.tf-notifications-panel {
+  z-index: 9999 !important;
+  top: calc(100% + 10px) !important;
+}
+
+/* Para que las cards nunca tapen el menú */
+.tf-dashboard-grid,
+.tf-welcome-card,
+.tf-next-card,
+.tf-stats-grid,
+.tf-stat-card,
+.tf-panel-section {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Consejo rápido mejorado: texto + imagen, sin quedar vacío */
+.tf-sidebar-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  min-height: clamp(130px, 19vh, 175px) !important;
+  padding: 14px !important;
+  overflow: hidden !important;
+}
+
+.tf-sidebar-card span,
+.tf-sidebar-card p {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.tf-sidebar-card span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 6px !important;
+  color: var(--tf-dorado-2) !important;
+  font-size: clamp(0.78rem, 0.9vw, 0.95rem) !important;
+  line-height: 1.15 !important;
+}
+
+.tf-sidebar-card p {
+  display: block !important;
+  max-width: 190px !important;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.84) !important;
+  font-size: clamp(0.68rem, 0.82vw, 0.86rem) !important;
+  line-height: 1.34 !important;
+}
+
+.tf-sidebar-card::after {
+  position: relative !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  min-height: clamp(54px, 9vh, 78px) !important;
+  margin-top: auto !important;
+  display: block !important;
+  flex: 1 1 auto !important;
+  background: url("../assets/img/icono-libro-planta.png") center bottom / contain no-repeat !important;
+  opacity: 0.98 !important;
+  z-index: 1 !important;
+}
+
+/* Pantallas bajas: hacerlo compacto, pero sin quitar letras */
+@media (min-width: 1081px) and (max-height: 840px) {
+  .tf-sidebar-card {
+    min-height: 112px !important;
+    padding: 10px 12px !important;
+  }
+
+  .tf-sidebar-card span {
+    margin-bottom: 4px !important;
+    font-size: 0.74rem !important;
+  }
+
+  .tf-sidebar-card p {
+    max-width: 170px !important;
+    font-size: 0.62rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .tf-sidebar-card::after {
+    min-height: 50px !important;
+  }
+
+  .tf-topbar {
+    z-index: 500 !important;
+  }
+}
+
+/* Pantallas muy bajas: mantener el consejo visible, aunque más mini */
+@media (min-width: 1081px) and (max-height: 710px) {
+  .tf-sidebar-card {
+    min-height: 86px !important;
+    padding: 8px 10px !important;
+  }
+
+  .tf-sidebar-card span {
+    font-size: 0.68rem !important;
+  }
+
+  .tf-sidebar-card p {
+    display: block !important;
+    max-width: 160px !important;
+    font-size: 0.56rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .tf-sidebar-card::after {
+    min-height: 38px !important;
+  }
+}
+
+
+/* =====================================================
+   V7 - Ajuste fino header, hero, sidebar y scroll
+   Solo visual. No toca JS ni Firebase.
+===================================================== */
+
+/* Header: centrar mejor Hola, dani + emoji */
+.tf-topbar {
+  align-items: center !important;
+}
+
+.tf-topbar-greeting {
+  min-height: 44px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.tf-topbar-greeting h1,
+#tituloBienvenida {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  line-height: 1.05 !important;
+  margin: 0 !important;
+}
+
+.tf-topbar-greeting p {
+  margin-top: 2px !important;
+}
+
+/* Hero: evitar que se vea una segunda imagen de libros/birrete.
+   La imagen se amplía y se recorta dentro del contenedor. */
+.tf-welcome-card::before {
+  content: "✦" !important;
+  background: none !important;
+}
+
+.tf-welcome-visual {
+  overflow: hidden !important;
+  min-height: 116px !important;
+  background-image: url("../assets/img/icono-libros-birrete.png") !important;
+  background-repeat: no-repeat !important;
+  background-size: 148% auto !important;
+  background-position: 42% center !important;
+  filter: drop-shadow(0 18px 28px rgba(6, 26, 58, 0.12)) !important;
+}
+
+/* Que el hero use mejor el espacio sin alargarse */
+@media (min-width: 1081px) {
+  .tf-welcome-card {
+    min-height: 170px !important;
+    grid-template-columns: minmax(0, 1.38fr) minmax(172px, 0.45fr) !important;
+    align-items: center !important;
+  }
+
+  .tf-welcome-card h2 {
+    max-width: 560px !important;
+    font-size: clamp(1.48rem, 2.05vw, 2.05rem) !important;
+    line-height: 1.04 !important;
+  }
+
+  .tf-welcome-card p {
+    max-width: 430px !important;
+    font-size: 0.7rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .tf-actions {
+    margin-top: 8px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 118px !important;
+  }
+}
+
+/* Consejo rápido: más legible y más bonito */
+.tf-sidebar-card {
+  min-height: 128px !important;
+  padding: 12px 12px 10px !important;
+  border-radius: 18px !important;
+}
+
+.tf-sidebar-card span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  margin-bottom: 5px !important;
+  color: var(--tf-dorado-2) !important;
+  font-size: 0.78rem !important;
+  line-height: 1.1 !important;
+}
+
+.tf-sidebar-card p {
+  display: block !important;
+  max-width: 170px !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 0.64rem !important;
+  line-height: 1.18 !important;
+}
+
+.tf-sidebar-card::after {
+  display: block !important;
+  width: 96px !important;
+  min-height: 58px !important;
+  margin-top: auto !important;
+  background: url("../assets/img/icono-libro-planta.png") right bottom / contain no-repeat !important;
+  opacity: 0.95 !important;
+}
+
+/* Reducir un poquito más para que no se corte abajo */
+@media (min-width: 1081px) and (max-height: 860px) {
+  .tf-student-layout {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .tf-student-main main {
+    gap: 7px !important;
+  }
+
+  .tf-topbar {
+    min-height: 54px !important;
+    margin-bottom: 5px !important;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .tf-topbar h1 {
+    font-size: 1.05rem !important;
+  }
+
+  .tf-topbar p,
+  .tf-page-label {
+    font-size: 0.68rem !important;
+  }
+
+  .tf-dashboard-grid {
+    gap: 8px !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 164px !important;
+    padding: 12px 16px !important;
+  }
+
+  .tf-label {
+    margin-bottom: 6px !important;
+    padding: 5px 10px !important;
+    font-size: 0.6rem !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.42rem !important;
+  }
+
+  .tf-welcome-card p {
+    margin-top: 5px !important;
+    font-size: 0.64rem !important;
+    line-height: 1.18 !important;
+  }
+
+  .tf-btn,
+  .tf-link-action {
+    min-height: 32px !important;
+    padding-inline: 11px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .tf-next-card h3 {
+    font-size: 1rem !important;
+  }
+
+  .tf-next-info p {
+    font-size: 0.7rem !important;
+  }
+
+  .tf-stats-grid {
+    gap: 7px !important;
+  }
+
+  .tf-stat-card {
+    min-height: 62px !important;
+    padding: 8px 10px !important;
+    grid-template-columns: 32px 1fr !important;
+  }
+
+  .tf-stat-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .tf-stat-card p,
+  .tf-stat-card small {
+    font-size: 0.62rem !important;
+  }
+
+  .tf-panel-section {
+    min-height: 74px !important;
+    padding: 10px 14px !important;
+  }
+
+  .tf-section-header h2 {
+    margin-bottom: 7px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .tf-shortcuts {
+    padding-right: 100px !important;
+    gap: 6px !important;
+  }
+
+  .tf-shortcuts a {
+    min-height: 36px !important;
+    padding: 6px 8px !important;
+    grid-template-columns: 26px 1fr !important;
+  }
+
+  .tf-shortcuts i {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .tf-shortcuts strong {
+    font-size: 0.64rem !important;
+  }
+
+  .tf-panel-section::before {
+    width: 88px !important;
+    height: 66px !important;
+    right: 8px !important;
+    bottom: 3px !important;
+  }
+}
+
+/* Pantallas grandes: no dejar el hero demasiado alto */
+@media (min-width: 1500px) {
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 178px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 128px !important;
+    background-size: 142% auto !important;
+  }
+
+  .tf-panel-section {
+    min-height: 88px !important;
+  }
+}
+
+/* En pantallas muy bajas, prioridad: que no se corte la zona inferior */
+@media (min-width: 1081px) and (max-height: 720px) {
+  .tf-welcome-card p {
+    display: none !important;
+  }
+
+  .tf-welcome-card,
+  .tf-next-card {
+    min-height: 148px !important;
+  }
+
+  .tf-welcome-card h2 {
+    font-size: 1.28rem !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 92px !important;
+  }
+
+  .tf-panel-section {
+    min-height: 68px !important;
+  }
+
+  .tf-sidebar-card {
+    min-height: 82px !important;
+  }
+
+  .tf-sidebar-card p {
+    font-size: 0.56rem !important;
+  }
+
+  .tf-sidebar-card::after {
+    width: 78px !important;
+    min-height: 42px !important;
+  }
+}
+
+
+/* =====================================================
+   V8 - Ajuste visual final solicitado
+   - Hero sin imagen duplicada/entrelazada
+   - Consejo rápido mejor aprovechado
+   - Accesos rápidos con ilustración ocupando el espacio vacío
+   - Header más centrado visualmente
+===================================================== */
+
+.tf-topbar {
+  align-items: center !important;
+}
+
+.tf-topbar-greeting {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 48px !important;
+}
+
+.tf-topbar-greeting h1,
+#tituloBienvenida {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  line-height: 1.06 !important;
+  margin: 0 !important;
+}
+
+.tf-topbar-greeting p {
+  margin-top: 3px !important;
+}
+
+/* HERO: una sola ilustración, sin recortes raros */
+.tf-welcome-card {
+  grid-template-columns: minmax(0, 1.08fr) minmax(240px, 0.82fr) !important;
+  min-height: 246px !important;
+  gap: 16px !important;
+}
+
+.tf-welcome-card h2 {
+  max-width: 540px !important;
+  font-size: clamp(1.95rem, 2.7vw, 2.75rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.tf-welcome-card p {
+  max-width: 430px !important;
+  margin-top: 14px !important;
+  line-height: 1.42 !important;
+}
+
+.tf-welcome-visual {
+  min-height: 190px !important;
+  background: url("../assets/img/icono-libros-birrete.png") center right / 100% auto no-repeat !important;
+  filter: drop-shadow(0 18px 28px rgba(6, 26, 58, 0.12)) !important;
+}
+
+/* CONSEJO RÁPIDO: texto a un lado y libro en el espacio libre */
+.tf-sidebar-card {
+  min-height: 124px !important;
+  padding: 14px 14px 12px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 84px !important;
+  grid-template-rows: auto 1fr !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+}
+
+.tf-sidebar-card span {
+  grid-column: 1 / 2 !important;
+  grid-row: 1 / 2 !important;
+  margin: 0 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.1 !important;
+}
+
+.tf-sidebar-card p {
+  grid-column: 1 / 2 !important;
+  grid-row: 2 / 3 !important;
+  max-width: none !important;
+  margin: 4px 0 0 !important;
+  font-size: 0.66rem !important;
+  line-height: 1.16 !important;
+  color: rgba(255,255,255,.9) !important;
+}
+
+.tf-sidebar-card::after {
+  grid-column: 2 / 3 !important;
+  grid-row: 1 / 3 !important;
+  align-self: end !important;
+  justify-self: end !important;
+  width: 82px !important;
+  min-height: 62px !important;
+  margin-top: 0 !important;
+  background: url("../assets/img/icono-libro-planta.png") right bottom / contain no-repeat !important;
+  opacity: 1 !important;
+}
+
+/* ACCESOS RÁPIDOS: usar mejor el lado derecho */
+.tf-panel-section {
+  min-height: 142px !important;
+  padding: 18px 20px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 110px !important;
+  grid-template-areas:
+    "header art"
+    "shortcuts art" !important;
+  column-gap: 14px !important;
+  align-items: start !important;
+}
+
+.tf-section-header {
+  grid-area: header !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.tf-section-header h2 {
+  margin: 4px 0 12px !important;
+}
+
+.tf-shortcuts {
+  grid-area: shortcuts !important;
+  padding-right: 0 !important;
+  gap: 10px !important;
+}
+
+.tf-panel-section::before {
+  right: 10px !important;
+  bottom: 10px !important;
+  width: 96px !important;
+  height: 76px !important;
+  background: url("../assets/img/icono-mochila-libros.png") center / contain no-repeat !important;
+}
+
+.tf-panel-section::after {
+  right: 94px !important;
+  top: 26px !important;
+  font-size: 1.65rem !important;
+}
+
+/* Ajustes en pantallas grandes */
+@media (min-width: 1400px) {
+  .tf-welcome-card {
+    grid-template-columns: minmax(0, 1.12fr) minmax(250px, 0.78fr) !important;
+    min-height: 236px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 184px !important;
+    background-size: 98% auto !important;
+  }
+
+  .tf-panel-section {
+    min-height: 138px !important;
+    grid-template-columns: minmax(0, 1fr) 118px !important;
+  }
+
+  .tf-panel-section::before {
+    width: 102px !important;
+    height: 82px !important;
+  }
+}
+
+/* Ajustes en pantallas medianas */
+@media (max-width: 1200px) {
+  .tf-welcome-card {
+    grid-template-columns: minmax(0, 1fr) 220px !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 170px !important;
+    background-size: 96% auto !important;
+  }
+
+  .tf-panel-section {
+    grid-template-columns: minmax(0, 1fr) 94px !important;
+  }
+
+  .tf-panel-section::before {
+    width: 84px !important;
+    height: 68px !important;
+  }
+}
+
+
+/* =====================================================
+   V9 - Hero sin libros repetidos
+   Se deja de usar icono-libros-birrete.png porque aparece duplicado.
+===================================================== */
+
+.tf-welcome-card::before {
+  content: "✦" !important;
+  background: none !important;
+}
+
+/* La imagen antigua queda anulada completamente */
+.tf-welcome-visual {
+  min-height: 190px !important;
+  background-image: url("../assets/img/hero-libros-birrete-tutorflash.svg") !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background-position: center right !important;
+  filter: drop-shadow(0 18px 28px rgba(6, 26, 58, 0.12)) !important;
+}
+
+.tf-welcome-visual img {
+  display: none !important;
+}
+
+/* Para aprovechar el espacio sin duplicar imagen */
+@media (min-width: 1081px) {
+  .tf-welcome-card {
+    grid-template-columns: minmax(0, 1.05fr) minmax(220px, 0.55fr) !important;
+  }
+
+  .tf-welcome-visual {
+    min-height: 168px !important;
+    background-size: 96% auto !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .tf-welcome-visual {
+    min-height: 178px !important;
+    background-size: 94% auto !important;
+  }
+}
+
+@media (max-width: 780px) {
+  .tf-welcome-visual {
+    min-height: 150px !important;
+    background-position: center !important;
+    background-size: contain !important;
+  }
+}
+
+
+/* =====================================================
+   V10 - Ocultar header hamburguesa en PC/laptop
+   El menú hamburguesa solo debe servir en pantallas pequeñas.
+===================================================== */
+
+@media (min-width: 1081px) {
+  body.tf-student-page .tf-mobile-header,
+  body.tf-student-page .mobile-header,
+  body.tf-student-page .mobile-topbar,
+  body.tf-student-page .mobile-sidebar-header,
+  body.tf-student-page .tf-header-mobile,
+  body.tf-student-page .tf-responsive-header,
+  body.tf-student-page .tf-mobile-topbar,
+  body.tf-student-page .student-mobile-header,
+  body.tf-student-page .global-mobile-header,
+  body.tf-student-page .header-mobile,
+  body.tf-student-page .mobile-nav,
+  body.tf-student-page .hamburger,
+  body.tf-student-page .hamburger-btn,
+  body.tf-student-page .menu-toggle,
+  body.tf-student-page .sidebar-toggle,
+  body.tf-student-page .btn-menu,
+  body.tf-student-page #btnMenu,
+  body.tf-student-page #btnAbrirMenu,
+  body.tf-student-page #btnAbrirSidebar,
+  body.tf-student-page #btnSidebar,
+  body.tf-student-page #sidebarToggle,
+  body.tf-student-page [aria-label="Abrir menú"],
+  body.tf-student-page [aria-label="Abrir menu"],
+  body.tf-student-page [aria-label="Menú"],
+  body.tf-student-page [aria-label="Menu"] {
+    display: none !important;
+  }
+
+  body.tf-student-page {
+    padding-top: 0 !important;
+  }
+
+  body.tf-student-page .tf-student-layout {
+    margin-top: 0 !important;
+  }
+}
+
+/* En móvil sí puede mostrarse el menú responsive */
+@media (max-width: 1080px) {
+  body.tf-student-page .tf-mobile-header,
+  body.tf-student-page .mobile-header,
+  body.tf-student-page .mobile-topbar,
+  body.tf-student-page .mobile-sidebar-header,
+  body.tf-student-page .tf-header-mobile,
+  body.tf-student-page .tf-responsive-header,
+  body.tf-student-page .tf-mobile-topbar,
+  body.tf-student-page .student-mobile-header,
+  body.tf-student-page .global-mobile-header,
+  body.tf-student-page .header-mobile {
+    z-index: 10000 !important;
+  }
+}
+
+
+/* =====================================================
+   V8 - Menú Mi cuenta: correo arriba + contenido centrado
+   Solo visual. No toca JS ni Firebase.
+===================================================== */
+
+.tf-user-dropdown {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 0 !important;
+}
+
+.tf-user-dropdown-close {
+  align-self: flex-end !important;
+  order: 0 !important;
+}
+
+.tf-user-email,
+#correoUsuarioMenu {
+  order: 1 !important;
+  width: 100% !important;
+  margin: 0 auto 10px !important;
+  text-align: center !important;
+  line-height: 1.35 !important;
+  word-break: break-word !important;
+}
+
+.tf-user-dropdown-avatar,
+#avatarInicialesMenu {
+  order: 2 !important;
+  margin: 0 auto 12px !important;
+}
+
+.tf-user-dropdown h3,
+#saludoUsuarioMenu {
+  order: 3 !important;
+  width: 100% !important;
+  margin: 0 auto 14px !important;
+  text-align: center !important;
+}
+
+.tf-user-dropdown-btn {
+  order: 4 !important;
+  width: 100% !important;
+}
+
+.tf-user-dropdown-logout {
+  order: 5 !important;
+  width: 100% !important;
+}
+
+
+/* FIX V10 - Mostrar siempre el correo arriba en Mi cuenta */
+.tf-user-dropdown #correoUsuarioMenu,
+.tf-user-dropdown .tf-user-email {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  transform: none !important;
+  overflow: visible !important;
+  width: 100% !important;
+  max-width: 260px !important;
+  min-height: 18px !important;
+  margin: 0 auto 12px !important;
+  padding: 0 8px !important;
+  color: #64748b !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+  order: 1 !important;
+}
+
+.tf-user-dropdown #avatarInicialesMenu {
+  order: 2 !important;
+}
+
+.tf-user-dropdown #saludoUsuarioMenu {
+  order: 3 !important;
+}
+
+
+/* =====================================================
+   V11 - Sidebar premium compacto + Mi cuenta no flotante
+   Aplica a todo el portal estudiante. Solo visual.
+===================================================== */
+@media (min-width: 1081px) {
+  body.tf-student-page,
+  body:has(.tf-student-layout) {
+    overflow-x: hidden !important;
+  }
+
+  body.tf-student-page .tf-student-layout,
+  body:has(.tf-student-layout) .tf-student-layout {
+    width: min(100%, 1480px) !important;
+    max-width: 1480px !important;
+    margin-inline: auto !important;
+    padding: 8px 12px !important;
+    display: grid !important;
+    grid-template-columns: 202px minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  body.tf-student-page .tf-sidebar,
+  body:has(.tf-student-layout) .tf-sidebar {
+    position: sticky !important;
+    top: 8px !important;
+    height: calc(100dvh - 16px) !important;
+    min-height: 0 !important;
+    padding: 14px 12px !important;
+    gap: 10px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(244, 180, 0, 0.13), transparent 27%),
+      linear-gradient(180deg, #061a3a 0%, #071f45 52%, #06172f 100%) !important;
+    box-shadow: 0 24px 60px rgba(6, 26, 58, 0.22) !important;
+  }
+
+  body.tf-student-page .tf-sidebar::before,
+  body:has(.tf-student-layout) .tf-sidebar::before {
+    opacity: 0.18 !important;
+    background-size: 30px 30px !important;
+  }
+
+  body.tf-student-page .tf-sidebar-logo,
+  body:has(.tf-student-layout) .tf-sidebar-logo {
+    min-height: 48px !important;
+    padding: 8px 10px !important;
+    gap: 9px !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body.tf-student-page .tf-sidebar-logo::before,
+  body:has(.tf-student-layout) .tf-sidebar-logo::before {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 12px !important;
+    background-size: 30px 30px !important;
+  }
+
+  body.tf-student-page .tf-sidebar-logo::after,
+  body:has(.tf-student-layout) .tf-sidebar-logo::after {
+    font-size: 0.98rem !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  body.tf-student-page .tf-sidebar-menu,
+  body:has(.tf-student-layout) .tf-sidebar-menu {
+    gap: 6px !important;
+  }
+
+  body.tf-student-page .tf-sidebar-menu a,
+  body:has(.tf-student-layout) .tf-sidebar-menu a,
+  body.tf-student-page .sidebar-link,
+  body:has(.tf-student-layout) .sidebar-link {
+    min-height: 36px !important;
+    padding: 0 10px !important;
+    gap: 9px !important;
+    border-radius: 12px !important;
+    font-size: 0.78rem !important;
+    line-height: 1 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  body.tf-student-page .tf-sidebar-menu a:hover,
+  body:has(.tf-student-layout) .tf-sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.085) !important;
+    transform: translateX(1px) !important;
+  }
+
+  body.tf-student-page .tf-sidebar-menu a.active,
+  body.tf-student-page .tf-sidebar-menu a.is-active,
+  body.tf-student-page .tf-sidebar-menu a.activo,
+  body:has(.tf-student-layout) .tf-sidebar-menu a.active,
+  body:has(.tf-student-layout) .tf-sidebar-menu a.is-active,
+  body:has(.tf-student-layout) .tf-sidebar-menu a.activo {
+    color: #ffffff !important;
+    background: rgba(255, 199, 44, 0.14) !important;
+    border-color: rgba(255, 199, 44, 0.82) !important;
+    box-shadow: inset 3px 0 0 #f4b400 !important;
+  }
+
+  body.tf-student-page .sidebar-icon,
+  body.tf-student-page .tf-svg-icon,
+  body:has(.tf-student-layout) .sidebar-icon,
+  body:has(.tf-student-layout) .tf-svg-icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  body.tf-student-page .sidebar-icon svg,
+  body.tf-student-page .tf-svg-icon svg,
+  body:has(.tf-student-layout) .sidebar-icon svg,
+  body:has(.tf-student-layout) .tf-svg-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 2.1 !important;
+  }
+
+  /* No mostrar badges amarillos estáticos en el sidebar. El contador real queda en la campana del topbar. */
+  body.tf-student-page .tf-sidebar-badge,
+  body.tf-student-page .tf-menu-badge,
+  body.tf-student-page .sidebar-badge,
+  body.tf-student-page .nav-badge,
+  body.tf-student-page .badge-menu,
+  body:has(.tf-student-layout) .tf-sidebar-badge,
+  body:has(.tf-student-layout) .tf-menu-badge,
+  body:has(.tf-student-layout) .sidebar-badge,
+  body:has(.tf-student-layout) .nav-badge,
+  body:has(.tf-student-layout) .badge-menu {
+    display: none !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card,
+  body.tf-student-page .tf-sidebar-tip,
+  body:has(.tf-student-layout) .tf-sidebar-card,
+  body:has(.tf-student-layout) .tf-sidebar-tip {
+    margin-top: auto !important;
+    min-height: 120px !important;
+    padding: 12px 12px 10px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 72px !important;
+    grid-template-rows: auto 1fr !important;
+    column-gap: 8px !important;
+    align-items: start !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.13) !important;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035)),
+      radial-gradient(circle at 88% 84%, rgba(255, 199, 44, 0.16), transparent 38%) !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card span,
+  body.tf-student-page .tf-sidebar-tip strong,
+  body:has(.tf-student-layout) .tf-sidebar-card span,
+  body:has(.tf-student-layout) .tf-sidebar-tip strong {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
+    margin: 0 0 4px !important;
+    color: #ffc72c !important;
+    font-size: 0.68rem !important;
+    line-height: 1.08 !important;
+    font-weight: 900 !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card p,
+  body.tf-student-page .tf-sidebar-tip p,
+  body:has(.tf-student-layout) .tf-sidebar-card p,
+  body:has(.tf-student-layout) .tf-sidebar-tip p {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.56rem !important;
+    line-height: 1.15 !important;
+    font-weight: 750 !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card::after,
+  body.tf-student-page .tf-sidebar-tip::after,
+  body:has(.tf-student-layout) .tf-sidebar-card::after,
+  body:has(.tf-student-layout) .tf-sidebar-tip::after {
+    content: "" !important;
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 3 !important;
+    align-self: end !important;
+    justify-self: end !important;
+    display: block !important;
+    width: 72px !important;
+    min-height: 60px !important;
+    margin: 0 !important;
+    background: url("../assets/img/icono-libro-planta.png") right bottom / contain no-repeat !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 1081px) and (max-height: 760px) {
+  body.tf-student-page .tf-student-layout,
+  body:has(.tf-student-layout) .tf-student-layout {
+    grid-template-columns: 190px minmax(0, 1fr) !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  body.tf-student-page .tf-sidebar,
+  body:has(.tf-student-layout) .tf-sidebar {
+    top: 5px !important;
+    height: calc(100dvh - 10px) !important;
+    padding: 10px !important;
+    gap: 7px !important;
+  }
+
+  body.tf-student-page .tf-sidebar-menu a,
+  body:has(.tf-student-layout) .tf-sidebar-menu a {
+    min-height: 32px !important;
+    font-size: 0.72rem !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card,
+  body.tf-student-page .tf-sidebar-tip,
+  body:has(.tf-student-layout) .tf-sidebar-card,
+  body:has(.tf-student-layout) .tf-sidebar-tip {
+    min-height: 96px !important;
+    grid-template-columns: minmax(0, 1fr) 58px !important;
+  }
+
+  body.tf-student-page .tf-sidebar-card::after,
+  body.tf-student-page .tf-sidebar-tip::after,
+  body:has(.tf-student-layout) .tf-sidebar-card::after,
+  body:has(.tf-student-layout) .tf-sidebar-tip::after {
+    width: 58px !important;
+    min-height: 48px !important;
+  }
+}
+
+/* El menú de cuenta nunca debe quedar como bloque pegado al scroll. */
+body.tf-student-page .tf-user-area,
+body:has(.tf-student-layout) .tf-user-area {
+  position: relative !important;
+}
+
+body.tf-student-page .tf-user-dropdown,
+body:has(.tf-student-layout) .tf-user-dropdown {
+  position: absolute !important;
+  right: 0 !important;
+  top: calc(100% + 10px) !important;
+  z-index: 9999 !important;
+  width: min(330px, calc(100vw - 28px)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+
+/* =====================================================
+   V9 - Corrección menú Mi cuenta
+   Permite que la X, clic fuera y JS original cierren el menú.
+   Solo visual: no toca Firebase ni lógica de datos.
+===================================================== */
+
+.tf-user-dropdown.oculto,
+.tf-user-menu.oculto,
+.tf-notifications-panel.oculto,
+#menuUsuario.oculto,
+#panelNotificaciones.oculto {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.tf-user-dropdown:not(.oculto),
+#menuUsuario.tf-user-dropdown:not(.oculto) {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.tf-user-menu:not(.oculto),
+#menuUsuario.tf-user-menu:not(.oculto) {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }

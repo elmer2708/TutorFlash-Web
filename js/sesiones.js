@@ -1,9 +1,12 @@
 import {
   observarUsuario,
+  cerrarSesion,
+  obtenerPerfilUsuarioActual,
   obtenerMisSesiones,
   registrarPagoReserva,
   cancelarReservaEstudiante,
 } from "./firebase-service.js";
+import { mostrarAviso } from "./mensajes-ui.js";
 import {
   limitarTexto,
   validarMontoPositivo,
@@ -13,6 +16,18 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
   const estadoSesiones = document.querySelector("#estadoSesiones");
   const listaMisSesiones = document.querySelector("#listaMisSesiones");
+
+  const btnUsuario = document.querySelector("#btnUsuario");
+  const menuUsuario = document.querySelector("#menuUsuario");
+  const cerrarMenuUsuario = document.querySelector("#cerrarMenuUsuario");
+  const btnCerrarSesionPortal = document.querySelector(
+    "#btnCerrarSesionPortal",
+  );
+  const avatarIniciales = document.querySelector("#avatarIniciales");
+  const avatarInicialesMenu = document.querySelector("#avatarInicialesMenu");
+  const nombreUsuarioTop = document.querySelector("#nombreUsuarioTop");
+  const correoUsuarioMenu = document.querySelector("#correoUsuarioMenu");
+  const saludoUsuarioMenu = document.querySelector("#saludoUsuarioMenu");
 
   const statTotalSesiones = document.querySelector("#statTotalSesiones");
   const statPendientes = document.querySelector("#statPendientes");
@@ -61,6 +76,61 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function obtenerNombreUsuario(usuario, perfil) {
+    return (
+      perfil?.nombre ||
+      perfil?.nombreCompleto ||
+      perfil?.nombreUsuario ||
+      usuario?.displayName ||
+      "estudiante"
+    );
+  }
+
+  function obtenerIniciales(nombre, correo) {
+    const texto = String(nombre || correo || "Usuario").trim();
+    const partes = texto.replace("@", " ").split(" ").filter(Boolean);
+    const inicial1 = partes[0]?.charAt(0) || "U";
+    const inicial2 = partes[1]?.charAt(0) || "";
+
+    return `${inicial1}${inicial2}`.toUpperCase();
+  }
+
+  function mostrarDatosUsuario(usuario, perfil) {
+    const nombre = obtenerNombreUsuario(usuario, perfil);
+    const correo = usuario?.email || perfil?.correo || "correo@ejemplo.com";
+    const iniciales = obtenerIniciales(nombre, correo);
+
+    if (nombreUsuarioTop) {
+      nombreUsuarioTop.textContent = nombre;
+    }
+
+    if (correoUsuarioMenu) {
+      correoUsuarioMenu.textContent = correo;
+    }
+
+    if (saludoUsuarioMenu) {
+      saludoUsuarioMenu.textContent = `Hola, ${nombre}`;
+    }
+
+    if (avatarIniciales) {
+      avatarIniciales.textContent = iniciales;
+    }
+
+    if (avatarInicialesMenu) {
+      avatarInicialesMenu.textContent = iniciales;
+    }
+  }
+
+  async function cargarDatosUsuario(usuario) {
+    try {
+      const perfil = await obtenerPerfilUsuarioActual();
+      mostrarDatosUsuario(usuario, perfil);
+    } catch (error) {
+      console.error("Error al cargar perfil del estudiante:", error);
+      mostrarDatosUsuario(usuario, null);
+    }
   }
 
   function formatearFecha(fecha) {
@@ -745,6 +815,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (btnUsuario && menuUsuario) {
+    btnUsuario.addEventListener("click", () => {
+      menuUsuario.classList.toggle("oculto");
+    });
+  }
+
+  if (cerrarMenuUsuario && menuUsuario) {
+    cerrarMenuUsuario.addEventListener("click", () => {
+      menuUsuario.classList.add("oculto");
+    });
+  }
+
+  document.addEventListener("click", (evento) => {
+    if (
+      menuUsuario &&
+      btnUsuario &&
+      !menuUsuario.contains(evento.target) &&
+      !btnUsuario.contains(evento.target)
+    ) {
+      menuUsuario.classList.add("oculto");
+    }
+  });
+
+  if (btnCerrarSesionPortal) {
+    btnCerrarSesionPortal.addEventListener("click", async () => {
+      try {
+        await cerrarSesion();
+        window.location.href = "../index.html";
+      } catch (error) {
+        console.error(error);
+        mostrarAviso("No se pudo cerrar sesión.", "error");
+      }
+    });
+  }
+
   observarUsuario((usuario) => {
     if (!usuario) {
       mostrarEstado("Debes iniciar sesión para ver tus reservas.");
@@ -763,6 +868,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    cargarDatosUsuario(usuario);
     cargarSesiones();
   });
 });

@@ -1,19 +1,29 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash | Portal del estudiante</title>
-    <link rel="stylesheet" href="../css/estudiante.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
     <link rel="stylesheet" href="../css/icons.css" />
     <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v9-menu-close" />
+      <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
   </head>
 
-  <body>
+  <body class="tf-student-page">
     <div class="tf-student-layout">
       <!-- MENÚ LATERAL -->
-      <aside class="tf-sidebar">
-        <a href="../index.html" class="tf-sidebar-logo">
+      <aside class="tf-sidebar" aria-label="Menú del estudiante">
+        <a href="../index.html" class="tf-sidebar-logo" aria-label="Ir al inicio de TutorFlash">
           <img
             src="../assets/img/logo-tutorflash-transparente.png"
             alt="TutorFlash"
@@ -86,7 +96,8 @@
                 <path d="M10 21h4"></path>
               </svg>
             </span>
-            <span class="sidebar-label">Notificaciones</span>
+           <span class="sidebar-label">Notificaciones</span>
+            
           </a>
 
           <a href="sesiones.html" class="sidebar-link">
@@ -115,7 +126,7 @@
         </nav>
 
         <div class="tf-sidebar-card">
-          <span>Consejo rápido</span>
+          <span><i class="bi bi-lightbulb-fill"></i> Consejo rápido</span>
           <p>Reserva con anticipación para encontrar mejores horarios.</p>
         </div>
       </aside>
@@ -124,9 +135,10 @@
       <div class="tf-student-main">
         <!-- TOPBAR -->
         <header class="tf-topbar">
-          <div>
+          <div class="tf-topbar-greeting">
             <span class="tf-page-label">Portal del estudiante</span>
             <h1 id="tituloBienvenida">Hola, estudiante</h1>
+            <p>¡Qué bueno verte de nuevo!</p>
           </div>
 
           <div class="tf-topbar-actions">
@@ -190,6 +202,7 @@
                   <strong id="nombreUsuarioTop">Verificando...</strong>
                   <small>Mi cuenta</small>
                 </span>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
               </button>
 
               <div class="tf-user-dropdown oculto" id="menuUsuario">
@@ -231,38 +244,42 @@
           <!-- BIENVENIDA + PRÓXIMA TUTORÍA -->
           <section class="tf-dashboard-grid">
             <article class="tf-welcome-card">
-              <span class="tf-label">Tutorías rápidas antes de exámenes</span>
+              <div class="tf-welcome-copy">
+                <span class="tf-label"><i class="bi bi-lightning-charge-fill"></i> Tutorías rápidas antes de exámenes</span>
 
-              <h2>Organiza tus tutorías desde un solo lugar</h2>
+                <h2>Organiza tus tutorías desde un solo lugar</h2>
 
-              <p>
-                Busca tutores, reserva horarios disponibles y revisa el estado
-                de tus sesiones académicas desde tu portal.
-              </p>
+                <p>
+                  Encuentra tutores, reserva horarios disponibles y revisa el
+                  estado de tus sesiones académicas desde tu portal.
+                </p>
 
-              <div class="tf-actions">
-                <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
-                  Buscar tutor ahora
-                </a>
+                <div class="tf-actions">
+                  <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
+                    <i class="bi bi-search"></i> Buscar tutor ahora
+                  </a>
 
-                <a href="sesiones.html" class="tf-btn tf-btn-secondary">
-                  Ver mis sesiones
-                </a>
+                  <a href="sesiones.html" class="tf-btn tf-btn-secondary">
+                    <i class="bi bi-calendar-week"></i> Ver mis sesiones
+                  </a>
+                </div>
               </div>
+              <div class="tf-welcome-visual" aria-hidden="true"></div>
             </article>
 
             <article class="tf-next-card">
+              <div class="tf-next-icon" aria-hidden="true"><i class="bi bi-calendar2-week"></i></div>
               <span>Próxima tutoría</span>
 
               <h3 id="proximaCurso">Aún no hay próxima sesión</h3>
 
               <div class="tf-next-info">
-                <p><strong>Tutor:</strong> <span id="proximaTutor">-</span></p>
-                <p><strong>Fecha:</strong> <span id="proximaFecha">-</span></p>
-                <p><strong>Hora:</strong> <span id="proximaHora">-</span></p>
+                <p><i class="bi bi-person"></i><strong>Tutor:</strong> <span id="proximaTutor">-</span></p>
+                <p><i class="bi bi-calendar-event"></i><strong>Fecha:</strong> <span id="proximaFecha">-</span></p>
+                <p><i class="bi bi-clock"></i><strong>Hora:</strong> <span id="proximaHora">-</span></p>
 
                 <p>
-                  <strong>Estado:</strong>
+                  <i class="bi bi-check-circle"></i><strong>Estado:</strong>
                   <span id="proximaEstado" class="tf-status-pill">
                     Pendiente
                   </span>
@@ -270,7 +287,7 @@
               </div>
 
               <a href="sesiones.html" class="tf-link-action">
-                Revisar sesiones →
+                Revisar sesiones <i class="bi bi-arrow-right"></i>
               </a>
             </article>
           </section>
@@ -278,43 +295,55 @@
           <!-- RESUMEN -->
           <section class="tf-stats-grid">
             <article
-              class="tf-stat-card tf-stat-link"
+              class="tf-stat-card tf-stat-link is-purple"
               data-href="sesiones.html?filtro=pendiente"
             >
-              <span>Pendientes</span>
-              <strong id="totalPendientes">0</strong>
-              <p>Solicitudes enviadas</p>
-              <small>Ver detalle →</small>
+              <div class="tf-stat-icon"><i class="bi bi-clock-history"></i></div>
+              <div>
+                <span>Pendientes</span>
+                <strong id="totalPendientes">0</strong>
+                <p>Solicitudes enviadas</p>
+                <small>Ver detalle <i class="bi bi-arrow-right"></i></small>
+              </div>
             </article>
 
             <article
-              class="tf-stat-card tf-stat-link"
+              class="tf-stat-card tf-stat-link is-green"
               data-href="sesiones.html?filtro=aceptada"
             >
-              <span>Aceptadas</span>
-              <strong id="totalAceptadas">0</strong>
-              <p>Sesiones aceptadas</p>
-              <small>Ver detalle →</small>
+              <div class="tf-stat-icon"><i class="bi bi-check2-circle"></i></div>
+              <div>
+                <span>Aceptadas</span>
+                <strong id="totalAceptadas">0</strong>
+                <p>Sesiones aceptadas</p>
+                <small>Ver detalle <i class="bi bi-arrow-right"></i></small>
+              </div>
             </article>
 
             <article
-              class="tf-stat-card tf-stat-link"
+              class="tf-stat-card tf-stat-link is-blue"
               data-href="sesiones.html?filtro=finalizada"
             >
-              <span>Finalizadas</span>
-              <strong id="totalRealizadas">0</strong>
-              <p>Tutorías completadas</p>
-              <small>Ver detalle →</small>
+              <div class="tf-stat-icon"><i class="bi bi-calendar-check"></i></div>
+              <div>
+                <span>Finalizadas</span>
+                <strong id="totalRealizadas">0</strong>
+                <p>Tutorías completadas</p>
+                <small>Ver detalle <i class="bi bi-arrow-right"></i></small>
+              </div>
             </article>
 
             <article
-              class="tf-stat-card tf-stat-link"
+              class="tf-stat-card tf-stat-link is-gold"
               data-href="sesiones.html?filtro=pago-pendiente"
             >
-              <span>Pagos pendientes</span>
-              <strong id="totalInvertido">0</strong>
-              <p>Reservas por pagar</p>
-              <small>Ver detalle →</small>
+              <div class="tf-stat-icon"><i class="bi bi-credit-card"></i></div>
+              <div>
+                <span>Pagos pendientes</span>
+                <strong id="totalInvertido">0</strong>
+                <p>Reservas por pagar</p>
+                <small>Ver detalle <i class="bi bi-arrow-right"></i></small>
+              </div>
             </article>
           </section>
 
@@ -329,33 +358,44 @@
 
             <div class="tf-shortcuts">
               <a href="buscar-tutor.html">
+                <i class="bi bi-search"></i>
                 <strong>Buscar tutor</strong>
-                <span>Encuentra apoyo por curso, horario y precio.</span>
+                <span>Encuentra el ideal</span>
               </a>
 
               <a href="agenda-estudiante.html">
+                <i class="bi bi-calendar-week"></i>
                 <strong>Mi agenda</strong>
-                <span>Revisa tus próximas clases virtuales.</span>
-              </a>
-
-              <a href="tutores.html">
-                <strong>Ver tutores</strong>
-                <span>Revisa los tutores activos de TutorFlash.</span>
+                <span>Ver mis clases</span>
               </a>
 
               <a href="sesiones.html">
+                <i class="bi bi-list-task"></i>
                 <strong>Mis sesiones</strong>
-                <span>Consulta tus reservas pendientes y finalizadas.</span>
+                <span>Gestiona tus tutorías</span>
+              </a>
+
+              <a href="favoritos.html">
+                <i class="bi bi-star"></i>
+                <strong>Favoritos</strong>
+                <span>Tutores guardados</span>
+              </a>
+
+              <a href="notificaciones.html">
+                <i class="bi bi-bell"></i>
+                <strong>Notificaciones</strong>
+                <span>Tus avisos</span>
               </a>
             </div>
           </section>
         </main>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
-    <script type="module" src="../js/estudiante.js"></script>
+<script type="module" src="../js/estudiante.js"></script>
     <script type="module" src="../js/chat.js"></script>
   </body>
 </html>

@@ -1,16 +1,26 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Disponibilidad Tutor | TutorFlash</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
 
-    <link rel="stylesheet" href="../css/disponibilidad-tutor.css" />
-    <link rel="stylesheet" href="../css/panel-tutor.css" />
+    <link rel="stylesheet" href="../css/disponibilidad-tutor.css?v=tf-tutor-premium-v1" />
+    <link rel="stylesheet" href="../css/panel-tutor.css?v=tf-tutor-premium-v1" />
       <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css?v=tf-redesign2" />
   </head>
-  <body>
+  <body class="tf-tutor-page tf-tutor-availability-page tf-tutor-page tf-tutor-availability-page">
         <aside class="tutor-sidebar">
       <a href="../index.html" class="sidebar-logo" aria-label="TutorFlash">
         <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
@@ -50,8 +60,8 @@
       </nav>
 
       <div class="tf-sidebar-card tutor-sidebar-card">
-        <span>Consejo rapido</span>
-        <p>Manten tu perfil, disponibilidad y pagos al dia para recibir reservas.</p>
+        <span>Consejo rápido</span>
+        <p>Mantén tu perfil, disponibilidad y pagos al dia para recibir reservas.</p>
       </div>
     </aside>
 
@@ -59,7 +69,7 @@
       <header class="tutor-topbar">
         <div>
           <span class="tutor-topbar-label">Portal tutor</span>
-          <strong>Gestion de tutorias</strong>
+          <strong>Gestión de tutorias</strong>
         </div>
 
         <div class="tf-user-area tutor-user-area">
@@ -72,12 +82,12 @@
           </button>
 
           <div class="tf-user-dropdown oculto" id="menuUsuarioTutor">
-            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">x</button>
+            <button class="tf-user-dropdown-close" id="cerrarMenuTutor" type="button">×</button>
             <p class="tf-user-email" id="correoTutorMenu">correo@ejemplo.com</p>
             <div class="tf-user-dropdown-avatar" id="avatarTutorMenu">TF</div>
             <h3 id="saludoTutorMenu">Hola, tutor</h3>
             <a class="tf-user-dropdown-btn" href="perfil-tutor.html">Ver perfil tutor</a>
-            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesion</button>
+            <button class="tf-user-dropdown-logout" id="btnCerrarSesionTutor" type="button">Cerrar sesión</button>
           </div>
         </div>
       </header>
@@ -89,7 +99,7 @@
           <h1>Mi disponibilidad</h1>
 
           <p>
-            Configura los días y horarios en los que puedes recibir reservas de
+            Configura los das y horarios en los que puedes recibir reservas de
             estudiantes.
           </p>
         </div>
@@ -102,8 +112,8 @@
           <h2>Horario semanal</h2>
 
           <p>
-            Agrega bloques de tiempo según los días que puedes enseñar. Más
-            adelante, el estudiante solo podrá reservar dentro de estos
+            Agrega bloques de tiempo segn los das que puedes ensear. Ms
+            adelante, el estudiante solo podr reservar dentro de estos
             horarios.
           </p>
 
@@ -111,7 +121,7 @@
             <strong>Ejemplo</strong>
             <p>Lunes de 16:00 a 20:00</p>
             <p>Martes de 17:00 a 21:00</p>
-            <p>Sábado de 09:00 a 13:00</p>
+            <p>Sbado de 09:00 a 13:00</p>
           </div>
 
           <div class="estado-card">
@@ -134,16 +144,16 @@
               </div>
 
               <div class="form-grupo">
-                <label for="diaHorario">Día</label>
+                <label for="diaHorario">Da</label>
 
                 <select id="diaHorario" disabled>
                   <option value="">Selecciona una fecha</option>
                   <option value="lunes">Lunes</option>
                   <option value="martes">Martes</option>
-                  <option value="miercoles">Miércoles</option>
+                  <option value="miercoles">Mircoles</option>
                   <option value="jueves">Jueves</option>
                   <option value="viernes">Viernes</option>
-                  <option value="sabado">Sábado</option>
+                  <option value="sabado">Sbado</option>
                   <option value="domingo">Domingo</option>
                 </select>
               </div>
@@ -186,12 +196,13 @@
 
           <div id="listaBloquesHorario" class="bloques-lista">
             <div class="empty-state">
-              Todavía no agregaste horarios disponibles.
+              Todava no agregaste horarios disponibles.
             </div>
           </div>
         </section>
       </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/tutor-account.js"></script>

@@ -1,24 +1,31 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notificaciones | TutorFlash</title>
-    <link rel="stylesheet" href="../css/estudiante.css" />
-    <link rel="stylesheet" href="../css/notificaciones.css" />
-      <link rel="stylesheet" href="../css/chat.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v8-dropdown-email" />
+    <link rel="stylesheet" href="../css/notificaciones.css?v=tf-notificaciones-premium-v2" />
+    <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
   </head>
-  <body>
+  <body class="tf-student-page tf-notifications-page">
     <main class="tf-student-layout">
       <aside class="tf-sidebar">
-        <div class="tf-sidebar-logo">
-          <img
-            src="../assets/img/logo-tutorflash-transparente.png"
-            alt="TutorFlash"
-          />
-        </div>
+        <a href="../index.html" class="tf-sidebar-logo">
+          <img src="../assets/img/logo-tutorflash-transparente.png" alt="TutorFlash" />
+        </a>
 
-                <nav class="tf-sidebar-menu">
+        <nav class="tf-sidebar-menu">
           <a href="estudiante.html" class="sidebar-link">
             <span class="sidebar-icon tf-svg-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
@@ -74,64 +81,65 @@
             </span>
             <span class="sidebar-label">Mi perfil</span>
           </a>
-
         </nav>
 
         <div class="tf-sidebar-tip">
           <strong>Consejo rápido</strong>
-          <p>
-            Revisa tus avisos antes de cada clase para no perder horarios
-            importantes.
-          </p>
+          <p>Revisa tus avisos antes de cada clase para no perder cambios de horario, pagos o enlaces de acceso.</p>
         </div>
       </aside>
 
       <section class="tf-student-main">
         <header class="tf-student-topbar">
-          <div>
+          <div class="tf-topbar-copy">
             <span class="tf-section-label">Notificaciones</span>
             <h1 id="tituloBienvenida">Tus avisos importantes</h1>
+            <p>Todo lo importante de tus reservas, pagos y clases en un solo lugar.</p>
           </div>
 
           <div class="tf-topbar-actions">
-            <a
-              href="notificaciones.html"
-              class="tf-icon-btn"
-              title="Notificaciones"
-            >
-              🔔
+            <a href="notificaciones.html" class="tf-icon-btn" title="Notificaciones" aria-label="Notificaciones">
+              <i class="bi bi-bell"></i>
               <span class="tf-notification-dot" id="contadorNotificaciones">0</span>
             </a>
 
-            <button type="button" id="btnUsuario" class="tf-user-btn">
-              <span id="avatarIniciales">E</span>
+            <button type="button" id="btnUsuario" class="tf-user-btn tf-user-chip">
+              <span class="tf-user-chip-avatar" id="avatarIniciales">E</span>
+              <span class="tf-user-chip-meta">
+                <strong>Mi cuenta</strong>
+                <small>Perfil y sesión</small>
+              </span>
+              <i class="bi bi-chevron-down"></i>
             </button>
 
             <div id="menuUsuario" class="tf-user-menu oculto">
-              <div class="tf-user-menu-header">
-                <div id="avatarInicialesMenu" class="tf-user-menu-avatar">
-                  E
-                </div>
-                <div>
-                  <strong id="saludoUsuarioMenu">¡Hola!</strong>
-                  <p id="correoUsuarioMenu">correo@ejemplo.com</p>
-                </div>
-              </div>
-
-              <button type="button" id="btnCerrarSesionPortal">
-                Cerrar sesión
-              </button>
+              <p id="correoUsuarioMenu">correo@ejemplo.com</p>
+              <div id="avatarInicialesMenu" class="tf-user-menu-avatar">E</div>
+              <strong id="saludoUsuarioMenu">¡Hola!</strong>
+              <a href="perfil-estudiante.html" class="tf-user-menu-link">Ver perfil del estudiante</a>
+              <button type="button" id="btnCerrarSesionPortal">Cerrar sesión</button>
             </div>
           </div>
         </header>
 
-        <section class="tf-content-card">
-          <span class="tf-section-label">Centro de avisos</span>
-          <h2>Mis notificaciones</h2>
+        <section class="tf-content-card tf-notifications-board">
+          <div class="tf-board-head">
+            <div>
+              <span class="tf-section-label">Centro de avisos</span>
+              <h2>Mis notificaciones</h2>
+              <p id="estadoNotificaciones" class="tf-section-subtitle">
+                Cargando notificaciones...
+              </p>
+            </div>
 
-          <p id="estadoNotificaciones" class="tf-section-subtitle">
-            Cargando notificaciones...
-          </p>
+            <div class="tf-board-badge">
+              <span class="tf-board-badge-icon"><i class="bi bi-stars"></i></span>
+              <div>
+                <strong>Avisos inteligentes</strong>
+                <small>Pagos, enlaces y clases del día.</small>
+              </div>
+            </div>
+          </div>
 
           <div id="listaNotificaciones" class="tf-notifications-list">
             <!-- Aquí se cargan las notificaciones reales -->
@@ -140,12 +148,10 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
     <script type="module" src="../js/notificaciones.js"></script>
-      <script type="module" src="../js/chat.js"></script>
+    <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
-
-
-

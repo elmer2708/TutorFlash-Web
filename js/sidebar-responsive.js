@@ -13,9 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.createElement("div");
   const brand = document.createElement("a");
   const actions = document.createElement("div");
-  const existingActions = document.querySelector(
-    ".tf-topbar-actions, .tutor-user-area, .admin-topbar-actions",
-  );
+  const mobileLogout = document.createElement("button");
 
   if (!document.getElementById("tf-app-header-styles")) {
     const styles = document.createElement("style");
@@ -26,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inset: 0 0 auto 0;
         z-index: 160;
         min-height: 60px;
-        display: grid;
+        display: none;
         grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
         gap: 14px;
@@ -35,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         border-bottom: 1px solid rgba(7, 27, 61, 0.08);
         box-shadow: 0 12px 28px rgba(7, 27, 61, 0.1);
       }
-      body.tf-has-app-header { padding-top: 60px; }
+      body.tf-has-app-header { padding-top: 0; }
       .tf-app-header .tf-menu-toggle,
       .tf-app-header-link {
         position: static;
@@ -79,13 +77,67 @@ document.addEventListener("DOMContentLoaded", () => {
       body.tf-has-app-header .perfil-sidebar,
       body.tf-has-app-header .disponibilidad-sidebar,
       body.tf-has-app-header .admin-sidebar {
-        top: 60px;
-        height: calc(100vh - 60px);
+        top: 0;
+        height: 100vh;
       }
       body.tf-has-app-header .tf-topbar,
+      body.tf-has-app-header .tf-student-topbar,
       body.tf-has-app-header .tutor-topbar,
       body.tf-has-app-header .admin-topbar {
-        display: none;
+        display: flex;
+      }
+      body.tf-has-app-header .tf-student-main,
+      body.tf-has-app-header .tutor-main,
+      body.tf-has-app-header .perfil-main,
+      body.tf-has-app-header .disponibilidad-main,
+      body.tf-has-app-header .admin-content {
+        padding-top: 0;
+      }
+      body.tf-has-app-header .chat-shell {
+        min-height: 100vh;
+      }
+      body.tf-has-app-header .chat-layout {
+        min-height: calc(100vh - 48px);
+      }
+      @media (max-width: 900px) {
+        .tf-app-header {
+          display: grid;
+        }
+        body.tf-has-app-header {
+          padding-top: 60px;
+        }
+        body.tf-has-app-header .tf-sidebar,
+        body.tf-has-app-header .tutor-sidebar,
+        body.tf-has-app-header .perfil-sidebar,
+        body.tf-has-app-header .disponibilidad-sidebar,
+        body.tf-has-app-header .admin-sidebar {
+          top: 60px;
+          height: calc(100vh - 60px);
+        }
+        body.tf-has-app-header .tf-topbar,
+        body.tf-has-app-header .tf-student-topbar,
+        body.tf-has-app-header .tutor-topbar,
+        body.tf-has-app-header .admin-topbar {
+          display: none;
+        }
+        body.tf-has-app-header .tf-student-main,
+        body.tf-has-app-header .tutor-main,
+        body.tf-has-app-header .perfil-main,
+        body.tf-has-app-header .disponibilidad-main,
+        body.tf-has-app-header .admin-content {
+          padding-top: 16px;
+        }
+        body.tf-has-app-header .chat-shell {
+          min-height: calc(100vh - 60px);
+        }
+        body.tf-has-app-header .chat-layout {
+          min-height: calc(100vh - 108px);
+        }
+      }
+      @media (max-width: 760px) {
+        body.tf-has-app-header .chat-layout {
+          min-height: calc(100vh - 60px);
+        }
       }
       @media (max-width: 620px) {
         .tf-app-header {
@@ -115,32 +167,36 @@ document.addEventListener("DOMContentLoaded", () => {
   brand.href = "../index.html";
   brand.textContent = "TutorFlash";
 
+  const esTutor = !!document.querySelector(".tutor-sidebar") || !!document.querySelector(".perfil-sidebar") || !!document.querySelector(".disponibilidad-sidebar");
+  const esAdmin = !!document.querySelector(".admin-sidebar");
+  const notificacionesHref = esAdmin ? "admin.html" : (esTutor ? "panel-tutor.html#reservas" : "notificaciones.html");
+  const perfilHref = esAdmin ? "admin.html" : (esTutor ? "perfil-tutor.html" : "perfil-estudiante.html");
+  const perfilLabel = esAdmin ? "Panel" : "Perfil";
+
   actions.className = "tf-app-header-actions";
-
-  if (existingActions) {
-    actions.append(existingActions);
-
-    if (!actions.querySelector(".tf-notification-btn")) {
-      actions.insertAdjacentHTML(
-        "afterbegin",
-        '<a class="tf-app-header-link" href="notificaciones.html" aria-label="Ver notificaciones">🔔</a>',
-      );
-    }
-
-    if (!actions.querySelector(".tf-user-chip")) {
-      actions.insertAdjacentHTML(
-        "beforeend",
-        '<a class="tf-app-header-link" href="perfil-estudiante.html">Perfil</a>',
-      );
-    }
-  } else {
-    actions.innerHTML = `
-      <a class="tf-app-header-link" href="notificaciones.html" aria-label="Ver notificaciones">🔔</a>
-      <a class="tf-app-header-link" href="perfil-estudiante.html">Perfil</a>
-    `;
-  }
+  actions.innerHTML = `
+    <a class="tf-app-header-link" href="${notificacionesHref}" aria-label="Acceso rápido">🔔</a>
+    <a class="tf-app-header-link" href="${perfilHref}">${perfilLabel}</a>
+  `;
 
   overlay.className = "tf-sidebar-overlay";
+
+  mobileLogout.type = "button";
+  mobileLogout.className = "tf-mobile-sidebar-logout";
+  mobileLogout.innerHTML = '<span aria-hidden="true">⏻</span><span>Cerrar sesión</span>';
+  mobileLogout.addEventListener("click", () => {
+    const logoutButton = document.querySelector("#btnCerrarSesionPortal, #btnCerrarSesionAdmin, #btnCerrarSesionTutor");
+    if (logoutButton) {
+      logoutButton.click();
+      return;
+    }
+
+    window.location.href = "cuenta.html";
+  });
+
+  if (sidebar && !sidebar.querySelector(".tf-mobile-sidebar-logout")) {
+    sidebar.append(mobileLogout);
+  }
 
   function cerrarMenu() {
     document.body.classList.remove("tf-sidebar-open");

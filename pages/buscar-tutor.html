@@ -1,16 +1,26 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash | Buscar tutor</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
 
-    <link rel="stylesheet" href="../css/estudiante.css" />
-    <link rel="stylesheet" href="../css/buscar-tutor.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v9-menu-close" />
+    <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
+    <link rel="stylesheet" href="../css/buscar-tutor.css?v=tf-buscar-v10-sidebar-dropdown" />
     <link rel="stylesheet" href="../css/chat.css" />
   </head>
 
-  <body>
+  <body class="tf-student-page tf-buscar-page">
     <div class="tf-student-layout">
       <!-- MENÚ LATERAL -->
       <aside class="tf-sidebar">
@@ -125,9 +135,10 @@
       <div class="tf-student-main">
         <!-- TOPBAR -->
         <header class="tf-topbar">
-          <div>
-            <span class="tf-page-label">Buscar tutor</span>
-            <h1 id="tituloBienvenida">Encuentra tu tutor 🔎</h1>
+          <div class="tf-topbar-greeting">
+            <span class="tf-page-label">C. Buscar tutor</span>
+            <h1 id="tituloBienvenida">¡Hola, estudiante! 👋</h1>
+            <p>Qué bueno verte de nuevo.</p>
           </div>
 
           <div class="tf-topbar-actions">
@@ -138,8 +149,12 @@
                 class="tf-notification-btn"
                 href="notificaciones.html"
                 title="Notificaciones"
-              >
-                🔔
+              ><span class="tf-svg-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                    <path d="M10 21h4"></path>
+                  </svg>
+                </span>
                 <span class="tf-notification-dot" id="contadorNotificaciones"
                   >0</span
                 >
@@ -156,17 +171,17 @@
 
                 <div class="tf-notification-list">
                   <article class="tf-notification-item">
-                    <strong>🔎 Búsqueda activa</strong>
+                    <strong> Búsqueda activa</strong>
                     <p>Filtra tutores por curso, modalidad y precio.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>📅 Disponibilidad real</strong>
+                    <strong> Disponibilidad real</strong>
                     <p>Los horarios se mostrarán según cada tutor.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>💳 Pago pendiente</strong>
+                    <strong> Pago pendiente</strong>
                     <p>La reserva quedará con pago pendiente.</p>
                   </article>
                 </div>
@@ -221,35 +236,39 @@
 
         <main>
           <!-- INTRO -->
-          <section class="tf-search-hero">
-            <div>
-              <span class="tf-label">Buscar tutor</span>
-              <h2>Reserva una tutoría rápida</h2>
+          <section class="tf-search-hero" aria-labelledby="buscarHeroTitulo">
+            <div class="tf-search-hero-copy">
+              <span class="tf-label"><i class="bi bi-lightning-fill" aria-hidden="true"></i> Buscar tutor</span>
+              <h2 id="buscarHeroTitulo">Reserva una tutoría rápida</h2>
               <p>
                 Encuentra tutores activos, revisa sus cursos, precios y
                 disponibilidad real antes de reservar.
               </p>
             </div>
 
-            <a href="agenda-estudiante.html" class="tf-btn tf-btn-secondary">
+            <div class="tf-search-hero-visual" aria-hidden="true"></div>
+
+            <a href="agenda-estudiante.html" class="tf-btn tf-btn-secondary tf-hero-action">
               Ver mi agenda
             </a>
           </section>
 
           <!-- BUSCADOR -->
-          <section class="tf-panel-section">
+          <section class="tf-panel-section tf-search-panel" aria-labelledby="filtrosTitulo">
             <div class="tf-section-header">
               <div>
                 <span>Filtros</span>
-                <h2>¿Qué curso necesitas?</h2>
+                <h2 id="filtrosTitulo">¿Qué curso necesitas?</h2>
+                <p>Encuentra el tutor ideal en segundos.</p>
               </div>
             </div>
 
             <div class="tf-search-box">
               <div class="tf-search-main">
-                <label for="buscarCurso">Curso o tema</label>
+                <label for="buscarCurso" class="visually-hidden">Curso o tema</label>
 
                 <div class="tf-search-row">
+                  <span class="tf-input-icon" aria-hidden="true"><i class="bi bi-search"></i></span>
                   <input
                     id="buscarCurso"
                     type="search"
@@ -262,51 +281,59 @@
 
               <div class="tf-search-filters">
                 <label>
-                  Nivel
-                  <select id="filtroNivel">
-                    <option value="">Todos los niveles</option>
-                    <option value="primaria">Primaria</option>
-                    <option value="secundaria">Secundaria</option>
-                    <option value="preuniversitario">Preuniversitario</option>
-                    <option value="universitario">Universitario</option>
-                  </select>
+                  <span>Nivel</span>
+                  <span class="tf-select-wrap">
+                    <i class="bi bi-bar-chart-fill" aria-hidden="true"></i>
+                    <select id="filtroNivel">
+                      <option value="">Todos los niveles</option>
+                      <option value="primaria">Primaria</option>
+                      <option value="secundaria">Secundaria</option>
+                      <option value="preuniversitario">Preuniversitario</option>
+                      <option value="universitario">Universitario</option>
+                    </select>
+                  </span>
                 </label>
 
                 <label>
-                  Modalidad
-                  <input type="text" value="Virtual" disabled />
+                  <span>Modalidad</span>
+                  <span class="tf-select-wrap">
+                    <i class="bi bi-display" aria-hidden="true"></i>
+                    <input type="text" value="Virtual" disabled />
+                  </span>
                 </label>
               </div>
             </div>
           </section>
 
           <!-- CURSOS RÁPIDOS -->
-          <section class="tf-panel-section">
-            <div class="tf-section-header">
+          <section class="tf-panel-section tf-courses-panel" aria-labelledby="cursosRapidosTitulo">
+            <div class="tf-section-header tf-section-header-row">
               <div>
                 <span>Cursos rápidos</span>
-                <h2>Elige un curso frecuente</h2>
+                <h2 id="cursosRapidosTitulo">Explora los cursos más buscados</h2>
               </div>
+              <a href="#tutores" class="tf-section-link">Ver todos los cursos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             </div>
 
             <div class="tf-courses">
-              <button type="button">Matemática</button>
-              <button type="button">Inglés</button>
-              <button type="button">Contabilidad</button>
-              <button type="button">Comunicación</button>
-              <button type="button">Física</button>
-              <button type="button">Química</button>
-              <button type="button">Programación</button>
-              <button type="button">Economía</button>
+              <button type="button"><i class="bi bi-calculator" aria-hidden="true"></i>Matemática</button>
+              <button type="button"><i class="bi bi-journal-bookmark" aria-hidden="true"></i>Contabilidad</button>
+              <button type="button"><i class="bi bi-translate" aria-hidden="true"></i>Inglés</button>
+              <button type="button"><i class="bi bi-chat-square-text" aria-hidden="true"></i>Comunicación</button>
+              <button type="button"><i class="bi bi-lightbulb" aria-hidden="true"></i>Física</button>
+              <button type="button"><i class="bi bi-code-slash" aria-hidden="true"></i>Programación</button>
+              <button type="button"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Economía</button>
+              <button type="button"><i class="bi bi-beaker" aria-hidden="true"></i>Química</button>
             </div>
           </section>
 
           <!-- RESULTADOS -->
-          <section class="tf-panel-section" id="tutores">
+          <section class="tf-panel-section tf-results-panel" id="tutores">
             <div class="tf-section-header">
               <div>
                 <span>Resultados</span>
                 <h2>Tutores disponibles</h2>
+                <p>Los resultados aparecerán aquí según el curso y filtros seleccionados.</p>
               </div>
             </div>
 
@@ -351,7 +378,7 @@
             <div>
               <h3 id="modalTutor">Tutor seleccionado</h3>
               <p id="modalCurso">Curso</p>
-              <span id="modalInfo">⭐ 4.8 · Disponible según horario</span>
+              <span id="modalInfo">★ 4.8 · Disponible según horario</span>
             </div>
           </div>
 
@@ -478,10 +505,11 @@
         </div>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
-    <script type="module" src="../js/buscar-tutor.js"></script>
+<script type="module" src="../js/buscar-tutor.js"></script>
     <script type="module" src="../js/chat.js"></script>
   </body>
 </html>

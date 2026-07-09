@@ -4,7 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash</title>
-    <link rel="stylesheet" href="css/index.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="css/tutorflash-theme.css" />
+    <link rel="stylesheet" href="css/index.css?v=tf-index-v19" />
   </head>
 
   <body class="tf-welcome-page">
@@ -22,9 +31,57 @@
         rápido y fácil
       </h1>
 
+      <p class="tf-welcome-subtitle">
+        Encuentra tutores expertos y mejora tu rendimiento académico desde
+        donde estés.
+      </p>
+
       <div class="tf-welcome-actions" aria-label="Opciones de entrada">
-        <a href="pages/informacion.html" class="tf-enter-btn"> Entrar </a>
+        <a href="pages/informacion.html" class="tf-enter-btn">
+          <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+          Entrar
+        </a>
       </div>
+
+      <section class="tf-benefits" aria-label="Beneficios TutorFlash">
+        <article class="tf-benefit-card">
+          <span class="tf-benefit-icon">
+            <i class="bi bi-mortarboard" aria-hidden="true"></i>
+          </span>
+          <strong>Tutores verificados</strong>
+          <p>Profesionales listos para ayudarte.</p>
+        </article>
+
+        <article class="tf-benefit-card">
+          <span class="tf-benefit-icon">
+            <i class="bi bi-clock" aria-hidden="true"></i>
+          </span>
+          <strong>Reservas rápidas</strong>
+          <p>Agenda clases en pocos pasos.</p>
+        </article>
+
+        <article class="tf-benefit-card">
+          <span class="tf-benefit-icon">
+            <i class="bi bi-chat-dots" aria-hidden="true"></i>
+          </span>
+          <strong>Clases online</strong>
+          <p>Aprende desde cualquier lugar.</p>
+        </article>
+
+        <article class="tf-benefit-card">
+          <span class="tf-benefit-icon">
+            <i class="bi bi-shield-check" aria-hidden="true"></i>
+          </span>
+          <strong>Seguro y confiable</strong>
+          <p>Tu progreso en una plataforma clara.</p>
+        </article>
+      </section>
+
+      <footer class="tf-welcome-footer">
+        <img src="assets/img/rayito-tutorflash.png" alt="" />
+        <span>TutorFlash - Tu mejor aliado para aprobar</span>
+      </footer>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

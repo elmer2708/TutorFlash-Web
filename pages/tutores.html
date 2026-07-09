@@ -1,16 +1,26 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorFlash | Tutores</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
 
-    <link rel="stylesheet" href="../css/estudiante.css" />
-    <link rel="stylesheet" href="../css/buscar-tutor.css" />
+    <link rel="stylesheet" href="../css/estudiante.css?v=tf-estudiante-v9-menu-close" />
     <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../css/student-suite.css?v=tf-student-mobile-v2-menu-logout" />
+    <link rel="stylesheet" href="../css/tutores.css?v=tf-tutores-v5-sidebar-dropdown" />
   </head>
 
-  <body>
+  <body class="tf-student-page tf-tutores-page">
     <div class="tf-student-layout">
       <!-- MENÚ LATERAL -->
       <aside class="tf-sidebar">
@@ -126,8 +136,9 @@
         <!-- TOPBAR -->
         <header class="tf-topbar">
           <div>
-            <span class="tf-page-label">Tutores</span>
-            <h1 id="tituloBienvenida">Tutores disponibles 👨‍🏫</h1>
+            <span class="tf-page-label">C. TUTORES</span>
+            <h1 id="tituloBienvenida">Conoce tus tutores</h1>
+            <p class="tf-topbar-subtitle">Revisa perfiles activos y reserva una clase cuando estés listo.</p>
           </div>
 
           <div class="tf-topbar-actions">
@@ -138,8 +149,12 @@
                 href="notificaciones.html"
                 class="tf-notification-btn"
                 title="Notificaciones"
-              >
-                🔔
+              ><span class="tf-svg-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                    <path d="M10 21h4"></path>
+                  </svg>
+                </span>
                 <span class="tf-notification-dot" id="contadorNotificaciones"
                   >0</span
                 >
@@ -156,17 +171,17 @@
 
                 <div class="tf-notification-list">
                   <article class="tf-notification-item">
-                    <strong>👨‍🏫 Tutores activos</strong>
+                    <strong>Tutores activos</strong>
                     <p>Revisa los tutores disponibles en TutorFlash.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>⭐ Favoritos</strong>
+                    <strong>Favoritos</strong>
                     <p>Pronto podrás guardar tus tutores preferidos.</p>
                   </article>
 
                   <article class="tf-notification-item">
-                    <strong>📅 Reserva rápida</strong>
+                    <strong> Reserva rápida</strong>
                     <p>Desde esta página podrás reservar una tutoría.</p>
                   </article>
                 </div>
@@ -219,38 +234,81 @@
           </div>
         </header>
 
-        <main>
-          <!-- INTRO -->
-          <section class="tf-search-hero">
-            <div>
-              <span class="tf-label">Catálogo de tutores</span>
-              <h2>Conoce a los tutores activos</h2>
+        <main class="tf-tutores-main">
+          <!-- HERO -->
+          <section class="tf-tutores-hero" aria-labelledby="tituloCatalogoTutores">
+            <div class="tf-tutores-hero-content">
+              <span class="tf-label"><i class="bi bi-people-fill" aria-hidden="true"></i> Catálogo de tutores</span>
+              <h2 id="tituloCatalogoTutores">Elige al tutor ideal para tu próxima clase</h2>
               <p>
-                Aquí verás los tutores disponibles, sus cursos, modalidad,
-                precio y estado de conexión.
+                Consulta tutores activos, cursos, modalidad, precio y disponibilidad antes de reservar.
               </p>
+
+              <div class="tf-tutores-hero-actions">
+                <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
+                  <i class="bi bi-search" aria-hidden="true"></i>
+                  Buscar por curso
+                </a>
+                <a href="favoritos.html" class="tf-btn tf-btn-secondary">
+                  <i class="bi bi-star" aria-hidden="true"></i>
+                  Ver favoritos
+                </a>
+              </div>
             </div>
 
-            <a href="buscar-tutor.html" class="tf-btn tf-btn-primary">
-              Buscar por curso
-            </a>
+            <div class="tf-tutores-hero-visual" aria-hidden="true">
+              <img src="../assets/img/icono-mochila-libros.png?v=tf-v3" alt="" loading="eager" decoding="async" />
+            </div>
+          </section>
+
+          <!-- RESUMEN -->
+          <section class="tf-tutores-summary" aria-label="Resumen de tutores">
+            <article class="tf-summary-card">
+              <span class="tf-summary-icon"><i class="bi bi-person-check" aria-hidden="true"></i></span>
+              <div>
+                <strong>Tutores activos</strong>
+                <p>Perfiles disponibles para reservar.</p>
+              </div>
+            </article>
+
+            <article class="tf-summary-card">
+              <span class="tf-summary-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
+              <div>
+                <strong>Modalidad virtual</strong>
+                <p>Clases organizadas desde la plataforma.</p>
+              </div>
+            </article>
+
+            <article class="tf-summary-card">
+              <span class="tf-summary-icon"><i class="bi bi-lightning-charge" aria-hidden="true"></i></span>
+              <div>
+                <strong>Reserva rápida</strong>
+                <p>Elige tutor y revisa su disponibilidad.</p>
+              </div>
+            </article>
           </section>
 
           <!-- LISTADO DE TUTORES -->
-          <section class="tf-panel-section">
-            <div class="tf-section-header">
+          <section class="tf-panel-section tf-tutores-panel" id="tutoresDisponibles">
+            <div class="tf-section-header tf-tutores-section-header">
               <div>
                 <span>Disponibles</span>
                 <h2>Todos los tutores</h2>
+                <p>Selecciona un tutor para revisar su perfil, cursos y reservar una tutoría.</p>
               </div>
+
+              <a href="buscar-tutor.html" class="tf-section-link">
+                Filtrar por curso <i class="bi bi-arrow-right" aria-hidden="true"></i>
+              </a>
             </div>
 
             <p id="mensajeTutores" class="tf-search-message">
               Cargando tutores activos...
             </p>
 
-            <div id="listaTutores" class="tf-tutors">
+            <div id="listaTutores" class="tf-tutors tf-tutores-grid">
               <div class="tf-empty-tutors">
+                <span class="tf-empty-icon"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span>
                 <h3>Cargando tutores...</h3>
                 <p>Espera un momento mientras cargamos la lista.</p>
               </div>
@@ -259,10 +317,11 @@
         </main>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../js/contador-notificaciones.js"></script>
     <script type="module" src="../js/sidebar-responsive.js"></script>
-    <script type="module" src="../js/tutores.js"></script>
+<script type="module" src="../js/tutores.js"></script>
     <script type="module" src="../js/chat.js"></script>
   </body>
 </html>

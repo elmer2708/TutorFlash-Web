@@ -1,248 +1,425 @@
-/* ==============================
-   TUTORFLASH - MIS SESIONES
-   Diseño profesional estudiante
-================================= */
+@import url("./tutorflash-theme.css");
 
-body {
-  overflow-x: hidden;
-}
+/* =====================================================
+   TutorFlash - Mis sesiones premium
+   Solo visual. No toca Firebase ni lógica JS.
+===================================================== */
 
-.tf-student-main {
-  min-width: 0;
-}
-
-/* HERO */
-
-.tf-sessions-hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  padding: 24px;
-  margin-bottom: 14px;
-  border-radius: 24px;
+body.tf-sesiones-page {
   background:
-    radial-gradient(
-      circle at 12% 20%,
-      rgba(255, 198, 41, 0.28),
-      transparent 30%
-    ),
-    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
+    radial-gradient(circle at 16% 12%, rgba(37, 99, 235, 0.08), transparent 25%),
+    radial-gradient(circle at 86% 10%, rgba(244, 180, 0, 0.10), transparent 22%),
+    linear-gradient(180deg, #eef3fb 0%, #f4f8fd 100%);
 }
 
-.tf-hero-pill {
-  display: inline-flex;
-  width: fit-content;
-  margin-bottom: 12px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(255, 198, 41, 0.24);
-  color: #071b3d;
-  font-size: 0.78rem;
-  font-weight: 900;
+body.tf-sesiones-page .tf-student-main {
+  min-width: 0;
+  padding: clamp(14px, 1.8vw, 22px);
 }
 
-.tf-sessions-hero h2 {
-  max-width: 760px;
-  margin: 0;
-  color: #071b3d;
-  font-size: clamp(1.7rem, 3vw, 2.35rem);
-  line-height: 1.05;
-  letter-spacing: -0.5px;
+body.tf-sesiones-page .tf-sidebar {
+  position: sticky;
+  top: 10px;
+  align-self: start;
 }
 
-.tf-sessions-hero p {
-  max-width: 680px;
-  margin: 12px 0 0;
-  color: #64748b;
-  line-height: 1.5;
+body.tf-sesiones-page .tf-sidebar-logo {
+  display: flex;
 }
 
-/* RESUMEN */
-
-.tf-session-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+body.tf-sesiones-page .tf-topbar {
   margin-bottom: 14px;
 }
 
-.tf-session-stat-card {
-  padding: 18px;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
-}
-
-.tf-session-stat-card span {
-  display: block;
-  margin-bottom: 8px;
-  color: #64748b;
-  font-size: 0.88rem;
-  font-weight: 900;
-}
-
-.tf-session-stat-card strong {
-  display: block;
-  color: #071b3d;
-  font-size: 1.8rem;
-  line-height: 1;
-}
-
-.tf-session-stat-card p {
-  margin: 7px 0 0;
-  color: #94a3b8;
-  font-size: 0.84rem;
-  font-weight: 700;
-}
-
-/* PANEL */
-
-.tf-sessions-panel {
-  overflow: hidden;
-}
-
-.tf-session-toolbar {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-.auth-mensaje {
-  margin: 0;
-  color: #64748b;
-  font-weight: 800;
-}
-
-.tf-session-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-}
-
-.tf-session-filters button {
-  border: 1px solid rgba(7, 27, 61, 0.1);
-  cursor: pointer;
-  padding: 9px 13px;
-  border-radius: 999px;
-  background: #f8fafc;
-  color: #071b3d;
-  font-size: 0.86rem;
-  font-weight: 900;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.tf-session-filters button:hover {
-  transform: translateY(-2px);
-  background: #fff8e8;
-}
-
-.tf-session-filters button.is-active {
-  background: #071b3d;
-  color: #ffffff;
-}
-
-/* LISTA */
-
-.tf-sessions-list {
-  display: grid;
-  gap: 14px;
-}
-
-.tf-session-loading {
-  padding: 22px;
-  border-radius: 20px;
-  background: #f8fafc;
-  border: 1px dashed rgba(7, 27, 61, 0.16);
+/* Menú usuario centrado */
+body.tf-sesiones-page .tf-user-dropdown {
   text-align: center;
 }
 
-.tf-session-loading p {
+body.tf-sesiones-page .tf-user-email {
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+body.tf-sesiones-page .tf-user-dropdown-avatar {
+  margin: 0 auto 12px;
+}
+
+body.tf-sesiones-page #saludoUsuarioMenu {
+  margin: 0 0 14px;
+  text-align: center;
+}
+
+/* HERO */
+body.tf-sesiones-page .tf-sessions-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(180px, 260px) minmax(210px, 290px);
+  align-items: center;
+  gap: clamp(18px, 2vw, 30px);
+  min-height: 270px;
+  margin-bottom: 16px;
+  padding: clamp(28px, 3.4vw, 40px);
+  overflow: hidden;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 199, 44, 0.16), transparent 22%),
+    radial-gradient(circle at 78% 20%, rgba(37, 99, 235, 0.08), transparent 20%),
+    linear-gradient(135deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid rgba(220, 231, 243, 0.96);
+  box-shadow: 0 18px 42px rgba(6, 26, 58, 0.08);
+}
+
+body.tf-sesiones-page .tf-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(244, 180, 0, 0.14);
+  color: #b67800;
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+body.tf-sesiones-page .tf-sessions-hero-copy h2 {
+  max-width: 700px;
+  margin: 0;
+  color: #071b3d;
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  line-height: 0.97;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+}
+
+body.tf-sesiones-page .tf-sessions-hero-copy p {
+  max-width: 660px;
+  margin: 18px 0 0;
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+body.tf-sesiones-page .tf-sessions-hero-visual {
+  position: relative;
+  min-height: 210px;
+  background: url("../assets/img/icono-libros-birrete.png") center / contain no-repeat;
+}
+
+body.tf-sesiones-page .tf-sessions-hero-visual::after {
+  content: "✦";
+  position: absolute;
+  left: 2%;
+  top: 18%;
+  color: #f4b400;
+  font-size: clamp(1.8rem, 2vw, 2.4rem);
+  font-weight: 900;
+}
+
+body.tf-sesiones-page .tf-sessions-hero-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+body.tf-sesiones-page .tf-hero-main-btn {
+  min-height: 58px;
+  padding: 16px 26px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 16px 28px rgba(6, 26, 58, 0.22);
+}
+
+body.tf-sesiones-page .tf-hero-main-btn i {
+  font-size: 1.1rem;
+}
+
+/* STATS */
+body.tf-sesiones-page .tf-session-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+body.tf-sesiones-page .tf-session-stat-card {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 16px;
+  align-items: center;
+  min-height: 150px;
+  padding: 20px 22px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(220, 231, 243, 0.96);
+  box-shadow: 0 14px 34px rgba(6, 26, 58, 0.07);
+}
+
+body.tf-sesiones-page .tf-session-stat-icon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  font-size: 1.9rem;
+}
+
+body.tf-sesiones-page .stat-total .tf-session-stat-icon {
+  background: #efe9ff;
+  color: #6d4dff;
+}
+
+body.tf-sesiones-page .stat-pendiente .tf-session-stat-icon {
+  background: #fff3da;
+  color: #f0a400;
+}
+
+body.tf-sesiones-page .stat-aceptada .tf-session-stat-icon {
+  background: #e8f8e8;
+  color: #22a52a;
+}
+
+body.tf-sesiones-page .stat-finalizada .tf-session-stat-icon {
+  background: #eaf1ff;
+  color: #2563eb;
+}
+
+body.tf-sesiones-page .tf-session-stat-content span {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+body.tf-sesiones-page .tf-session-stat-content strong {
+  display: block;
+  color: #071b3d;
+  font-size: 2.2rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+body.tf-sesiones-page .tf-session-stat-content p {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+/* PANEL PRINCIPAL */
+body.tf-sesiones-page .tf-sessions-panel {
+  display: block !important;
+  min-height: auto !important;
+  padding: clamp(26px, 2.6vw, 34px) !important;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(244, 180, 0, 0.08), transparent 20%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid rgba(220, 231, 243, 0.96);
+  box-shadow: 0 16px 40px rgba(6, 26, 58, 0.08);
+}
+
+body.tf-sesiones-page .tf-sessions-panel::before,
+body.tf-sesiones-page .tf-sessions-panel::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.tf-sesiones-page .tf-section-header {
+  display: flex !important;
+  grid-area: unset !important;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+body.tf-sesiones-page .tf-section-header > div {
+  min-width: 0;
+}
+
+body.tf-sesiones-page .tf-section-header span {
+  display: inline-block;
+  color: #f0a400;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+body.tf-sesiones-page .tf-section-header h2 {
+  margin: 8px 0 10px !important;
+  color: #071b3d;
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  line-height: 1;
+  font-weight: 900;
+}
+
+body.tf-sesiones-page .auth-mensaje {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+body.tf-sesiones-page .tf-link-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 24px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(191, 204, 224, 0.9);
+  color: #2563eb;
+  font-size: 0.98rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+body.tf-sesiones-page .tf-link-action:hover {
+  background: #f8fbff;
+}
+
+body.tf-sesiones-page .tf-session-toolbar {
+  margin-bottom: 18px;
+}
+
+body.tf-sesiones-page .tf-session-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+body.tf-sesiones-page .tf-session-filters button {
+  border: 1px solid rgba(191, 204, 224, 0.9);
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #071b3d;
+  font-size: 0.94rem;
+  font-weight: 900;
+  transition: all .18s ease;
+}
+
+body.tf-sesiones-page .tf-session-filters button:hover {
+  transform: translateY(-2px);
+  background: #f8fbff;
+}
+
+body.tf-sesiones-page .tf-session-filters button.is-active {
+  background: #071b3d;
+  color: #ffffff;
+  border-color: #071b3d;
+  box-shadow: 0 10px 20px rgba(7, 27, 61, 0.16);
+}
+
+/* LISTA */
+body.tf-sesiones-page .tf-sessions-list {
+  display: grid;
+  gap: 16px;
+}
+
+body.tf-sesiones-page .tf-session-loading {
+  padding: 26px;
+  border-radius: 22px;
+  background: #f8fbff;
+  border: 1px dashed rgba(7, 27, 61, 0.14);
+  text-align: center;
+}
+
+body.tf-sesiones-page .tf-session-loading p {
   margin: 0;
   color: #64748b;
   font-weight: 800;
 }
 
-/* TARJETA DE SESIÓN */
-
-.sesion-card {
+/* TARJETAS DE SESIÓN DEL JS */
+body.tf-sesiones-page .sesion-card {
   position: relative;
   overflow: hidden;
   width: 100%;
   min-width: 0;
-  padding: 20px;
+  padding: 22px;
   border-radius: 24px;
   background: #ffffff;
-  border: 1px solid rgba(7, 27, 61, 0.08);
+  border: 1px solid rgba(220, 231, 243, 0.96);
   box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
 }
 
-.sesion-card::before {
+body.tf-sesiones-page .sesion-card::before {
   content: "";
   position: absolute;
   inset: 0 0 auto;
-  height: 6px;
+  height: 5px;
   background: linear-gradient(90deg, #071b3d, #ffc629);
 }
 
-.sesion-card-header {
+body.tf-sesiones-page .sesion-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: 14px;
   margin-bottom: 14px;
   padding-top: 4px;
 }
 
-.sesion-label {
+body.tf-sesiones-page .sesion-label {
   display: inline-block;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
   color: #f0a400;
   font-size: 0.74rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.14em;
 }
 
-.sesion-card h3 {
+body.tf-sesiones-page .sesion-card h3 {
   margin: 0;
   color: #071b3d;
-  font-size: 1.3rem;
-  line-height: 1.15;
+  font-size: 1.32rem;
+  line-height: 1.12;
+  font-weight: 900;
 }
 
-.sesion-mensaje {
+body.tf-sesiones-page .sesion-mensaje {
   margin: 0 0 16px;
-  padding: 13px 14px;
+  padding: 14px 16px;
   border-radius: 18px;
-  background: #f8fafc;
+  background: #f8fbff;
   color: #475569;
-  font-size: 0.93rem;
-  line-height: 1.45;
+  font-size: 0.94rem;
+  line-height: 1.5;
   font-weight: 700;
 }
 
-.sesion-detalles {
+body.tf-sesiones-page .sesion-detalles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
-.sesion-info-item {
+body.tf-sesiones-page .sesion-info-item {
   min-width: 0;
-  padding: 13px;
+  padding: 14px;
   border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid rgba(7, 27, 61, 0.06);
+  background: #f8fbff;
+  border: 1px solid rgba(220, 231, 243, 0.92);
 }
 
-.sesion-info-item span {
+body.tf-sesiones-page .sesion-info-item span {
   display: block;
   margin-bottom: 5px;
   color: #64748b;
@@ -250,7 +427,7 @@ body {
   font-weight: 900;
 }
 
-.sesion-info-item strong {
+body.tf-sesiones-page .sesion-info-item strong {
   display: block;
   color: #071b3d;
   font-size: 0.95rem;
@@ -258,13 +435,11 @@ body {
   overflow-wrap: anywhere;
 }
 
-/* ESTADOS */
-
-.sesion-estado {
+body.tf-sesiones-page .sesion-estado {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 112px;
+  min-width: 116px;
   padding: 8px 12px;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -273,59 +448,28 @@ body {
   white-space: nowrap;
 }
 
-.estado-pendiente {
-  background: #fff7d6;
-  color: #8a5a00;
-  border: 1px solid #f5b700;
-}
+body.tf-sesiones-page .estado-pendiente { background: #fff7d6; color: #8a5a00; border: 1px solid #f5b700; }
+body.tf-sesiones-page .estado-aceptada { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+body.tf-sesiones-page .estado-en_curso { background: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+body.tf-sesiones-page .estado-rechazada { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+body.tf-sesiones-page .estado-finalizada { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+body.tf-sesiones-page .estado-cancelada_estudiante,
+body.tf-sesiones-page .estado-cancelada_tutor,
+body.tf-sesiones-page .estado-expirada { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
-.estado-aceptada {
-  background: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
-}
-
-.estado-en_curso {
-  background: #e0f2fe;
-  color: #075985;
-  border: 1px solid #7dd3fc;
-}
-
-.estado-rechazada {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-}
-
-.estado-finalizada {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
-}
-
-.estado-cancelada_estudiante,
-.estado-cancelada_tutor,
-.estado-expirada {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #cbd5e1;
-}
-
-/* BADGES EXTRA */
-
-.sesion-extra-row {
+body.tf-sesiones-page .sesion-extra-row {
   display: flex;
   flex-wrap: wrap;
   gap: 9px;
   margin-top: 15px;
 }
 
-.sesion-badge {
+body.tf-sesiones-page .sesion-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   width: fit-content;
-  padding: 7px 10px;
+  padding: 8px 11px;
   border-radius: 999px;
   background: #eef4fb;
   color: #123b5d;
@@ -333,46 +477,22 @@ body {
   font-weight: 900;
 }
 
-.sesion-badge.pago-pendiente {
-  background: #fff7d6;
-  color: #8a5a00;
-}
+body.tf-sesiones-page .sesion-badge.pago-pendiente { background: #fff7d6; color: #8a5a00; }
+body.tf-sesiones-page .sesion-badge.pago-ok { background: #dcfce7; color: #166534; }
+body.tf-sesiones-page .sesion-badge.pago-revision { background: #e0f2fe; color: #075985; }
+body.tf-sesiones-page .sesion-badge.pago-rechazado { background: #fee2e2; color: #991b1b; }
+body.tf-sesiones-page .sesion-badge.clase-pendiente { background: #eff6ff; color: #1e40af; }
+body.tf-sesiones-page .sesion-badge.clase-ok { background: #dcfce7; color: #166534; }
 
-.sesion-badge.pago-ok {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.sesion-badge.pago-revision {
-  background: #e0f2fe;
-  color: #075985;
-}
-
-.sesion-badge.pago-rechazado {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.sesion-badge.clase-pendiente {
-  background: #eff6ff;
-  color: #1e40af;
-}
-
-.sesion-badge.clase-ok {
-  background: #dcfce7;
-  color: #166534;
-}
-
-/* ACCIONES */
-
-.sesion-actions {
+body.tf-sesiones-page .sesion-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
 }
 
-.sesion-action-btn {
+body.tf-sesiones-page .sesion-action-btn,
+body.tf-sesiones-page .btn-volver {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -385,188 +505,93 @@ body {
   font-size: 0.9rem;
   font-weight: 900;
   text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sesion-action-btn:hover {
+body.tf-sesiones-page .sesion-action-btn:hover,
+body.tf-sesiones-page .btn-volver:hover {
   transform: translateY(-2px);
   background: #123b5d;
   box-shadow: 0 12px 22px rgba(7, 27, 61, 0.18);
 }
 
-.sesion-action-btn.secondary {
+body.tf-sesiones-page .sesion-action-btn.secondary {
   background: #fff8e8;
   color: #071b3d;
   border: 1px solid rgba(7, 27, 61, 0.1);
 }
 
-.sesion-action-btn.danger {
+body.tf-sesiones-page .sesion-action-btn.danger {
   background: #fee2e2;
   color: #991b1b;
   border: 1px solid #fecaca;
 }
 
-.sesion-action-btn.danger:hover {
+body.tf-sesiones-page .sesion-action-btn.danger:hover {
   background: #fecaca;
   box-shadow: 0 12px 22px rgba(153, 27, 27, 0.12);
 }
 
-/* VACÍO */
-
-.sesion-vacia {
+body.tf-sesiones-page .sesion-vacia {
   text-align: center;
-  padding: 28px;
+  padding: 30px 26px;
   border-style: dashed;
 }
 
-.sesion-vacia h3 {
+body.tf-sesiones-page .sesion-vacia h3 {
   margin: 0 0 8px;
   color: #071b3d;
-}
-
-.sesion-vacia p {
-  margin: 0 0 16px;
-  color: #64748b;
-}
-
-.btn-volver {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  padding: 11px 17px;
-  border-radius: 999px;
-  background: #071b3d;
-  color: #ffffff;
-  text-decoration: none;
+  font-size: 1.24rem;
   font-weight: 900;
 }
 
-.btn-volver:hover {
-  background: #123b5d;
+body.tf-sesiones-page .sesion-vacia p {
+  margin: 0 0 16px;
+  color: #64748b;
+  line-height: 1.5;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 1180px) {
-  .tf-session-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sesion-detalles {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 900px) {
-  .tf-sessions-hero {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .tf-sessions-hero .tf-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 720px) {
-  .tf-session-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .tf-section-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .tf-session-filters {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .tf-session-filters button {
-    width: 100%;
-  }
-
-  .sesion-card-header {
-    flex-direction: column;
-  }
-
-  .sesion-estado {
-    align-self: flex-start;
-  }
-
-  .sesion-detalles {
-    grid-template-columns: 1fr;
-  }
-
-  .sesion-actions {
-    display: grid;
-  }
-
-  .sesion-action-btn,
-  .btn-volver {
-    width: 100%;
-  }
-}
-
-@media (max-width: 430px) {
-  .tf-sessions-hero,
-  .sesion-card {
-    border-radius: 20px;
-  }
-
-  .tf-session-filters {
-    grid-template-columns: 1fr;
-  }
-
-  .sesion-card {
-    padding: 18px;
-  }
-}
-
-.pago-tutor-box {
+/* BLOQUES DE PAGO */
+body.tf-sesiones-page .pago-tutor-box {
   display: grid;
   gap: 16px;
   margin-top: 18px;
   padding: 18px;
-  border: 1px solid rgba(7, 27, 61, 0.08);
+  border: 1px solid rgba(220, 231, 243, 0.96);
   border-radius: 20px;
   background: #ffffff;
   box-shadow: inset 0 0 0 1px rgba(255, 198, 41, 0.12);
 }
 
-.pago-tutor-box h4 {
+body.tf-sesiones-page .pago-tutor-box h4 {
   margin: 0;
   color: #071b3d;
   font-size: 1.05rem;
+  font-weight: 900;
 }
 
-.pago-help {
+body.tf-sesiones-page .pago-help {
   margin: 8px 0 0;
   color: #64748b;
   line-height: 1.45;
   font-weight: 700;
 }
 
-.pago-tutor-grid {
+body.tf-sesiones-page .pago-tutor-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.pago-tutor-grid div {
+body.tf-sesiones-page .pago-tutor-grid div {
   min-width: 0;
   padding: 12px;
   border-radius: 14px;
-  background: #f8fafc;
-  border: 1px solid rgba(7, 27, 61, 0.06);
+  background: #f8fbff;
+  border: 1px solid rgba(220, 231, 243, 0.92);
 }
 
-.pago-tutor-grid span {
+body.tf-sesiones-page .pago-tutor-grid span {
   display: block;
   margin-bottom: 5px;
   color: #64748b;
@@ -574,21 +599,21 @@ body {
   font-weight: 900;
 }
 
-.pago-tutor-grid strong {
+body.tf-sesiones-page .pago-tutor-grid strong {
   display: block;
   color: #071b3d;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
-.pago-form {
+body.tf-sesiones-page .pago-form {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   align-items: end;
 }
 
-.pago-form label {
+body.tf-sesiones-page .pago-form label {
   display: grid;
   gap: 7px;
   color: #123b5d;
@@ -596,9 +621,9 @@ body {
   font-weight: 900;
 }
 
-.pago-form input,
-.pago-form select,
-.pago-form textarea {
+body.tf-sesiones-page .pago-form input,
+body.tf-sesiones-page .pago-form select,
+body.tf-sesiones-page .pago-form textarea {
   width: 100%;
   border: 1px solid #d7dde6;
   border-radius: 14px;
@@ -609,22 +634,22 @@ body {
   outline: none;
 }
 
-.pago-form textarea {
+body.tf-sesiones-page .pago-form textarea {
   resize: vertical;
 }
 
-.pago-form input:focus,
-.pago-form select:focus,
-.pago-form textarea:focus {
+body.tf-sesiones-page .pago-form input:focus,
+body.tf-sesiones-page .pago-form select:focus,
+body.tf-sesiones-page .pago-form textarea:focus {
   border-color: #ffc629;
   box-shadow: 0 0 0 3px rgba(255, 198, 41, 0.2);
 }
 
-.pago-form-full {
+body.tf-sesiones-page .pago-form-full {
   grid-column: 1 / -1;
 }
 
-.btn-registrar-pago {
+body.tf-sesiones-page .btn-registrar-pago {
   border: none;
   border-radius: 999px;
   padding: 12px 16px;
@@ -634,17 +659,17 @@ body {
   cursor: pointer;
 }
 
-.btn-registrar-pago:hover:not(:disabled) {
+body.tf-sesiones-page .btn-registrar-pago:hover:not(:disabled) {
   background: #ffda73;
   transform: translateY(-2px);
 }
 
-.btn-registrar-pago:disabled {
+body.tf-sesiones-page .btn-registrar-pago:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-.pago-estado-box {
+body.tf-sesiones-page .pago-estado-box {
   margin-top: 18px;
   padding: 14px 16px;
   border-radius: 18px;
@@ -652,40 +677,137 @@ body {
   line-height: 1.45;
 }
 
-.pago-estado-box.pendiente,
-.pago-tutor-box.estado-pendiente {
+body.tf-sesiones-page .pago-estado-box.pendiente,
+body.tf-sesiones-page .pago-tutor-box.estado-pendiente {
   background: #fffdf4;
   border-color: rgba(255, 198, 41, 0.42);
 }
 
-.pago-estado-box.en_revision {
-  background: #e0f2fe;
-  color: #075985;
+body.tf-sesiones-page .pago-estado-box.en_revision { background: #e0f2fe; color: #075985; }
+body.tf-sesiones-page .pago-estado-box.confirmado { background: #dcfce7; color: #166534; }
+body.tf-sesiones-page .pago-estado-box.rechazado,
+body.tf-sesiones-page .pago-tutor-box.estado-rechazado { background: #fff8f8; border-color: rgba(153, 27, 27, 0.16); }
+
+/* RESPONSIVE */
+@media (max-width: 1280px) {
+  body.tf-sesiones-page .tf-sessions-hero {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    grid-template-areas:
+      "copy visual"
+      "action action";
+  }
+
+  body.tf-sesiones-page .tf-sessions-hero-copy { grid-area: copy; }
+  body.tf-sesiones-page .tf-sessions-hero-visual { grid-area: visual; min-height: 180px; }
+  body.tf-sesiones-page .tf-sessions-hero-action {
+    grid-area: action;
+    justify-content: flex-start;
+  }
+
+  body.tf-sesiones-page .tf-session-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.pago-estado-box.confirmado {
-  background: #dcfce7;
-  color: #166534;
+@media (max-width: 1080px) {
+  body.tf-sesiones-page .sesion-detalles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.pago-estado-box.rechazado,
-.pago-tutor-box.estado-rechazado {
-  background: #fff8f8;
-  border-color: rgba(153, 27, 27, 0.16);
-}
+@media (max-width: 920px) {
+  body.tf-sesiones-page .tf-sessions-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
 
-@media (max-width: 900px) {
-  .pago-form {
+  body.tf-sesiones-page .tf-sessions-hero-visual {
+    min-height: 170px;
+  }
+
+  body.tf-sesiones-page .tf-sessions-hero-action {
+    justify-content: flex-start;
+  }
+
+  body.tf-sesiones-page .tf-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  body.tf-sesiones-page .pago-form {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 720px) {
-  .pago-tutor-grid {
+  body.tf-sesiones-page .tf-session-stats {
     grid-template-columns: 1fr;
   }
 
-  .btn-registrar-pago {
+  body.tf-sesiones-page .tf-session-stat-card {
+    grid-template-columns: 56px 1fr;
+    min-height: 128px;
+    padding: 18px;
+  }
+
+  body.tf-sesiones-page .tf-session-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    font-size: 1.55rem;
+  }
+
+  body.tf-sesiones-page .tf-session-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.tf-sesiones-page .tf-session-filters button {
     width: 100%;
+    padding-inline: 12px;
+  }
+
+  body.tf-sesiones-page .sesion-card-header {
+    flex-direction: column;
+  }
+
+  body.tf-sesiones-page .sesion-estado {
+    align-self: flex-start;
+  }
+
+  body.tf-sesiones-page .sesion-detalles,
+  body.tf-sesiones-page .pago-tutor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.tf-sesiones-page .sesion-actions {
+    display: grid;
+  }
+
+  body.tf-sesiones-page .sesion-action-btn,
+  body.tf-sesiones-page .btn-volver,
+  body.tf-sesiones-page .tf-link-action,
+  body.tf-sesiones-page .tf-hero-main-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  body.tf-sesiones-page .tf-student-main {
+    padding: 12px;
+  }
+
+  body.tf-sesiones-page .tf-sessions-hero,
+  body.tf-sesiones-page .tf-sessions-panel,
+  body.tf-sesiones-page .sesion-card {
+    border-radius: 22px;
+  }
+
+  body.tf-sesiones-page .tf-session-filters {
+    grid-template-columns: 1fr;
+  }
+
+  body.tf-sesiones-page .sesion-card {
+    padding: 18px;
   }
 }

@@ -1,56 +1,42 @@
+@import url("./tutorflash-theme.css");
+
 * {
   box-sizing: border-box;
 }
 
 :root {
-  --azul-950: #081827;
-  --azul-900: #0f2740;
-  --azul-800: #123b5d;
-  --azul-700: #1d4f7a;
-  --azul-100: #eaf3fb;
-
-  --amarillo: #f4c542;
-  --amarillo-suave: #fff4cf;
-
-  --verde: #157347;
-  --verde-suave: #e8f7ef;
-
-  --rojo: #b42318;
-  --rojo-suave: #fdecec;
-
-  --gris-900: #1d2b3a;
-  --gris-700: #52677d;
-  --gris-500: #8798aa;
-  --gris-300: #dbe4ee;
-  --gris-200: #e8eef5;
-  --gris-100: #f5f8fc;
-
-  --blanco: #ffffff;
-  --sombra-suave: 0 14px 36px rgba(15, 39, 64, 0.1);
-  --sombra-media: 0 24px 60px rgba(15, 39, 64, 0.16);
+  --azul-950: #061A3A;
+  --azul-900: #0B1D3A;
+  --azul-600: #2563EB;
+  --dorado: #F4B400;
+  --dorado-2: #FFC72C;
+  --fondo: #F3F7FC;
+  --superficie: #FFFFFF;
+  --texto: #061A3A;
+  --texto-suave: #64748B;
+  --borde: #DCE7F3;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
+html,
 body {
+  width: 100%;
+  min-height: 100%;
   margin: 0;
-  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.tf-account-page {
   font-family: Arial, Helvetica, sans-serif;
-  color: var(--gris-900);
+  color: var(--texto);
   background:
-    radial-gradient(
-      circle at top left,
-      rgba(244, 197, 66, 0.18),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(29, 79, 122, 0.16),
-      transparent 34%
-    ),
-    linear-gradient(180deg, #f8fbff 0%, #eef3f8 100%);
+    radial-gradient(circle at top left, rgba(255, 199, 44, 0.16), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.10), transparent 30%),
+    linear-gradient(180deg, #F8FBFF 0%, #EDF4FB 100%);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 .oculto {
@@ -60,238 +46,258 @@ body {
 /* HEADER */
 
 .cuenta-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 7%;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 10px 26px rgba(7, 27, 61, 0.06);
-}
-
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #071b3d;
-  text-decoration: none;
-  font-weight: 900;
-  font-size: 1.15rem;
-}
-
-.logo-link img {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-}
-
-.volver-inicio:hover {
-  background: #ffc629;
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 50;
 }
 
 .volver-inicio {
+  min-height: 46px;
+  padding: 0 18px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 11px 16px;
+  gap: 10px;
   border-radius: 999px;
-  background: #fff8e8;
-  color: #071b3d;
-  border: 1px solid rgba(7, 27, 61, 0.1);
+  border: 1px solid rgba(244, 180, 0, 0.48);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--texto);
   text-decoration: none;
   font-weight: 900;
-}
-
-.cuenta-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: var(--azul-900);
-  font-size: 1.35rem;
-  font-weight: 900;
-  letter-spacing: -0.4px;
-}
-
-.cuenta-logo img {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-}
-
-.cuenta-nav {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.cuenta-nav a {
-  color: var(--gris-700);
-  text-decoration: none;
-  font-size: 0.96rem;
-  font-weight: 800;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.cuenta-nav a:hover,
-.cuenta-nav a.activo {
-  color: var(--azul-800);
-}
-
-.cuenta-nav a:hover {
-  transform: translateY(-1px);
-}
-
-/* MAIN */
-
-.cuenta-main {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 34px 5% 64px;
-}
-
-.cuenta-layout {
-  min-height: calc(100vh - 138px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* LADO IZQUIERDO */
-
-.cuenta-info {
-  display: none;
-}
-
-.cuenta-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: var(--amarillo-suave);
-  color: #9a6d00;
-  font-size: 0.92rem;
-  font-weight: 900;
-}
-
-.cuenta-info h1 {
-  margin: 0 0 18px;
-  color: var(--azul-900);
-  font-size: clamp(2.35rem, 5vw, 4rem);
-  line-height: 1.05;
-  letter-spacing: -1.4px;
-}
-
-.cuenta-info > p {
-  max-width: 620px;
-  margin: 0 0 30px;
-  color: var(--gris-700);
-  font-size: 1.08rem;
-  line-height: 1.75;
-}
-
-.cuenta-beneficios {
-  display: grid;
-  gap: 16px;
-  max-width: 620px;
-}
-
-.cuenta-beneficios article {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 18px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(219, 228, 238, 0.85);
-  box-shadow: 0 10px 26px rgba(15, 39, 64, 0.06);
+  box-shadow: 0 12px 28px rgba(6, 26, 58, 0.08);
   backdrop-filter: blur(8px);
 }
 
-.cuenta-beneficios span {
-  width: 42px;
-  height: 42px;
-  border-radius: 15px;
-  background: var(--azul-100);
+.volver-inicio:hover {
+  color: var(--texto);
+  background: #fff9e8;
+}
+
+/* LAYOUT GENERAL */
+
+.cuenta-main {
+  width: 100%;
+  min-height: 100dvh;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+}
+
+.login-shell {
+  width: min(100%, 1320px);
+  min-height: min(820px, calc(100dvh - 56px));
+  display: grid;
+  grid-template-columns: minmax(430px, 0.94fr) minmax(460px, 1.06fr);
+  overflow: hidden;
+  border-radius: 34px;
+  border: 1px solid rgba(220, 231, 243, 0.96);
+  background: var(--superficie);
+  box-shadow: 0 28px 80px rgba(6, 26, 58, 0.14);
+}
+
+/* PANEL IZQUIERDO LIMPIO */
+
+.login-visual {
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  overflow: hidden;
+  background: #061A3A;
+  color: #ffffff;
+}
+
+.login-visual-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.login-visual-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(6, 26, 58, 0.86) 0%,
+      rgba(6, 26, 58, 0.70) 44%,
+      rgba(6, 26, 58, 0.18) 100%
+    );
+  pointer-events: none;
+}
+
+.login-visual-content {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(42px, 4vw, 58px) clamp(42px, 5vw, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.login-visual-logo {
+  width: min(100%, 360px);
+  margin-bottom: clamp(48px, 6vh, 76px);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28));
+}
+
+.logo-cohete {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
   flex: 0 0 auto;
 }
 
-.cuenta-beneficios h3 {
-  margin: 0 0 5px;
-  color: var(--azul-900);
-  font-size: 1.02rem;
+.logo-texto {
+  width: 270px;
+  height: auto;
+  object-fit: contain;
+  flex: 1 1 auto;
 }
 
-.cuenta-beneficios p {
+.login-visual-copy {
+  width: min(100%, 500px);
+}
+
+.login-visual-copy h1 {
+  margin: 0 0 18px;
+  max-width: 500px;
+  color: #ffffff;
+  font-size: clamp(2.25rem, 3.8vw, 3.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  font-weight: 900;
+  text-wrap: balance;
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.login-visual-copy h1 span {
+  color: var(--dorado-2);
+}
+
+.login-visual-copy p {
+  margin: 0 0 30px;
+  max-width: 440px;
+  color: rgba(255, 255, 255, 0.91);
+  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.login-beneficios {
+  width: min(100%, 460px);
+  display: grid;
+  gap: 16px;
+}
+
+.login-beneficios article {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: center;
+  gap: 14px;
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 199, 44, 0.38), transparent 42%),
+    rgba(255, 255, 255, 0.12);
+  color: var(--dorado-2);
+  font-size: 1.2rem;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.login-beneficios strong {
+  display: block;
+  margin: 0 0 3px;
+  color: #ffffff;
+  font-size: 0.96rem;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.login-beneficios p {
   margin: 0;
-  color: var(--gris-700);
-  line-height: 1.5;
-  font-size: 0.94rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.84rem;
+  line-height: 1.35;
 }
 
 /* PANEL DERECHO */
 
 .auth-panel {
-  display: flex;
-  width: 100%;
-  justify-content: center;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(28px, 4vw, 58px);
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.06), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
 }
 
 .auth-card {
-  width: 100%;
-  max-width: 440px;
-  padding: 32px;
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(219, 228, 238, 0.95);
-  box-shadow: var(--sombra-media);
-  backdrop-filter: blur(12px);
+  width: min(100%, 560px);
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.auth-logo img {
+  width: clamp(230px, 25vw, 360px);
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(6, 26, 58, 0.12));
 }
 
 .auth-card-header {
-  margin-bottom: 22px;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
 .auth-card-header p {
-  margin: 0 0 8px;
-  color: var(--gris-500);
-  font-size: 0.82rem;
+  margin: 0 0 10px;
+  color: #b57600;
+  font-size: 0.84rem;
   font-weight: 900;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
 }
 
 .auth-card-header h2 {
-  margin: 0 0 8px;
-  color: var(--azul-900);
-  font-size: 1.85rem;
-  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  color: var(--texto);
+  font-size: clamp(2.35rem, 4vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  font-weight: 900;
 }
 
 .auth-card-header span {
-  color: var(--gris-700);
-  line-height: 1.5;
-  font-size: 0.96rem;
+  display: block;
+  color: var(--texto-suave);
+  font-size: clamp(1rem, 1.4vw, 1.18rem);
 }
 
-/* MENSAJES */
-
 .auth-mensaje {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   padding: 14px 16px;
   border-radius: 16px;
-  font-size: 0.94rem;
+  font-size: 0.95rem;
   font-weight: 800;
   line-height: 1.45;
   border: 1px solid transparent;
@@ -299,50 +305,71 @@ body {
 
 .auth-mensaje.info {
   background: #eef5ff;
-  color: var(--azul-700);
+  color: #1d4f7a;
   border-color: rgba(29, 79, 122, 0.16);
 }
 
 .auth-mensaje.exito {
-  background: var(--verde-suave);
-  color: var(--verde);
+  background: #e9f9ef;
+  color: #15803d;
   border-color: rgba(21, 115, 71, 0.18);
 }
 
 .auth-mensaje.error {
-  background: var(--rojo-suave);
-  color: var(--rojo);
+  background: #fdecec;
+  color: #b42318;
   border-color: rgba(180, 35, 24, 0.18);
 }
 
-/* FORMULARIOS */
-
 .auth-form {
   display: grid;
-  gap: 12px;
-}
-
-.auth-form h2 {
-  margin: 0;
+  gap: 14px;
 }
 
 .auth-form label {
-  color: var(--azul-900);
-  font-size: 0.92rem;
+  color: var(--texto);
+  font-size: 0.96rem;
   font-weight: 900;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  color: #72819a;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.input-action {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  color: #72819a;
+  font-size: 1rem;
+  pointer-events: none;
 }
 
 .auth-form input,
 .auth-form select {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--gris-300);
-  border-radius: 16px;
-  padding: 0 15px;
-  background: var(--gris-100);
-  color: var(--gris-900);
+  min-height: 58px;
+  border: 1px solid #cbd8e8;
+  border-radius: 18px;
+  padding: 0 18px 0 52px;
+  background: #f8fbff;
+  color: var(--texto);
   font-family: inherit;
-  font-size: 0.96rem;
+  font-size: 1rem;
   outline: none;
   transition:
     border-color 0.2s ease,
@@ -350,61 +377,134 @@ body {
     background 0.2s ease;
 }
 
+.input-password-wrap input {
+  padding-right: 50px;
+}
+
 .auth-form input:focus,
 .auth-form select:focus {
-  border-color: var(--azul-700);
-  background: var(--blanco);
-  box-shadow: 0 0 0 4px rgba(29, 79, 122, 0.12);
+  border-color: var(--azul-600);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
 .auth-form input::placeholder {
-  color: var(--gris-500);
+  color: #8795aa;
+}
+
+.btn-auth-link {
+  justify-self: end;
+  border: none;
+  background: transparent;
+  color: var(--azul-600);
+  font-family: inherit;
+  font-size: 0.94rem;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-auth-link:hover {
+  text-decoration: underline;
 }
 
 .btn-auth-principal {
   width: 100%;
-  min-height: 50px;
+  min-height: 58px;
   margin-top: 8px;
   border: none;
-  border-radius: 999px;
-  background: var(--amarillo);
-  color: var(--azul-950);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(180deg, #ffc72c 0%, #f4b400 100%);
+  color: var(--texto);
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.06rem;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 12px 26px rgba(244, 197, 66, 0.26);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  box-shadow:
+    0 18px 34px rgba(244, 180, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .btn-auth-principal:hover:not(:disabled) {
-  background: #e9b819;
   transform: translateY(-2px);
-  box-shadow: 0 16px 32px rgba(244, 197, 66, 0.32);
+  box-shadow: 0 22px 42px rgba(244, 180, 0, 0.32);
 }
 
 .btn-auth-principal:disabled {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
+.auth-separador {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 0 4px;
+}
+
+.auth-separador span {
+  height: 1px;
+  background: #dce5f0;
+}
+
+.auth-separador p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.btn-google {
+  width: 100%;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid #cbd8e8;
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--texto);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.btn-google:hover {
+  background: #f8fbff;
+}
+
+.google-mark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #4285f4;
+  background: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 2px 8px rgba(6, 26, 58, 0.08);
+}
+
 .auth-cambio {
   margin: 14px 0 0;
   text-align: center;
-  color: var(--gris-700);
-  font-size: 0.94rem;
+  color: var(--texto-suave);
+  font-size: 0.96rem;
 }
 
 .auth-cambio button {
   border: none;
   background: transparent;
-  color: var(--azul-800);
+  color: var(--azul-600);
   font-family: inherit;
   font-weight: 900;
   cursor: pointer;
@@ -415,574 +515,2040 @@ body {
   text-decoration: underline;
 }
 
-.btn-auth-link {
-  border: none;
-  background: transparent;
-  color: var(--azul-800);
-  font-family: inherit;
-  font-size: 0.92rem;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.btn-auth-link:hover {
-  text-decoration: underline;
-}
-
-/* CUENTA ACTIVA */
-
 .cuenta-activa {
   text-align: center;
 }
 
 .cuenta-activa-icono {
-  width: 62px;
-  height: 62px;
-  margin: 0 auto 16px;
-  border-radius: 22px;
-  background: var(--verde-suave);
-  color: var(--verde);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.7rem;
-  font-weight: 900;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 18px;
+  border-radius: 24px;
+  background: #e9f9ef;
+  color: #15803d;
+  display: grid;
+  place-items: center;
+  font-size: 1.85rem;
 }
 
 .cuenta-activa h2 {
   margin: 0 0 10px;
-  color: var(--azul-900);
-  font-size: 1.7rem;
+  color: var(--texto);
+  font-size: 1.8rem;
 }
 
 .cuenta-activa p {
-  margin: 0 0 18px;
-  color: var(--gris-700);
+  margin: 0;
+  color: var(--texto-suave);
   line-height: 1.5;
-  overflow-wrap: anywhere;
 }
 
-.cuenta-activa-links {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 18px;
-}
+/* LAPTOP BAJA */
 
-.cuenta-activa-links a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  border-radius: 999px;
-  background: var(--azul-100);
-  color: var(--azul-800);
-  text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 900;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-.cuenta-activa-links a:hover {
-  background: #dbeaf7;
-  transform: translateY(-2px);
-}
-
-#btnCerrarSesion {
-  width: 100%;
-  min-height: 48px;
-  border: none;
-  border-radius: 999px;
-  background: var(--azul-900);
-  color: var(--blanco);
-  font-family: inherit;
-  font-size: 0.98rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-#btnCerrarSesion:hover:not(:disabled) {
-  background: var(--azul-800);
-  transform: translateY(-2px);
-}
-
-#btnCerrarSesion:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-/* ACCESIBILIDAD */
-
-.cuenta-nav a:focus-visible,
-.auth-cambio button:focus-visible,
-.btn-auth-principal:focus-visible,
-#btnCerrarSesion:focus-visible,
-.cuenta-activa-links a:focus-visible {
-  outline: 3px solid rgba(244, 197, 66, 0.75);
-  outline-offset: 3px;
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 980px) {
-  .cuenta-layout {
-    min-height: calc(100vh - 132px);
+@media (min-width: 1025px) and (max-height: 760px) {
+  .cuenta-main {
+    padding: 16px;
   }
 
-  .cuenta-info {
-    display: none;
-  }
-}
-
-@media (max-width: 760px) {
-  .cuenta-header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 18px 5%;
+  .login-shell {
+    min-height: min(690px, calc(100dvh - 32px));
   }
 
-  .cuenta-nav {
-    flex-wrap: wrap;
+  .login-visual-content {
+    padding: 34px 48px 28px;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 340px);
+    margin-bottom: 40px;
+  }
+
+  .logo-cohete {
+    width: 68px;
+    height: 68px;
+  }
+
+  .logo-texto {
+    width: 250px;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 430px;
+    font-size: 2.7rem;
+  }
+
+  .login-visual-copy p {
+    max-width: 390px;
+    margin-bottom: 22px;
+    font-size: 0.92rem;
+    line-height: 1.48;
+  }
+
+  .login-beneficios {
     gap: 12px;
   }
 
-  .cuenta-main {
-    padding: 22px 5% 48px;
+  .benefit-icon {
+    width: 42px;
+    height: 42px;
   }
 
-  .auth-card {
-    max-width: 100%;
-    padding: 26px;
-    border-radius: 26px;
+  .login-beneficios article {
+    grid-template-columns: 42px 1fr;
   }
 
+  .login-beneficios strong {
+    font-size: 0.86rem;
+  }
+
+  .login-beneficios p {
+    font-size: 0.78rem;
+  }
+
+  .auth-panel {
+    padding: 24px 32px;
+  }
+
+  .auth-logo {
+    margin-bottom: 12px;
+  }
+
+  .auth-logo img {
+    width: 280px;
+  }
+
+  .auth-card-header {
+    margin-bottom: 16px;
+  }
+
+  .auth-card-header h2 {
+    font-size: 3rem;
+  }
+
+  .auth-form {
+    gap: 10px;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 52px;
+  }
 }
 
-@media (max-width: 600px) {
+/* TABLET */
+
+@media (max-width: 1024px) {
   .cuenta-header {
-    padding: 12px 18px;
+    position: static;
+    display: flex;
+    justify-content: center;
+    padding: 16px 16px 0;
   }
 
-  .logo-link span {
-    display: none;
+  .cuenta-main {
+    min-height: auto;
+    padding: 14px;
   }
 
+  .login-shell {
+    width: min(100%, 900px);
+    min-height: auto;
+    grid-template-columns: 1fr;
+    border-radius: 28px;
+  }
+
+  .login-visual {
+    min-height: 620px;
+  }
+
+  .login-visual-content {
+    padding: 42px 46px;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 340px);
+    margin-bottom: 42px;
+  }
+
+  .logo-cohete {
+    width: 68px;
+    height: 68px;
+  }
+
+  .logo-texto {
+    width: 250px;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 480px;
+    font-size: clamp(2.35rem, 6vw, 3.6rem);
+  }
+
+  .login-visual-copy p {
+    max-width: 420px;
+  }
+
+  .auth-panel {
+    padding: 34px 22px;
+  }
+}
+
+/* CELULAR */
+
+@media (max-width: 620px) {
   .volver-inicio {
-    padding: 10px 14px;
+    min-height: 42px;
+    padding: 0 16px;
     font-size: 0.9rem;
   }
-}
 
-@media (max-width: 520px) {
-  .cuenta-logo img {
+  .login-shell {
+    border-radius: 22px;
+  }
+
+  .login-visual {
+    min-height: 560px;
+  }
+
+  .login-visual-content {
+    padding: 30px 26px;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 290px);
+    margin-bottom: 34px;
+  }
+
+  .logo-cohete {
+    width: 56px;
+    height: 56px;
+  }
+
+  .logo-texto {
+    width: 220px;
+  }
+
+  .login-visual-copy h1 {
+    font-size: clamp(2rem, 8.2vw, 2.8rem);
+  }
+
+  .login-visual-copy p {
+    max-width: 330px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .login-beneficios {
+    gap: 11px;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+  }
+
+  .benefit-icon {
     width: 40px;
     height: 40px;
   }
 
-  .cuenta-logo {
-    font-size: 1.2rem;
+  .login-beneficios strong {
+    font-size: 0.82rem;
   }
 
-  .cuenta-nav a {
-    font-size: 0.9rem;
-  }
-
-  .auth-card {
-    padding: 22px;
-    border-radius: 22px;
-  }
-
-  .auth-card-header h2 {
-    font-size: 1.55rem;
-  }
-
-  .cuenta-activa-links {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ETAPA 11: pulido responsive y consistencia */
-
-body {
-  overflow-x: hidden;
-}
-
-button,
-a,
-input,
-select {
-  font-family: inherit;
-}
-
-.cuenta-layout > *,
-.cuenta-beneficios article,
-.auth-card,
-.cuenta-activa-links a {
-  min-width: 0;
-}
-
-.cuenta-info,
-.auth-card,
-.cuenta-beneficios,
-.cuenta-activa {
-  overflow-wrap: anywhere;
-}
-
-.cuenta-nav a,
-.cuenta-activa-links a,
-.auth-cambio button {
-  transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease,
-    opacity 0.2s ease;
-}
-
-button:disabled,
-input:disabled,
-select:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-@media (max-width: 760px) {
-  .cuenta-header {
-    align-items: center;
-    text-align: center;
-  }
-
-  .cuenta-nav {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 460px) {
-  .cuenta-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-  }
-
-  .cuenta-nav a {
-    display: inline-flex;
-    justify-content: center;
-    padding: 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.68);
-  }
-
-}
-
-@media (max-width: 340px) {
-  .cuenta-nav {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* LOGIN - AJUSTE VISUAL FINAL */
-
-body {
-  position: relative;
-  overflow-x: hidden;
-  background:
-    linear-gradient(135deg, rgba(8, 24, 39, 0.04) 0 22%, transparent 22% 100%),
-    linear-gradient(315deg, rgba(244, 197, 66, 0.12) 0 18%, transparent 18% 100%),
-    radial-gradient(ellipse at 50% -10%, rgba(244, 197, 66, 0.24), transparent 48%),
-    radial-gradient(ellipse at 86% 78%, rgba(141, 205, 232, 0.28), transparent 42%),
-    linear-gradient(180deg, #f9fcff 0%, #eef6fb 48%, #f7f1df 100%);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 74px 0 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(8, 24, 39, 0.08) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(8, 24, 39, 0.06) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 72%, transparent 100%);
-  opacity: 0.22;
-}
-
-.cuenta-header {
-  position: sticky;
-  min-height: 74px;
-  justify-content: center;
-  padding: 8px max(18px, 4vw);
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 34px rgba(7, 27, 61, 0.08);
-}
-
-.logo-link {
-  width: clamp(180px, 20vw, 235px);
-  height: 58px;
-  justify-content: center;
-  overflow: visible;
-}
-
-.logo-link img {
-  width: 100%;
-  height: auto;
-  max-height: 64px;
-  object-fit: contain;
-  transform: scale(1.45);
-}
-
-.volver-inicio {
-  position: absolute;
-  right: max(18px, 4vw);
-  min-height: 38px;
-  padding: 0 15px;
-  background: rgba(255, 248, 232, 0.92);
-  border-color: rgba(244, 197, 66, 0.55);
-  color: var(--azul-950);
-  font-size: 0.88rem;
-  box-shadow: 0 10px 24px rgba(7, 27, 61, 0.08);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.volver-inicio:hover {
-  background: var(--amarillo);
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(244, 197, 66, 0.24);
-}
-
-.cuenta-main {
-  width: min(100%, 720px);
-  max-width: none;
-  padding: clamp(24px, 5vh, 54px) 18px clamp(42px, 7vh, 78px);
-}
-
-.cuenta-layout {
-  position: relative;
-  min-height: calc(100vh - 150px);
-  isolation: isolate;
-}
-
-.cuenta-layout::before,
-.cuenta-layout::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  border-radius: 34px;
-  pointer-events: none;
-}
-
-.cuenta-layout::before {
-  width: min(640px, 92vw);
-  height: min(520px, 68vh);
-  background:
-    linear-gradient(145deg, rgba(8, 24, 39, 0.9), rgba(18, 59, 93, 0.72)),
-    linear-gradient(135deg, rgba(244, 197, 66, 0.22), transparent);
-  transform: rotate(-4deg);
-  box-shadow: 0 34px 80px rgba(7, 27, 61, 0.18);
-}
-
-.cuenta-layout::after {
-  width: min(540px, 82vw);
-  height: min(460px, 62vh);
-  background: rgba(255, 255, 255, 0.48);
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  transform: translate(34px, 20px) rotate(3deg);
-  box-shadow: 0 24px 70px rgba(7, 27, 61, 0.1);
-}
-
-.auth-panel {
-  position: relative;
-  z-index: 1;
-  padding: clamp(18px, 4vw, 34px);
-}
-
-.auth-card {
-  max-width: 500px;
-  padding: clamp(26px, 4vw, 42px);
-  border-radius: 30px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 251, 241, 0.96)),
-    var(--blanco);
-  border: 1px solid rgba(255, 255, 255, 0.82);
-  box-shadow:
-    0 30px 80px rgba(7, 27, 61, 0.24),
-    0 0 0 1px rgba(244, 197, 66, 0.1) inset;
-}
-
-.auth-card-header {
-  margin-bottom: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(219, 228, 238, 0.78);
-}
-
-.auth-card-header p {
-  color: #9a6d00;
-  letter-spacing: 0.12em;
-}
-
-.auth-card-header h2 {
-  font-size: clamp(1.85rem, 4vw, 2.25rem);
-}
-
-.auth-form {
-  gap: 13px;
-}
-
-.auth-form input,
-.auth-form select {
-  min-height: 52px;
-  border-radius: 15px;
-  background: #f8fbff;
-  border-color: rgba(123, 151, 178, 0.38);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
-}
-
-.auth-form input:hover,
-.auth-form select:hover {
-  border-color: rgba(29, 79, 122, 0.45);
-  background: #ffffff;
-}
-
-.auth-form input:focus,
-.auth-form select:focus {
-  border-color: var(--amarillo);
-  box-shadow:
-    0 0 0 4px rgba(244, 197, 66, 0.2),
-    0 12px 28px rgba(7, 27, 61, 0.08);
-}
-
-.btn-auth-principal {
-  min-height: 54px;
-  margin-top: 12px;
-  background: linear-gradient(180deg, #ffd95c 0%, #f4c542 100%);
-  box-shadow:
-    0 16px 32px rgba(244, 197, 66, 0.34),
-    0 1px 0 rgba(255, 255, 255, 0.65) inset;
-}
-
-.btn-auth-principal:hover:not(:disabled) {
-  background: linear-gradient(180deg, #ffe27a 0%, #f2bd24 100%);
-}
-
-.btn-auth-link {
-  justify-self: center;
-  min-height: 34px;
-  padding: 0 8px;
-}
-
-.auth-cambio {
-  margin-top: 10px;
-}
-
-.cuenta-nav a:focus-visible,
-.logo-link:focus-visible,
-.volver-inicio:focus-visible,
-.auth-cambio button:focus-visible,
-.btn-auth-link:focus-visible,
-.btn-auth-principal:focus-visible,
-#btnCerrarSesion:focus-visible,
-.cuenta-activa-links a:focus-visible {
-  outline: 3px solid rgba(244, 197, 66, 0.75);
-  outline-offset: 3px;
-}
-
-@media (min-width: 1024px) {
-  .cuenta-main {
-    width: min(100%, 760px);
-  }
-
-  .auth-card {
-    max-width: 520px;
-  }
-}
-
-@media (max-width: 760px) {
-  .cuenta-header {
-    min-height: 104px;
-    justify-content: center;
-    padding: 8px 16px 12px;
-  }
-
-  .logo-link {
-    width: clamp(164px, 52vw, 210px);
-    height: 48px;
-  }
-
-  .logo-link img {
-    max-height: 50px;
-    transform: scale(1.72);
-  }
-
-  .volver-inicio {
-    position: static;
-    margin-top: 6px;
-  }
-
-  .cuenta-main {
-    padding-top: 18px;
-  }
-
-  .cuenta-layout {
-    min-height: calc(100vh - 156px);
-  }
-
-  .cuenta-layout::before {
-    width: min(420px, 92vw);
-    height: min(470px, 70vh);
-    transform: rotate(-2deg);
-  }
-
-  .cuenta-layout::after {
-    transform: translate(12px, 18px) rotate(2deg);
-  }
-}
-
-@media (max-width: 480px) {
-  .cuenta-main {
-    padding-inline: 12px;
+  .login-beneficios p {
+    display: none;
   }
 
   .auth-panel {
-    padding: 14px 6px;
+    padding: 24px 16px;
   }
 
-  .auth-card {
-    padding: 24px 20px;
-    border-radius: 24px;
+  .auth-logo img {
+    width: min(250px, 74vw);
+  }
+
+  .auth-card-header h2 {
+    font-size: clamp(2rem, 8vw, 2.55rem);
+  }
+
+  .auth-card-header span {
+    font-size: 0.94rem;
+  }
+
+  .auth-form {
+    gap: 12px;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 52px;
+    font-size: 0.94rem;
   }
 
   .auth-form input,
   .auth-form select {
-    min-height: 50px;
+    padding-left: 46px;
+  }
+
+  .input-icon {
+    left: 15px;
+  }
+
+  .input-action {
+    right: 15px;
   }
 }
 
-@media (max-width: 360px) {
-  .cuenta-header {
-    min-height: 98px;
+
+/* =====================================================
+   LOGO IZQUIERDO: cohete + texto separados
+   Usa los logos enviados por la usuaria.
+===================================================== */
+.login-visual-logo {
+  width: min(100%, 390px) !important;
+  margin-bottom: clamp(44px, 6vh, 70px) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.30)) !important;
+}
+
+.logo-cohete {
+  width: clamp(70px, 6.2vw, 92px) !important;
+  height: auto !important;
+  object-fit: contain !important;
+  flex: 0 0 auto !important;
+}
+
+.logo-texto {
+  width: clamp(245px, 20vw, 310px) !important;
+  height: auto !important;
+  object-fit: contain !important;
+  flex: 0 1 auto !important;
+}
+
+@media (min-width: 1025px) and (max-height: 760px) {
+  .login-visual-logo {
+    width: min(100%, 360px) !important;
+    margin-bottom: 38px !important;
   }
 
-  .logo-link {
-    width: 172px;
+  .logo-cohete {
+    width: 78px !important;
   }
 
-  .volver-inicio {
-    min-height: 34px;
-    padding: 0 12px;
-    font-size: 0.82rem;
+  .logo-texto {
+    width: 270px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .login-visual-logo {
+    width: min(100%, 315px) !important;
+    margin-bottom: 34px !important;
+  }
+
+  .logo-cohete {
+    width: 62px !important;
+  }
+
+  .logo-texto {
+    width: 235px !important;
+  }
+}
+
+
+/* =====================================================
+   LOGIN DERECHO - ajuste premium tipo referencia
+===================================================== */
+
+.auth-panel {
+  padding: clamp(34px, 4vw, 64px) clamp(34px, 5vw, 76px) !important;
+  display: grid !important;
+  place-items: center !important;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.045), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%) !important;
+}
+
+.auth-card {
+  width: min(100%, 650px) !important;
+  max-width: 650px !important;
+  margin-inline: auto !important;
+}
+
+/* En la referencia no aparece la banda azul informativa.
+   Se oculta solo el mensaje info; error y éxito siguen apareciendo. */
+.auth-mensaje.info {
+  display: none !important;
+}
+
+.auth-logo {
+  margin-bottom: 22px !important;
+}
+
+.auth-logo img {
+  width: clamp(260px, 28vw, 390px) !important;
+  max-height: 150px !important;
+  object-fit: contain !important;
+}
+
+.auth-card-header {
+  margin-bottom: 34px !important;
+  text-align: center !important;
+}
+
+.auth-card-header p {
+  display: none !important;
+}
+
+.auth-card-header h2 {
+  margin-bottom: 12px !important;
+  font-size: clamp(2.45rem, 4vw, 4rem) !important;
+  line-height: 1.04 !important;
+}
+
+.auth-card-header span {
+  color: #64748b !important;
+  font-size: clamp(1.05rem, 1.45vw, 1.22rem) !important;
+}
+
+.auth-form {
+  gap: 18px !important;
+}
+
+.auth-form label {
+  margin-bottom: -6px !important;
+  font-size: 1rem !important;
+  font-weight: 900 !important;
+}
+
+.auth-form input,
+.auth-form select {
+  min-height: 62px !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd8e8 !important;
+  box-shadow: 0 2px 0 rgba(6, 26, 58, 0.015) !important;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: #2563eb !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+}
+
+.input-icon {
+  color: #6b7d96 !important;
+}
+
+.input-action {
+  color: #6b7d96 !important;
+}
+
+.btn-auth-link {
+  margin-top: -6px !important;
+  font-size: 0.95rem !important;
+}
+
+.btn-auth-principal {
+  min-height: 62px !important;
+  margin-top: 4px !important;
+  border-radius: 16px !important;
+  font-size: 1.08rem !important;
+}
+
+.auth-separador {
+  margin: 18px 0 4px !important;
+}
+
+.btn-google {
+  min-height: 58px !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+}
+
+.auth-cambio {
+  margin-top: 18px !important;
+  font-size: 1rem !important;
+}
+
+/* Laptop baja: compactar para que no se corte */
+@media (min-width: 1025px) and (max-height: 760px) {
+  .auth-panel {
+    padding: 18px 34px !important;
   }
 
   .auth-card {
-    padding: 22px 16px;
+    max-width: 620px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 10px !important;
+  }
+
+  .auth-logo img {
+    width: 300px !important;
+    max-height: 118px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 18px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 3rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.98rem !important;
+  }
+
+  .auth-form {
+    gap: 10px !important;
+  }
+
+  .auth-form label {
+    font-size: 0.94rem !important;
+    margin-bottom: -5px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 52px !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 52px !important;
+  }
+
+  .auth-separador {
+    margin: 10px 0 2px !important;
+  }
+
+  .auth-cambio {
+    margin-top: 10px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .auth-panel {
+    padding: 36px 24px !important;
+  }
+
+  .auth-card {
+    max-width: 620px !important;
+  }
+}
+
+/* Celular */
+@media (max-width: 620px) {
+  .auth-panel {
+    padding: 28px 16px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 14px !important;
+  }
+
+  .auth-logo img {
+    width: min(270px, 78vw) !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 22px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: clamp(2rem, 8vw, 2.55rem) !important;
+  }
+
+  .auth-form {
+    gap: 13px !important;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 54px !important;
+  }
+}
+
+
+/* =====================================================
+   V13 - Compactar layout para laptops/alturas bajas
+===================================================== */
+
+@media (min-width: 1025px) and (max-height: 860px) {
+  .cuenta-main {
+    padding: 14px !important;
+  }
+
+  .login-shell {
+    width: min(100%, 1240px) !important;
+    min-height: auto !important;
+    height: calc(100dvh - 28px) !important;
+    grid-template-columns: minmax(380px, 0.92fr) minmax(420px, 1.08fr) !important;
+  }
+
+  .login-visual-content {
+    padding: 28px 34px 24px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 320px) !important;
+    margin-bottom: 26px !important;
+    gap: 6px !important;
+  }
+
+  .logo-cohete {
+    width: 64px !important;
+  }
+
+  .logo-texto {
+    width: 238px !important;
+  }
+
+  .login-visual-copy {
+    width: min(100%, 390px) !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 360px !important;
+    font-size: clamp(2rem, 3vw, 2.85rem) !important;
+    line-height: 1.06 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 340px !important;
+    margin-bottom: 16px !important;
+    font-size: 0.87rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 360px) !important;
+    gap: 10px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 38px 1fr !important;
+    gap: 10px !important;
+  }
+
+  .benefit-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.82rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .login-beneficios p {
+    font-size: 0.72rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .auth-panel {
+    padding: 18px 24px 16px !important;
+    overflow-y: auto !important;
+  }
+
+  .auth-card {
+    width: min(100%, 590px) !important;
+    max-width: 590px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 8px !important;
+  }
+
+  .auth-logo img {
+    width: 250px !important;
+    max-height: 88px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 12px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.55rem !important;
+    margin-bottom: 4px !important;
+    line-height: 1.02 !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.96rem !important;
+  }
+
+  .auth-form {
+    gap: 8px !important;
+  }
+
+  .auth-form label {
+    font-size: 0.92rem !important;
+    margin-bottom: -3px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 46px !important;
+    border-radius: 15px !important;
+    font-size: 0.94rem !important;
+  }
+
+  .btn-auth-link {
+    margin-top: -2px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 48px !important;
+    font-size: 0.96rem !important;
+    border-radius: 15px !important;
+  }
+
+  .auth-separador {
+    margin: 8px 0 0 !important;
+    gap: 10px !important;
+  }
+
+  .auth-separador p {
+    font-size: 0.85rem !important;
+  }
+
+  .auth-cambio {
+    margin-top: 8px !important;
+    font-size: 0.88rem !important;
+  }
+}
+
+
+/* =====================================================
+   V14 - Login derecho proporcionado tipo referencia
+   El problema era ancho excesivo del formulario.
+===================================================== */
+
+.auth-panel {
+  padding: 28px 56px !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.auth-card {
+  width: min(100%, 500px) !important;
+  max-width: 500px !important;
+  margin-inline: auto !important;
+}
+
+.auth-logo {
+  margin-bottom: 14px !important;
+}
+
+.auth-logo img {
+  width: clamp(235px, 22vw, 310px) !important;
+  max-height: 110px !important;
+}
+
+.auth-card-header {
+  margin-bottom: 24px !important;
+}
+
+.auth-card-header h2 {
+  font-size: clamp(2.25rem, 3.4vw, 3.25rem) !important;
+  margin-bottom: 8px !important;
+}
+
+.auth-card-header span {
+  font-size: 1rem !important;
+}
+
+.auth-form {
+  width: 100% !important;
+  max-width: 500px !important;
+  margin-inline: auto !important;
+  gap: 14px !important;
+}
+
+.auth-form label {
+  font-size: 0.95rem !important;
+  margin-bottom: -4px !important;
+}
+
+.auth-form input,
+.auth-form select {
+  min-height: 54px !important;
+  border-radius: 15px !important;
+  background: #ffffff !important;
+  font-size: 0.95rem !important;
+}
+
+.btn-auth-link {
+  font-size: 0.9rem !important;
+  margin-top: -4px !important;
+}
+
+.btn-auth-principal {
+  min-height: 54px !important;
+  margin-top: 4px !important;
+  border-radius: 15px !important;
+}
+
+.auth-separador {
+  margin: 12px 0 0 !important;
+}
+
+.btn-google {
+  min-height: 52px !important;
+  border-radius: 15px !important;
+}
+
+.auth-cambio {
+  margin-top: 10px !important;
+}
+
+/* En laptop baja: todavía más centrado, no ancho completo */
+@media (min-width: 1025px) and (max-height: 860px) {
+  .auth-panel {
+    padding: 18px 52px !important;
+    overflow: visible !important;
+  }
+
+  .auth-card {
+    width: min(100%, 490px) !important;
+    max-width: 490px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 8px !important;
+  }
+
+  .auth-logo img {
+    width: 250px !important;
+    max-height: 90px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 16px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.65rem !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.92rem !important;
+  }
+
+  .auth-form {
+    max-width: 490px !important;
+    gap: 10px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 48px !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 48px !important;
+  }
+}
+
+/* Si la pantalla es angosta, sí usamos todo el ancho disponible */
+@media (max-width: 1024px) {
+  .auth-panel {
+    padding: 32px 24px !important;
+  }
+
+  .auth-card {
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .auth-panel {
+    padding: 24px 16px !important;
+  }
+
+  .auth-card {
+    width: 100% !important;
+  }
+}
+
+
+/* =====================================================
+   V15 - Interior del login derecho tipo referencia
+===================================================== */
+
+/* El contenedor interno no debe parecer otra tarjeta pesada */
+.auth-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+/* Más aire interno como la referencia */
+.auth-panel {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.035), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%) !important;
+}
+
+.auth-logo {
+  margin-bottom: 18px !important;
+}
+
+.auth-logo img {
+  width: clamp(255px, 24vw, 330px) !important;
+  max-height: 120px !important;
+}
+
+.auth-card-header {
+  margin-bottom: 30px !important;
+}
+
+.auth-card-header h2 {
+  margin-bottom: 10px !important;
+  color: #061A3A !important;
+  letter-spacing: -0.045em !important;
+}
+
+.auth-card-header span {
+  color: #64748B !important;
+  font-weight: 500 !important;
+}
+
+/* Formulario con separación más elegante */
+.auth-form {
+  gap: 16px !important;
+}
+
+.auth-form label {
+  margin: 0 0 -6px !important;
+  color: #061A3A !important;
+  font-size: 0.98rem !important;
+  font-weight: 900 !important;
+}
+
+/* Inputs blancos, no azules */
+.auth-form input,
+.auth-form select {
+  min-height: 58px !important;
+  border-radius: 16px !important;
+  border: 1px solid #C9D7EA !important;
+  background: #FFFFFF !important;
+  color: #061A3A !important;
+  box-shadow: none !important;
+}
+
+/* Quitar azul de autocompletado de Chrome */
+.auth-form input:-webkit-autofill,
+.auth-form input:-webkit-autofill:hover,
+.auth-form input:-webkit-autofill:focus,
+.auth-form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  -webkit-text-fill-color: #061A3A !important;
+  caret-color: #061A3A !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+}
+
+.auth-form input::placeholder {
+  color: #7A8AA3 !important;
+}
+
+.input-icon,
+.input-action {
+  color: #6B7D96 !important;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: #2563EB !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.11) !important;
+}
+
+.btn-auth-link {
+  justify-self: end !important;
+  color: #005CFF !important;
+  font-weight: 900 !important;
+}
+
+.btn-auth-principal {
+  background: linear-gradient(180deg, #FFC72C 0%, #F4B400 100%) !important;
+  color: #061A3A !important;
+  font-weight: 900 !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 16px 30px rgba(244, 180, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+}
+
+.auth-separador {
+  margin: 18px 0 4px !important;
+}
+
+.auth-separador span {
+  background: #DCE7F3 !important;
+}
+
+.auth-separador p {
+  color: #7A8AA3 !important;
+  font-weight: 700 !important;
+}
+
+.btn-google {
+  background: #FFFFFF !important;
+  border: 1px solid #C9D7EA !important;
+  color: #061A3A !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+
+.btn-google:hover {
+  background: #F8FBFF !important;
+}
+
+.auth-cambio {
+  color: #64748B !important;
+}
+
+.auth-cambio button {
+  color: #005CFF !important;
+}
+
+/* Laptop baja: mantener todo limpio sin deformar */
+@media (min-width: 1025px) and (max-height: 860px) {
+  .auth-panel {
+    padding: 18px 54px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 10px !important;
+  }
+
+  .auth-logo img {
+    width: 270px !important;
+    max-height: 96px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 18px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.8rem !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.94rem !important;
+  }
+
+  .auth-form {
+    gap: 11px !important;
+  }
+
+  .auth-form label {
+    margin-bottom: -5px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 50px !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 50px !important;
+  }
+
+  .auth-separador {
+    margin: 10px 0 2px !important;
+  }
+}
+
+
+/* =====================================================
+   V16 - Layout respirado, no apretado
+   Objetivo: que se parezca más a la referencia.
+===================================================== */
+
+/* Tarjeta general más horizontal y menos comprimida */
+.login-shell {
+  width: min(100%, 1380px) !important;
+  min-height: min(800px, calc(100dvh - 46px)) !important;
+  grid-template-columns: minmax(430px, 0.96fr) minmax(520px, 1.04fr) !important;
+}
+
+/* Dar más aire al lado izquierdo sin agrandar todo */
+.login-visual-content {
+  padding: clamp(38px, 4vw, 58px) clamp(54px, 5vw, 78px) !important;
+}
+
+.login-visual-logo {
+  width: min(100%, 350px) !important;
+  margin-bottom: clamp(56px, 7vh, 82px) !important;
+}
+
+.logo-cohete {
+  width: 76px !important;
+}
+
+.logo-texto {
+  width: 260px !important;
+}
+
+.login-visual-copy {
+  width: min(100%, 500px) !important;
+}
+
+.login-visual-copy h1 {
+  max-width: 500px !important;
+  font-size: clamp(2.35rem, 3.55vw, 3.65rem) !important;
+  line-height: 1.08 !important;
+  margin-bottom: 18px !important;
+}
+
+.login-visual-copy p {
+  max-width: 440px !important;
+  font-size: 1rem !important;
+  line-height: 1.55 !important;
+  margin-bottom: 30px !important;
+}
+
+.login-beneficios {
+  width: min(100%, 460px) !important;
+  gap: 16px !important;
+}
+
+.login-beneficios article {
+  grid-template-columns: 48px 1fr !important;
+  gap: 14px !important;
+}
+
+.benefit-icon {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.login-beneficios strong {
+  font-size: 0.96rem !important;
+}
+
+.login-beneficios p {
+  font-size: 0.84rem !important;
+}
+
+/* Panel derecho más centrado, con aire a los lados */
+.auth-panel {
+  padding: clamp(36px, 4vw, 70px) clamp(70px, 7vw, 120px) !important;
+}
+
+.auth-card {
+  width: min(100%, 560px) !important;
+  max-width: 560px !important;
+}
+
+.auth-logo {
+  margin-bottom: 22px !important;
+}
+
+.auth-logo img {
+  width: clamp(250px, 22vw, 340px) !important;
+  max-height: 128px !important;
+}
+
+.auth-card-header {
+  margin-bottom: 34px !important;
+}
+
+.auth-card-header h2 {
+  font-size: clamp(2.55rem, 3.6vw, 3.7rem) !important;
+  margin-bottom: 12px !important;
+}
+
+.auth-card-header span {
+  font-size: 1.08rem !important;
+}
+
+.auth-form {
+  gap: 18px !important;
+}
+
+.auth-form input,
+.auth-form select {
+  min-height: 58px !important;
+}
+
+.btn-auth-principal {
+  min-height: 58px !important;
+  margin-top: 8px !important;
+}
+
+.auth-separador {
+  margin: 18px 0 4px !important;
+}
+
+.btn-google {
+  min-height: 56px !important;
+}
+
+.google-mark {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  flex: 0 0 26px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+}
+
+.btn-google span:last-child {
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+
+/* Laptop baja: escalar con armonía, no aplastar */
+@media (min-width: 1025px) and (max-height: 860px) {
+  .cuenta-main {
+    padding: 14px !important;
+  }
+
+  .login-shell {
+    width: min(100%, 1280px) !important;
+    height: calc(100dvh - 28px) !important;
+    min-height: 0 !important;
+    grid-template-columns: minmax(420px, 0.95fr) minmax(500px, 1.05fr) !important;
+  }
+
+  .login-visual-content {
+    padding: 30px 46px 28px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 330px) !important;
+    margin-bottom: 38px !important;
+  }
+
+  .logo-cohete {
+    width: 68px !important;
+  }
+
+  .logo-texto {
+    width: 248px !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 420px !important;
+    font-size: clamp(2.15rem, 3.1vw, 3rem) !important;
+    line-height: 1.07 !important;
+    margin-bottom: 13px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 390px !important;
+    font-size: 0.92rem !important;
+    line-height: 1.42 !important;
+    margin-bottom: 22px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 390px) !important;
+    gap: 12px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 42px 1fr !important;
+    gap: 12px !important;
+  }
+
+  .benefit-icon {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.86rem !important;
+  }
+
+  .login-beneficios p {
+    font-size: 0.76rem !important;
+  }
+
+  .auth-panel {
+    padding: 26px 68px !important;
+    overflow: hidden !important;
+  }
+
+  .auth-card {
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 12px !important;
+  }
+
+  .auth-logo img {
+    width: 270px !important;
+    max-height: 96px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 20px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.8rem !important;
+    margin-bottom: 7px !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.96rem !important;
+  }
+
+  .auth-form {
+    gap: 11px !important;
+  }
+
+  .auth-form label {
+    margin-bottom: -4px !important;
+    font-size: 0.93rem !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 50px !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 50px !important;
+  }
+
+  .auth-separador {
+    margin: 10px 0 2px !important;
+  }
+
+  .auth-cambio {
+    margin-top: 10px !important;
+  }
+}
+
+/* Pantallas grandes: más parecido a la referencia */
+@media (min-width: 1400px) and (min-height: 850px) {
+  .login-shell {
+    min-height: 820px !important;
+  }
+
+  .auth-card {
+    max-width: 600px !important;
+  }
+
+  .auth-panel {
+    padding-inline: clamp(90px, 8vw, 140px) !important;
+  }
+}
+
+/* Tablet y celular mantienen estructura natural */
+@media (max-width: 1024px) {
+  .login-shell {
+    height: auto !important;
+    min-height: auto !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .auth-panel {
+    padding: 36px 24px !important;
+    overflow: visible !important;
+  }
+
+  .auth-card {
+    width: min(100%, 560px) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .auth-panel {
+    padding: 26px 16px !important;
+  }
+
+  .auth-card {
+    width: 100% !important;
+  }
+}
+
+
+/* =====================================================
+   V17 - Ajuste multimonitor
+   Pantallas grandes: conserva el diseño respirado.
+   Laptops/monitores con poca altura: escala proporcional.
+===================================================== */
+
+/* Evita corte del contenido interno */
+.login-shell {
+  overflow: hidden !important;
+}
+
+.auth-panel {
+  overflow: visible !important;
+}
+
+/* Pantallas medianas con poca altura */
+@media (min-width: 1025px) and (max-height: 790px) {
+  .cuenta-main {
+    padding: 12px !important;
+  }
+
+  .login-shell {
+    width: min(100%, 1280px) !important;
+    height: calc(100dvh - 24px) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    grid-template-columns: minmax(410px, 0.95fr) minmax(500px, 1.05fr) !important;
+  }
+
+  .login-visual-content {
+    padding: 32px 48px 28px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 330px) !important;
+    margin-bottom: 34px !important;
+  }
+
+  .logo-cohete {
+    width: 68px !important;
+  }
+
+  .logo-texto {
+    width: 248px !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 430px !important;
+    font-size: clamp(2.08rem, 3vw, 2.95rem) !important;
+    line-height: 1.07 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 390px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.42 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 390px) !important;
+    gap: 11px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 42px 1fr !important;
+    gap: 12px !important;
+  }
+
+  .benefit-icon {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.86rem !important;
+  }
+
+  .login-beneficios p {
+    font-size: 0.76rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .auth-panel {
+    padding: 18px 62px !important;
+  }
+
+  .auth-card {
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 10px !important;
+  }
+
+  .auth-logo img {
+    width: 265px !important;
+    max-height: 92px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 18px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.75rem !important;
+    line-height: 1.03 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.95rem !important;
+  }
+
+  .auth-form {
+    gap: 10px !important;
+  }
+
+  .auth-form label {
+    font-size: 0.92rem !important;
+    margin-bottom: -5px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 48px !important;
+    border-radius: 14px !important;
+    font-size: 0.93rem !important;
+  }
+
+  .btn-auth-link {
+    margin-top: -3px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 48px !important;
+    border-radius: 14px !important;
+    font-size: 0.94rem !important;
+  }
+
+  .auth-separador {
+    margin: 8px 0 0 !important;
+    gap: 10px !important;
+  }
+
+  .auth-separador p {
+    font-size: 0.84rem !important;
+  }
+
+  .auth-cambio {
+    margin-top: 8px !important;
+    font-size: 0.86rem !important;
+  }
+}
+
+/* Pantallas todavía más bajas: escala completa del formulario para que entre */
+@media (min-width: 1025px) and (max-height: 700px) {
+  .cuenta-main {
+    padding: 8px !important;
+  }
+
+  .login-shell {
+    height: calc(100dvh - 16px) !important;
+    width: min(100%, 1240px) !important;
+    grid-template-columns: minmax(390px, 0.94fr) minmax(480px, 1.06fr) !important;
+  }
+
+  .login-visual-content {
+    padding: 26px 42px 22px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 310px) !important;
+    margin-bottom: 26px !important;
+  }
+
+  .logo-cohete {
+    width: 62px !important;
+  }
+
+  .logo-texto {
+    width: 232px !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 390px !important;
+    font-size: 2.35rem !important;
+    line-height: 1.05 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 350px !important;
+    font-size: 0.84rem !important;
+    line-height: 1.32 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 350px) !important;
+    gap: 8px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 36px 1fr !important;
+    gap: 10px !important;
+  }
+
+  .benefit-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.78rem !important;
+  }
+
+  .login-beneficios p {
+    font-size: 0.68rem !important;
+    line-height: 1.18 !important;
+  }
+
+  .auth-panel {
+    padding: 8px 52px !important;
+  }
+
+  .auth-card {
+    transform: scale(0.91) !important;
+    transform-origin: center center !important;
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 8px !important;
+  }
+
+  .auth-logo img {
+    width: 245px !important;
+    max-height: 86px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 14px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 2.55rem !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.9rem !important;
+  }
+
+  .auth-form {
+    gap: 9px !important;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    min-height: 46px !important;
+  }
+
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 46px !important;
+  }
+
+  .auth-cambio {
+    margin-top: 6px !important;
+  }
+}
+
+/* En pantallas muy anchas y altas, se parece más a la referencia grande */
+@media (min-width: 1500px) and (min-height: 850px) {
+  .login-shell {
+    width: min(100%, 1420px) !important;
+    min-height: min(830px, calc(100dvh - 56px)) !important;
+  }
+
+  .auth-card {
+    max-width: 590px !important;
+  }
+
+  .auth-panel {
+    padding-inline: clamp(90px, 8vw, 135px) !important;
+  }
+}
+
+
+/* =====================================================
+   V18 - Responsive móvil/tablet corregido
+   Objetivo: que el panel visual izquierdo también se vea
+   bien en celular de distintos tamaños.
+===================================================== */
+
+/* TABLET Y MÓVIL: stack real, sin deformación */
+@media (max-width: 900px) {
+  .cuenta-header {
+    position: static !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 12px 12px 0 !important;
+  }
+
+  .volver-inicio {
+    min-height: 42px !important;
+    padding: 0 14px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .cuenta-main {
+    padding: 12px !important;
+    min-height: auto !important;
+  }
+
+  .login-shell {
+    width: min(100%, 720px) !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    grid-template-columns: 1fr !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+  }
+
+  .login-visual,
+  .auth-panel {
+    width: 100% !important;
+  }
+
+  .login-visual {
+    min-height: 520px !important;
+  }
+
+  .login-visual-bg {
+    object-fit: cover !important;
+    object-position: 72% bottom !important;
+  }
+
+  .login-visual-content {
+    padding: 28px 28px 26px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 300px) !important;
+    margin-bottom: 26px !important;
+    gap: 6px !important;
+  }
+
+  .logo-cohete {
+    width: 58px !important;
+  }
+
+  .logo-texto {
+    width: 220px !important;
+  }
+
+  .login-visual-copy {
+    width: min(100%, 360px) !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 340px !important;
+    font-size: clamp(2rem, 7vw, 3rem) !important;
+    line-height: 1.06 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 320px !important;
+    font-size: 0.94rem !important;
+    line-height: 1.42 !important;
+    margin-bottom: 18px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 320px) !important;
+    gap: 10px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 38px 1fr !important;
+    gap: 10px !important;
+  }
+
+  .benefit-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 0.92rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.82rem !important;
+  }
+
+  .login-beneficios p {
+    font-size: 0.72rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .auth-panel {
+    padding: 26px 18px 24px !important;
+    overflow: visible !important;
+  }
+
+  .auth-card {
+    width: min(100%, 520px) !important;
+    max-width: 520px !important;
+  }
+}
+
+/* CELULAR NORMAL */
+@media (max-width: 620px) {
+  .cuenta-main {
+    padding: 10px !important;
+  }
+
+  .login-shell {
+    width: 100% !important;
+    border-radius: 22px !important;
+  }
+
+  .login-visual {
+    min-height: 500px !important;
+  }
+
+  .login-visual-bg {
+    object-position: 74% bottom !important;
+  }
+
+  .login-visual-content {
+    padding: 24px 22px 22px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 265px) !important;
+    margin-bottom: 22px !important;
+  }
+
+  .logo-cohete {
+    width: 52px !important;
+  }
+
+  .logo-texto {
+    width: 194px !important;
+  }
+
+  .login-visual-copy {
+    width: min(100%, 280px) !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 280px !important;
+    font-size: clamp(1.9rem, 9vw, 2.55rem) !important;
+    line-height: 1.04 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 260px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.38 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 275px) !important;
+    gap: 8px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 34px 1fr !important;
+    gap: 9px !important;
+  }
+
+  .benefit-icon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.76rem !important;
+  }
+
+  .login-beneficios p {
+    display: none !important;
+  }
+
+  .auth-panel {
+    padding: 24px 14px 22px !important;
+  }
+
+  .auth-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .auth-logo {
+    margin-bottom: 12px !important;
+  }
+
+  .auth-logo img {
+    width: min(260px, 74vw) !important;
+    max-height: 96px !important;
+  }
+
+  .auth-card-header {
+    margin-bottom: 20px !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: clamp(2rem, 8vw, 2.6rem) !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.95rem !important;
+  }
+
+  .auth-form {
+    gap: 12px !important;
+  }
+
+  .auth-form label {
+    font-size: 0.92rem !important;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 52px !important;
+    font-size: 0.94rem !important;
+  }
+
+  .auth-separador {
+    margin: 10px 0 2px !important;
+  }
+
+  .auth-cambio {
+    margin-top: 10px !important;
+    font-size: 0.92rem !important;
+  }
+}
+
+/* CELULAR MUY PEQUEÑO */
+@media (max-width: 420px) {
+  .cuenta-main {
+    padding: 8px !important;
+  }
+
+  .login-shell {
+    border-radius: 18px !important;
+  }
+
+  .login-visual {
+    min-height: 460px !important;
+  }
+
+  .login-visual-bg {
+    object-position: 77% bottom !important;
+  }
+
+  .login-visual-content {
+    padding: 20px 18px 18px !important;
+  }
+
+  .login-visual-logo {
+    width: min(100%, 235px) !important;
+    margin-bottom: 18px !important;
+  }
+
+  .logo-cohete {
+    width: 46px !important;
+  }
+
+  .logo-texto {
+    width: 175px !important;
+  }
+
+  .login-visual-copy {
+    width: min(100%, 245px) !important;
+  }
+
+  .login-visual-copy h1 {
+    max-width: 245px !important;
+    font-size: clamp(1.7rem, 8.8vw, 2.2rem) !important;
+    line-height: 1.03 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .login-visual-copy p {
+    max-width: 230px !important;
+    font-size: 0.84rem !important;
+    line-height: 1.34 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .login-beneficios {
+    width: min(100%, 240px) !important;
+    gap: 7px !important;
+  }
+
+  .login-beneficios article {
+    grid-template-columns: 30px 1fr !important;
+    gap: 8px !important;
+  }
+
+  .benefit-icon {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.74rem !important;
+  }
+
+  .login-beneficios strong {
+    font-size: 0.7rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .auth-panel {
+    padding: 20px 12px 20px !important;
+  }
+
+  .auth-logo img {
+    width: min(220px, 70vw) !important;
+  }
+
+  .auth-card-header h2 {
+    font-size: 1.9rem !important;
+  }
+
+  .auth-card-header span {
+    font-size: 0.9rem !important;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .btn-auth-principal,
+  .btn-google {
+    min-height: 50px !important;
   }
 }

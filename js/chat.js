@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatForm = document.getElementById("chatForm");
   const chatTexto = document.getElementById("chatTexto");
   const chatEnviar = document.getElementById("chatEnviar");
+  let miniChatBadge = null;
 
   function limpiarTexto(valor) {
     return String(valor ?? "")
@@ -29,6 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function obtenerIniciales(nombre) {
+    return String(nombre || "?")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((parte) => parte.charAt(0).toUpperCase())
+      .join("") || "?";
   }
 
   function obtenerNombreChat(chat) {
@@ -114,6 +125,31 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function obtenerTotalNoLeidos(chats = chatsActuales) {
+    return chats.filter((chat) => chat.noLeido).length;
+  }
+
+  function actualizarBadgeMiniChat(total = obtenerTotalNoLeidos()) {
+    if (!miniChatBadge) return;
+
+    if (total > 0) {
+      miniChatBadge.textContent = total > 99 ? "99+" : String(total);
+      miniChatBadge.hidden = false;
+      return;
+    }
+
+    miniChatBadge.hidden = true;
+    miniChatBadge.textContent = "";
+  }
+
+  function obtenerTextoResumenChat(chat) {
+    if (chat.noLeido) {
+      return chat.ultimoMensaje || "Nuevo mensaje";
+    }
+
+    return chat.ultimoMensaje || "Sin mensajes todavía";
+  }
+
   function pintarLista(contenedor, chats, compacto = false, resumen = null) {
     if (!contenedor) return;
 
@@ -131,13 +167,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     contenedor.innerHTML = chats
-      .map((chat) => `
-        <button class="chat-item ${chatActivo?.id === chat.id ? "active" : ""}" type="button" data-chat-id="${limpiarTexto(chat.id)}">
-          <strong>${limpiarTexto(obtenerNombreChat(chat))}</strong>
-          <span>${limpiarTexto(chat.curso || "Tutoria")}</span>
-          <span>${limpiarTexto(chat.ultimoMensaje || "Sin mensajes todavia")}</span>
+      .map((chat) => {
+        const nombreChat = obtenerNombreChat(chat);
+        return `
+        <button class="chat-item ${chatActivo?.id === chat.id ? "active" : ""} ${chat.noLeido ? "unread" : ""}" type="button" data-chat-id="${limpiarTexto(chat.id)}">
+          <span class="chat-item-avatar">${limpiarTexto(obtenerIniciales(nombreChat))}</span>
+          <span class="chat-item-body">
+            <span class="chat-item-title">
+              <strong>${limpiarTexto(nombreChat)}</strong>
+              ${chat.noLeido ? '<span class="chat-unread-dot" aria-label="Conversación no leída"></span>' : ""}
+            </span>
+            <span class="chat-item-course">${limpiarTexto(chat.curso || "Tutoría")}</span>
+            <span class="chat-item-preview">
+              ${chat.noLeido ? '<strong class="chat-new-label">Nuevo mensaje</strong>' : ""}
+              ${limpiarTexto(obtenerTextoResumenChat(chat))}
+            </span>
+          </span>
         </button>
-      `)
+      `;
+      })
       .join("");
 
     if (compacto) {
@@ -152,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargarChats() {
     const resumen = await obtenerResumenChats();
     chatsActuales = resumen.chats;
+    actualizarBadgeMiniChat(resumen.totalNoLeidos);
 
     if (esPaginaChat) {
       pintarLista(listaConversaciones, chatsActuales, false, resumen);
@@ -179,11 +228,17 @@ document.addEventListener("DOMContentLoaded", () => {
     pintarLista(listaConversaciones, chatsActuales);
 
     if (chatTitulo) chatTitulo.textContent = obtenerNombreChat(chatActivo);
-    if (chatCurso) chatCurso.textContent = chatActivo.curso || "Tutoria";
+    if (chatCurso) chatCurso.textContent = chatActivo.curso || "Tutoría";
     actualizarFormularioChat(true);
 
     const mensajes = await obtenerMensajesChat(chatActivo.id);
     await marcarChatLeido(chatActivo.id);
+    chatsActuales = chatsActuales.map((chat) =>
+      chat.id === chatActivo.id ? { ...chat, noLeido: false } : chat,
+    );
+    chatActivo = { ...chatActivo, noLeido: false };
+    pintarLista(listaConversaciones, chatsActuales);
+    actualizarBadgeMiniChat();
 
     if (!chatMensajes) return;
 
@@ -200,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return `
         <div class="chat-message ${mensaje.autorId === usuario?.uid ? "mine" : ""}">
-          ${limpiarTexto(mensaje.texto)}
+          <p>${limpiarTexto(mensaje.texto)}</p>
           <small>${limpiarTexto(mensaje.autorRol || "usuario")}${fechaMensaje ? ` · ${limpiarTexto(fechaMensaje)}` : ""}</small>
         </div>
       `;
@@ -216,14 +271,18 @@ document.addEventListener("DOMContentLoaded", () => {
     boton.className = "tf-mini-chat-button";
     boton.type = "button";
     boton.setAttribute("aria-label", "Abrir chat");
-    boton.textContent = "Chat";
+    boton.innerHTML = `
+      <span class="tf-mini-chat-icon">💬</span>
+      <span class="tf-mini-chat-text">Chat</span>
+      <span class="tf-mini-chat-badge" hidden></span>
+    `;
 
     const panel = document.createElement("section");
     panel.className = "tf-mini-chat-panel oculto";
     panel.innerHTML = `
       <div class="tf-mini-chat-head">
         <strong>Mensajes</strong>
-        <button class="tf-mini-chat-close" type="button">x</button>
+        <button class="tf-mini-chat-close" type="button">×</button>
       </div>
       <div class="tf-mini-chat-list">
         <div class="chat-empty"><strong>Cargando mensajes...</strong></div>
@@ -234,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.body.append(boton, panel);
+    miniChatBadge = boton.querySelector(".tf-mini-chat-badge");
 
     const lista = panel.querySelector(".tf-mini-chat-list");
     const cerrar = panel.querySelector(".tf-mini-chat-close");
@@ -241,10 +301,12 @@ document.addEventListener("DOMContentLoaded", () => {
     async function cargarMiniChat() {
       try {
         const resumen = await obtenerResumenChats();
+        chatsActuales = resumen.chats;
+        actualizarBadgeMiniChat(resumen.totalNoLeidos);
         pintarLista(lista, resumen.chats, true, resumen);
       } catch (error) {
         if (esErrorSesion(error)) {
-          pintarEstadoChat(lista, "Inicia sesion para ver tus conversaciones.");
+          pintarEstadoChat(lista, "Inicia sesión para ver tus conversaciones.");
           return;
         }
 
@@ -340,11 +402,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (esErrorSesion(error)) {
           pintarEstadoChat(
             listaConversaciones,
-            "Inicia sesion para ver tus conversaciones.",
+            "Inicia sesión para ver tus conversaciones.",
           );
           pintarEstadoChat(
             chatMensajes,
-            "Inicia sesion para ver tus conversaciones.",
+            "Inicia sesión para ver tus conversaciones.",
           );
           return;
         }

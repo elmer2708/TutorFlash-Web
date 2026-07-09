@@ -1,175 +1,573 @@
-/* ==============================
-   TUTORFLASH - PERFIL ESTUDIANTE
-================================= */
+@import url("./tutorflash-theme.css");
 
-.tf-profile-layout {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.35fr) minmax(0, 0.65fr);
-  gap: 14px;
+/* =====================================================
+   TutorFlash - Perfil estudiante premium
+   Solo visual. No toca JS ni Firebase.
+===================================================== */
+
+body.tf-profile-page {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(37,99,235,.08), transparent 24%),
+    radial-gradient(circle at 88% 12%, rgba(244,180,0,.10), transparent 22%),
+    linear-gradient(180deg, #eef3fb 0%, #f4f8fd 100%);
 }
 
-.tf-profile-card {
-  background: #ffffff;
-  border: 1px solid rgba(7, 27, 61, 0.08);
-  box-shadow: 0 14px 32px rgba(7, 27, 61, 0.07);
-  border-radius: 22px;
-  padding: 20px;
+body.tf-profile-page .tf-student-main {
+  min-width: 0;
+  padding: clamp(14px, 1.8vw, 22px);
 }
 
-.tf-profile-summary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+body.tf-profile-page .tf-sidebar {
+  position: sticky;
+  top: 10px;
+  align-self: start;
+}
+
+body.tf-profile-page .tf-topbar {
+  margin-bottom: 18px;
+}
+
+/* dropdown usuario */
+body.tf-profile-page .tf-user-dropdown {
+  text-align: center;
+}
+body.tf-profile-page .tf-user-email {
+  margin: 0 auto 10px;
+  text-align: center;
+}
+body.tf-profile-page .tf-user-dropdown-avatar {
+  margin: 0 auto 12px;
+}
+body.tf-profile-page #saludoUsuarioMenu {
+  margin: 0 0 14px;
   text-align: center;
 }
 
-.tf-profile-avatar {
-  width: 92px;
-  height: 92px;
+/* layout principal */
+body.tf-profile-page .tf-profile-layout {
   display: grid;
-  place-items: center;
-  margin-bottom: 14px;
-  border-radius: 28px;
-  background: #ffc629;
-  color: #071b3d;
-  font-size: 2rem;
-  font-weight: 900;
-  box-shadow: 0 14px 26px rgba(255, 198, 41, 0.28);
+  grid-template-columns: minmax(290px, 0.37fr) minmax(0, 0.63fr);
+  gap: 20px;
+  align-items: stretch;
 }
 
-.tf-profile-label {
+body.tf-profile-page .tf-profile-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(28px, 3vw, 36px);
+  border-radius: 32px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid rgba(220,231,243,.96);
+  box-shadow: 0 18px 42px rgba(6,26,58,.08);
+}
+
+/* resumen */
+body.tf-profile-page .tf-profile-summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 740px;
+  text-align: center;
+}
+
+body.tf-profile-page .tf-profile-summary-deco {
+  position: absolute;
+  color: #f4b400;
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+body.tf-profile-page .tf-profile-summary-deco-left {
+  left: 20%;
+  top: 18%;
+}
+body.tf-profile-page .tf-profile-summary-deco-right {
+  right: 18%;
+  top: 12%;
+}
+
+body.tf-profile-page .tf-profile-avatar {
+  width: 118px;
+  height: 118px;
+  margin: 18px auto 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 34px;
+  background: linear-gradient(180deg, #ffc72c 0%, #f4b400 100%);
+  color: #07245b;
+  font-size: 3rem;
+  font-weight: 900;
+  box-shadow: 0 18px 38px rgba(244,180,0,.28);
+}
+
+body.tf-profile-page .tf-profile-label {
   display: inline-block;
   margin-bottom: 8px;
   color: #f0a400;
-  font-size: 0.78rem;
+  font-size: .86rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: .12em;
 }
 
-.tf-profile-summary h2 {
-  margin: 0 0 6px;
+body.tf-profile-page .tf-profile-summary h2 {
+  margin: 0;
   color: #071b3d;
+  font-size: clamp(2rem, 2.8vw, 2.7rem);
+  line-height: 1.04;
+  font-weight: 900;
+}
+
+body.tf-profile-page .tf-profile-summary p {
+  margin: 8px 0 0;
+  color: #587197;
+  font-size: 1.03rem;
+  line-height: 1.45;
+}
+
+body.tf-profile-page .tf-profile-badges {
+  width: 100%;
+  max-width: 320px;
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+body.tf-profile-page .tf-profile-badges span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #2150bb;
+  font-size: .95rem;
+  font-weight: 900;
+}
+
+body.tf-profile-page .tf-profile-divider {
+  width: 100%;
+  height: 1px;
+  margin: 34px 0 26px;
+  background: linear-gradient(90deg, transparent 0%, rgba(191,204,224,.95) 16%, rgba(191,204,224,.95) 84%, transparent 100%);
+}
+
+body.tf-profile-page .tf-profile-note {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid rgba(220,231,243,.96);
+  color: #64748b;
+  text-align: left;
+}
+
+body.tf-profile-page .tf-profile-note i {
+  color: #2563eb;
   font-size: 1.45rem;
 }
 
-.tf-profile-summary p {
+body.tf-profile-page .tf-profile-note p {
+  margin: 0;
+  font-size: .98rem;
+  line-height: 1.55;
+  color: #4a648b;
+}
+
+/* editor */
+body.tf-profile-page .tf-profile-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+body.tf-profile-page .tf-profile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+body.tf-profile-page .tf-section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.tf-profile-page .tf-profile-header h2 {
+  margin: 10px 0 8px;
+  color: #071b3d;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1;
+  font-weight: 900;
+}
+
+body.tf-profile-page .tf-profile-intro {
   margin: 0;
   color: #64748b;
-  font-size: 0.92rem;
-  word-break: break-word;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-.tf-profile-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.tf-profile-badges span {
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: #eef4fb;
-  color: #123b5d;
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.tf-profile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.tf-profile-header h2 {
-  margin: 4px 0 0;
-  color: #071b3d;
-  font-size: 1.7rem;
-  line-height: 1.1;
-}
-
-.tf-profile-status {
-  margin: 0 0 16px;
-  color: #64748b;
-  font-size: 0.92rem;
+body.tf-profile-page .tf-profile-status {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fbff;
+  color: #5a6f8f;
   font-weight: 800;
+  border: 1px solid rgba(220,231,243,.96);
 }
-
-.tf-profile-status.is-success {
-  color: #16834a;
+body.tf-profile-page .tf-profile-status.is-success {
+  background: #ecfdf3;
+  color: #166534;
+  border-color: #bbf7d0;
 }
-
-.tf-profile-status.is-error {
+body.tf-profile-page .tf-profile-status.is-error {
+  background: #fef2f2;
   color: #b91c1c;
+  border-color: #fecaca;
 }
 
-.tf-profile-form {
+body.tf-profile-page .tf-profile-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 18px 20px;
 }
 
-.tf-profile-form label {
+body.tf-profile-page .tf-profile-form label {
   display: grid;
-  gap: 7px;
+  gap: 10px;
+}
+
+body.tf-profile-page .tf-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   color: #071b3d;
+  font-size: 1rem;
   font-weight: 900;
 }
 
-.tf-profile-form input,
-.tf-profile-form select {
-  width: 100%;
-  border: 1px solid rgba(7, 27, 61, 0.14);
-  border-radius: 16px;
-  padding: 12px 13px;
-  background: white;
-  color: #071b3d;
-  outline: none;
-  font-size: 0.96rem;
+body.tf-profile-page .tf-field-label i {
+  color: #1f356f;
+  font-size: 1.2rem;
 }
 
-.tf-profile-form input:focus,
-.tf-profile-form select:focus {
+body.tf-profile-page .tf-input-shell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 0 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(191,204,224,.96);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+body.tf-profile-page .tf-input-shell:focus-within {
   border-color: #ffc629;
-  box-shadow: 0 0 0 4px rgba(255, 198, 41, 0.24);
+  box-shadow: 0 0 0 4px rgba(255,198,41,.20);
 }
 
-.tf-profile-form input:disabled {
+body.tf-profile-page .tf-input-icon {
+  flex-shrink: 0;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+body.tf-profile-page .tf-input-shell input,
+body.tf-profile-page .tf-input-shell select {
+  width: 100%;
+  min-height: 56px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #071b3d;
+  font-size: 1rem;
+}
+
+body.tf-profile-page .tf-input-shell select {
+  cursor: pointer;
+}
+
+body.tf-profile-page .tf-input-shell input::placeholder {
+  color: #8a9ab5;
+}
+
+body.tf-profile-page .tf-input-shell.is-disabled {
   background: #f1f5f9;
+}
+
+body.tf-profile-page .tf-input-shell input:disabled {
   color: #64748b;
   cursor: not-allowed;
 }
 
-.tf-profile-full {
+body.tf-profile-page .tf-profile-full {
   grid-column: 1 / -1;
 }
 
-.tf-profile-form .tf-btn {
+body.tf-profile-page .tf-profile-save {
   grid-column: 1 / -1;
   width: 100%;
+  min-height: 62px;
+  border-radius: 22px;
+  font-size: 1.06rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 18px 28px rgba(6,26,58,.18);
 }
 
-@media (max-width: 980px) {
-  .tf-profile-layout {
+body.tf-profile-page .tf-profile-save i {
+  font-size: 1.15rem;
+}
+
+/* responsive */
+@media (max-width: 1080px) {
+  body.tf-profile-page .tf-profile-layout {
     grid-template-columns: 1fr;
+  }
+
+  body.tf-profile-page .tf-profile-summary {
+    min-height: auto;
   }
 }
 
-@media (max-width: 620px) {
-  .tf-profile-form {
+@media (max-width: 760px) {
+  body.tf-profile-page .tf-profile-form {
     grid-template-columns: 1fr;
   }
 
-  .tf-profile-card {
-    padding: 18px;
-    border-radius: 20px;
+  body.tf-profile-page .tf-profile-header h2 {
+    font-size: 2rem;
   }
 
-  .tf-profile-header h2 {
-    font-size: 1.45rem;
+  body.tf-profile-page .tf-profile-summary-deco-left {
+    left: 16%;
+    top: 14%;
   }
+}
+
+@media (max-width: 430px) {
+  body.tf-profile-page .tf-student-main {
+    padding: 12px;
+  }
+
+  body.tf-profile-page .tf-profile-card {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  body.tf-profile-page .tf-profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 28px;
+    font-size: 2.45rem;
+  }
+
+  body.tf-profile-page .tf-profile-badges span,
+  body.tf-profile-page .tf-profile-save {
+    border-radius: 18px;
+  }
+}
+
+
+/* =====================================================
+   V4 - Íconos visibles + layout más compacto y centrado
+===================================================== */
+body.tf-profile-page {
+  overflow-x: hidden;
+}
+
+body.tf-profile-page .tf-student-main {
+  overflow-x: hidden;
+  padding: clamp(12px, 1.5vw, 18px);
+}
+
+body.tf-profile-page .tf-profile-layout {
+  max-width: 1460px;
+  margin: 0 auto;
+  grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+body.tf-profile-page .tf-profile-card {
+  padding: clamp(22px, 2.2vw, 30px);
+}
+
+body.tf-profile-page .tf-profile-summary {
+  min-height: 0;
+  justify-content: center;
+}
+
+body.tf-profile-page .tf-profile-avatar {
+  margin: 8px auto 18px;
+}
+
+body.tf-profile-page .tf-profile-badges {
+  margin-top: 22px;
+}
+
+body.tf-profile-page .tf-profile-badges span {
+  position: relative;
+  min-height: 52px;
+}
+
+body.tf-profile-page #perfilNivelResumen::before {
+  content: "🎓";
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+body.tf-profile-page #perfilDistritoResumen::before {
+  content: "📍";
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
+body.tf-profile-page .tf-profile-divider {
+  margin: 28px 0 22px;
+}
+
+body.tf-profile-page .tf-profile-note {
+  padding: 16px;
+}
+
+body.tf-profile-page .tf-profile-header h2 {
+  margin: 8px 0 6px;
+}
+
+body.tf-profile-page .tf-profile-status {
+  margin: 0 0 16px;
+}
+
+body.tf-profile-page .tf-profile-form {
+  gap: 16px 18px;
+}
+
+body.tf-profile-page .tf-input-shell {
+  min-height: 56px;
+}
+
+body.tf-profile-page .tf-input-shell input,
+body.tf-profile-page .tf-input-shell select {
+  min-height: 54px;
+}
+
+body.tf-profile-page .tf-profile-save {
+  min-height: 58px;
+}
+
+@media (max-width: 1180px) {
+  body.tf-profile-page .tf-profile-layout {
+    grid-template-columns: 1fr;
+    max-width: 980px;
+  }
+
+  body.tf-profile-page .tf-profile-summary {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  body.tf-profile-page .tf-profile-layout {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 430px) {
+  body.tf-profile-page .tf-profile-badges span {
+    justify-content: center;
+    padding-inline: 14px;
+  }
+}
+
+
+/* =====================================================
+   V5 - Íconos SVG en badges del perfil
+===================================================== */
+body.tf-profile-page .tf-profile-badges span {
+  gap: 12px;
+}
+
+body.tf-profile-page .tf-profile-badges .tf-badge-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 22px;
+  color: #2563eb;
+}
+
+body.tf-profile-page .tf-profile-badges .tf-badge-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body.tf-profile-page .tf-profile-badges .tf-badge-text {
+  display: inline-block;
+}
+
+body.tf-profile-page #perfilNivelResumen::before,
+body.tf-profile-page #perfilDistritoResumen::before {
+  content: none !important;
+  display: none !important;
+}
+
+
+/* =====================================================
+   V6 - Íconos que NO se borran con JS
+   El JS usa textContent en estos badges, por eso los íconos deben ir en ::before.
+===================================================== */
+body.tf-profile-page #perfilNivelResumen,
+body.tf-profile-page #perfilDistritoResumen {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 11px !important;
+  text-align: center !important;
+}
+
+body.tf-profile-page #perfilNivelResumen::before,
+body.tf-profile-page #perfilDistritoResumen::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 23px !important;
+  height: 23px !important;
+  flex: 0 0 23px !important;
+  margin: 0 !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+body.tf-profile-page #perfilNivelResumen::before {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5 3 9.5 12 14l9-4.5L12 5Z'/%3E%3Cpath d='M7 11.5V15c0 1.7 2.4 3 5 3s5-1.3 5-3v-3.5'/%3E%3Cpath d='M21 9.5V14'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+body.tf-profile-page #perfilDistritoResumen::before {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/g%3E%3C/svg%3E") !important;
 }

@@ -1,3 +1,5 @@
+@import url("./tutorflash-theme.css");
+
 * {
   box-sizing: border-box;
 }
@@ -1235,5 +1237,54 @@ body.tf-has-app-header .admin-content {
     width: auto;
     max-width: 150px;
     padding-right: 8px;
+  }
+}
+
+/* Premium admin pass */
+.admin-brand {
+  border-radius: 24px;
+}
+
+.admin-content {
+  padding: 18px 22px 42px;
+}
+
+.admin-topbar {
+  padding: 18px 22px;
+}
+
+.admin-section {
+  border-radius: 28px;
+  background: #ffffff;
+  border-color: var(--tf-borde);
+}
+
+.admin-stats {
+  gap: 14px;
+}
+
+.stat-card {
+  min-height: 150px;
+  display: grid;
+  align-content: center;
+}
+
+.btn-admin-secundario.activo {
+  background: var(--tf-azul-950);
+}
+
+.postulacion-card {
+  background: #ffffff;
+  border-color: var(--tf-borde);
+}
+
+.postulacion-dato {
+  background: #f8fbff;
+  border: 1px solid var(--tf-borde);
+}
+
+@media (max-width: 850px) {
+  .admin-content {
+    padding: 76px 16px 32px;
   }
 }

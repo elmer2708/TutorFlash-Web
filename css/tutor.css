@@ -800,3 +800,36 @@ textarea:disabled {
     width: 100%;
   }
 }
+
+/* Tutor público / postulación - estilo compatible V1 */
+body.tf-tutor-public-page {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(37,99,235,.08), transparent 24%),
+    radial-gradient(circle at 86% 12%, rgba(244,180,0,.10), transparent 22%),
+    linear-gradient(180deg, #eef4fb 0%, #f5f8fd 100%) !important;
+  color: #071b3d;
+}
+body.tf-tutor-public-page main,
+body.tf-tutor-public-page .tutor-main {
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: clamp(14px, 2vw, 28px) !important;
+}
+body.tf-tutor-public-page section,
+body.tf-tutor-public-page .form-card,
+body.tf-tutor-public-page .panel-card,
+body.tf-tutor-public-page .tutor-card {
+  border-radius: 28px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(220,231,243,.96) !important;
+  box-shadow: 0 18px 42px rgba(6,26,58,.08) !important;
+}
+body.tf-tutor-public-page input,
+body.tf-tutor-public-page select,
+body.tf-tutor-public-page textarea {
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(191,204,224,.96) !important;
+}
+body.tf-tutor-public-page button,
+body.tf-tutor-public-page .tf-btn { border-radius: 999px !important; font-weight: 900 !important; }

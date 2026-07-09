@@ -2,6 +2,7 @@ import {
   observarUsuario,
   registrarUsuario,
   iniciarSesion,
+  iniciarSesionGoogle,
   cerrarSesion,
   obtenerUsuarioActual,
   obtenerPerfilUsuarioActual,
@@ -26,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginCorreo = document.querySelector("#loginCorreo");
   const loginPassword = document.querySelector("#loginPassword");
   const btnLogin = document.querySelector("#btnLogin");
+  const btnGoogleLogin = document.querySelector("#btnGoogleLogin");
+  const btnTogglePassword = document.querySelector("#btnTogglePassword");
   const btnRestablecerPassword = document.querySelector(
     "#btnRestablecerPassword",
   );

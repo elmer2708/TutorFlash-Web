@@ -1,110 +1,210 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi cuenta | TutorFlash</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../css/tutorflash-theme.css" />
     <link rel="stylesheet" href="../css/cuenta.css" />
   </head>
 
-  <body>
+  <body class="tf-account-page">
     <header class="cuenta-header">
-      <a href="../index.html" class="logo-link" aria-label="Ir al inicio">
-        <img
-          src="../assets/img/logo-tutorflash-transparente.png"
-          alt="TutorFlash"
-        />
+      <a href="../index.html" class="volver-inicio">
+        <i class="bi bi-arrow-left"></i>
+        <span>Volver al inicio</span>
       </a>
-
-      <a href="../index.html" class="volver-inicio"> Volver al inicio </a>
     </header>
 
     <main class="cuenta-main">
-      <section class="cuenta-layout">
+      <section class="login-shell" aria-label="Acceso a cuenta TutorFlash">
+        <aside class="login-visual" aria-hidden="true">
+          <img
+            class="login-visual-bg"
+            src="../assets/img/login-visual-tutorflash.png"
+            alt=""
+          />
+
+          <div class="login-visual-overlay"></div>
+
+          <div class="login-visual-content">
+            <div class="login-visual-logo" aria-label="TutorFlash">
+              <img
+                class="logo-cohete"
+                src="../assets/img/logo-cohete-tutorflash.png"
+                alt=""
+              />
+              <img
+                class="logo-texto"
+                src="../assets/img/logo-texto-tutorflash-blanco.png"
+                alt="TutorFlash"
+              />
+            </div>
+
+            <div class="login-visual-copy">
+              <h1>Aprende sin límites. Avanza con <span>confianza.</span></h1>
+              <p>
+                Conecta con tutores expertos, organiza tus sesiones y alcanza
+                tus metas académicas desde un solo lugar.
+              </p>
+            </div>
+
+            <div class="login-beneficios">
+              <article>
+                <span class="benefit-icon"><i class="bi bi-people-fill"></i></span>
+                <div>
+                  <strong>Tutores verificados y calificados</strong>
+                  <p>Aprende con profesionales de confianza.</p>
+                </div>
+              </article>
+
+              <article>
+                <span class="benefit-icon"><i class="bi bi-calendar-check-fill"></i></span>
+                <div>
+                  <strong>Agenda flexible</strong>
+                  <p>Encuentra horarios que se adapten a ti.</p>
+                </div>
+              </article>
+
+              <article>
+                <span class="benefit-icon"><i class="bi bi-lightning-charge-fill"></i></span>
+                <div>
+                  <strong>Todo en un solo lugar</strong>
+                  <p>Clases, pagos y recursos en tu portal.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </aside>
+
         <section class="auth-panel">
           <div class="auth-card" id="authCard">
+            <div class="auth-logo">
+              <img
+                src="../assets/img/logo-tutorflash-transparente.png"
+                alt="TutorFlash"
+              />
+            </div>
+
             <div class="auth-card-header">
               <p>Mi cuenta</p>
-              <h2>Inicia sesión</h2>
-              <span>Accede a tu cuenta de TutorFlash.</span>
+              <h2>Iniciar sesión</h2>
+              <span>Accede a tu panel de TutorFlash.</span>
             </div>
 
             <p class="auth-mensaje oculto" id="authMensaje"></p>
 
             <form id="loginForm" class="auth-form">
               <label for="loginCorreo">Correo electrónico</label>
-              <input
-                type="email"
-                id="loginCorreo"
-                placeholder="ejemplo@correo.com"
-                autocomplete="email"
-                required
-              />
+              <div class="input-group">
+                <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                <input
+                  type="email"
+                  id="loginCorreo"
+                  placeholder="ejemplo@correo.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
 
               <label for="loginPassword">Contraseña</label>
-              <input
-                type="password"
-                id="loginPassword"
-                placeholder="Ingresa tu contraseña"
-                autocomplete="current-password"
-                minlength="6"
-                required
-              />
+              <div class="input-group input-password-wrap">
+                <span class="input-icon"><i class="bi bi-lock"></i></span>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Ingresa tu contraseña"
+                  autocomplete="current-password"
+                  minlength="6"
+                  required
+                />
+                <span class="input-action" aria-hidden="true"><i class="bi bi-eye"></i></span>
+              </div>
 
-              <button type="submit" id="btnLogin" class="btn-auth-principal">
-                Iniciar sesión
+              <button
+                type="button"
+                id="btnRestablecerPassword"
+                class="btn-auth-link"
+              >
+                ¿Olvidaste tu contraseña?
               </button>
 
-              <button type="button" id="btnRestablecerPassword" class="btn-auth-link">
-                Olvidé mi contraseña
+              <button type="submit" id="btnLogin" class="btn-auth-principal">
+                <i class="bi bi-lightning-charge"></i>
+                <span>Iniciar sesión</span>
+              </button>
+
+              <div class="auth-separador">
+                <span></span>
+                <p>o continúa con</p>
+                <span></span>
+              </div>
+
+              <button type="button" id="btnGoogleLogin" class="btn-google">
+                <span class="google-mark">G</span>
+                <span>Continuar con Google</span>
               </button>
 
               <p class="auth-cambio">
                 ¿No tienes cuenta?
-                <button type="button" id="mostrarRegistro">Crear cuenta</button>
+                <button type="button" id="mostrarRegistro">Regístrate aquí</button>
               </p>
             </form>
 
             <form id="registroForm" class="auth-form oculto">
               <label for="registroNombre">Nombre completo</label>
-              <input
-                type="text"
-                id="registroNombre"
-                placeholder="Escribe tu nombre completo"
-                autocomplete="name"
-                minlength="2"
-                maxlength="60"
-                required
-              />
+              <div class="input-group">
+                <span class="input-icon"><i class="bi bi-person"></i></span>
+                <input
+                  type="text"
+                  id="registroNombre"
+                  placeholder="Escribe tu nombre completo"
+                  autocomplete="name"
+                  minlength="2"
+                  maxlength="60"
+                  required
+                />
+              </div>
 
               <label for="registroRol">Tipo de cuenta</label>
-              <select id="registroRol">
-                <option value="estudiante">Soy estudiante</option>
-                <option value="tutor">Quiero postular como tutor</option>
-              </select>
+              <div class="input-group">
+                <span class="input-icon"><i class="bi bi-people"></i></span>
+                <select id="registroRol">
+                  <option value="estudiante">Soy estudiante</option>
+                  <option value="tutor">Quiero postular como tutor</option>
+                </select>
+              </div>
 
               <label for="registroCorreo">Correo electrónico</label>
-              <input
-                type="email"
-                id="registroCorreo"
-                placeholder="ejemplo@correo.com"
-                autocomplete="email"
-                required
-              />
+              <div class="input-group">
+                <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                <input
+                  type="email"
+                  id="registroCorreo"
+                  placeholder="ejemplo@correo.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
 
               <label for="registroPassword">Contraseña</label>
-              <input
-                type="password"
-                id="registroPassword"
-                placeholder="Mínimo 6 caracteres"
-                autocomplete="new-password"
-                minlength="6"
-                required
-              />
+              <div class="input-group input-password-wrap">
+                <span class="input-icon"><i class="bi bi-lock"></i></span>
+                <input
+                  type="password"
+                  id="registroPassword"
+                  placeholder="Mínimo 6 caracteres"
+                  autocomplete="new-password"
+                  minlength="6"
+                  required
+                />
+              </div>
 
               <button type="submit" id="btnRegistro" class="btn-auth-principal">
-                Crear cuenta
+                <i class="bi bi-person-plus"></i>
+                <span>Crear cuenta</span>
               </button>
 
               <p class="auth-cambio">
@@ -114,8 +214,7 @@
             </form>
 
             <div class="cuenta-activa oculto" id="cuentaActiva">
-              <div class="cuenta-activa-icono">✓</div>
-
+              <div class="cuenta-activa-icono"><i class="bi bi-check-circle"></i></div>
               <h2>Redirigiendo a tu panel...</h2>
               <p id="usuarioActualTexto">Validando tu rol en TutorFlash.</p>
             </div>
@@ -124,7 +223,7 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../js/cuenta.js"></script>
   </body>
 </html>
-

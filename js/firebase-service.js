@@ -3,7 +3,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/fireba
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
@@ -179,6 +181,26 @@ export async function iniciarSesion(correo, password) {
     password,
   );
   return credencial.user;
+}
+
+export async function iniciarSesionGoogle() {
+  const provider = new GoogleAuthProvider();
+  const credencial = await signInWithPopup(auth, provider);
+  const usuario = credencial.user;
+  const perfil = await obtenerPerfilUsuarioActual();
+
+  if (!perfil) {
+    await addDoc(collection(db, "usuarios"), {
+      usuarioId: usuario.uid,
+      nombre: usuario.displayName || "Estudiante",
+      correo: normalizarCorreo(usuario.email),
+      rol: "estudiante",
+      fechaRegistro: serverTimestamp(),
+      proveedor: "google",
+    });
+  }
+
+  return usuario;
 }
 
 export async function cerrarSesion() {
@@ -1644,6 +1666,26 @@ function usuarioParticipaEnChat(chat, usuarioId) {
   return obtenerParticipantesChat(chat).includes(usuarioId);
 }
 
+function chatEstaNoLeido(chat, usuarioId) {
+  const ultimoAutorId = limpiarTextoSeguro(chat?.ultimoAutorId);
+  const leidosPor = chat?.leidosPor || {};
+  const leidoPorUsuario = Array.isArray(leidosPor)
+    ? leidosPor.includes(usuarioId)
+    : Object.prototype.hasOwnProperty.call(leidosPor, usuarioId);
+
+  return Boolean(
+    ultimoAutorId && ultimoAutorId !== usuarioId && !leidoPorUsuario,
+  );
+}
+
+function prepararChatParaUsuario(chat, usuarioId) {
+  return {
+    ...chat,
+    participantes: obtenerParticipantesChat(chat),
+    noLeido: chatEstaNoLeido(chat, usuarioId),
+  };
+}
+
 export async function crearOObtenerChatDesdeReserva(reserva) {
   const usuario = obtenerUsuarioAutenticado(
     "Debes iniciar sesión para abrir el chat.",
@@ -1693,6 +1735,7 @@ export async function crearOObtenerChatDesdeReserva(reserva) {
     id: chatId,
     ...datosChat,
     ultimoMensaje: chatSnap.exists() ? chatSnap.data().ultimoMensaje || "" : "",
+    ultimoAutorId: chatSnap.exists() ? chatSnap.data().ultimoAutorId || "" : "",
     leidosPor: chatSnap.exists() ? chatSnap.data().leidosPor || {} : {},
   };
 }
@@ -1732,14 +1775,22 @@ export async function obtenerMisChats() {
     resultado.value.docs.forEach((documento) => {
       const chat = documento.data();
       chats.set(documento.id, {
-        id: documento.id,
-        ...chat,
-        participantes: obtenerParticipantesChat(chat),
+        ...prepararChatParaUsuario(
+          {
+            id: documento.id,
+            ...chat,
+          },
+          usuario.uid,
+        ),
       });
     });
   });
 
   return [...chats.values()].sort((a, b) => {
+    if (a.noLeido !== b.noLeido) {
+      return a.noLeido ? -1 : 1;
+    }
+
     const fechaA = a.actualizadoEn?.toMillis ? a.actualizadoEn.toMillis() : 0;
     const fechaB = b.actualizadoEn?.toMillis ? b.actualizadoEn.toMillis() : 0;
     return fechaB - fechaA;
@@ -1799,7 +1850,7 @@ async function obtenerRolChatActual(usuario) {
 
 export async function obtenerResumenChats() {
   const usuario = obtenerUsuarioAutenticado(
-    "Debes iniciar sesiÃ³n para ver tus chats.",
+    "Debes iniciar sesión para ver tus chats.",
   );
 
   const rol = await obtenerRolChatActual(usuario);
@@ -1832,16 +1883,23 @@ export async function obtenerResumenChats() {
     chatsPreparados.set(chat.id, chat);
   });
 
-  const chats = [...chatsPreparados.values()].sort((a, b) => {
-    const fechaA = a.actualizadoEn?.toMillis ? a.actualizadoEn.toMillis() : 0;
-    const fechaB = b.actualizadoEn?.toMillis ? b.actualizadoEn.toMillis() : 0;
-    return fechaB - fechaA;
-  });
+  const chats = [...chatsPreparados.values()]
+    .map((chat) => prepararChatParaUsuario(chat, usuario.uid))
+    .sort((a, b) => {
+      if (a.noLeido !== b.noLeido) {
+        return a.noLeido ? -1 : 1;
+      }
+
+      const fechaA = a.actualizadoEn?.toMillis ? a.actualizadoEn.toMillis() : 0;
+      const fechaB = b.actualizadoEn?.toMillis ? b.actualizadoEn.toMillis() : 0;
+      return fechaB - fechaA;
+    });
 
   return {
     usuarioId: usuario.uid,
     rol,
     chats,
+    totalNoLeidos: chats.filter((chat) => chat.noLeido).length,
     tieneReservas: reservas.length > 0,
   };
 }
@@ -1927,7 +1985,7 @@ export async function enviarMensajeChat(chatId, texto) {
     leido: false,
   });
 
-  await setDoc(
+  await updateDoc(
     chatRef,
     {
       ultimoMensaje: mensaje,
@@ -1938,7 +1996,6 @@ export async function enviarMensajeChat(chatId, texto) {
         [usuario.uid]: serverTimestamp(),
       },
     },
-    { merge: true },
   );
 }
 
