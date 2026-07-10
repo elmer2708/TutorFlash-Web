@@ -6,7 +6,7 @@ import {
   guardarTutorFavorito,
   obtenerMisFavoritos,
 } from "./firebase-service.js";
-import { mostrarAviso } from "./mensajes-ui.js";
+import { escaparHtml, mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -31,14 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensajeTutores = document.querySelector("#mensajeTutores");
   const listaTutores = document.querySelector("#listaTutores");
 
-  function limpiarTexto(valor) {
-    return String(valor ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+  const limpiarTexto = escaparHtml;
 
   function normalizar(texto) {
     return String(texto || "")

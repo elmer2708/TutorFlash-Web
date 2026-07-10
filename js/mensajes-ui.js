@@ -1,3 +1,12 @@
+export function escaparHtml(valor) {
+  return String(valor ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 export function mostrarAviso(mensaje, tipo = "info") {
   const aviso = document.createElement("div");
   const iconos = {

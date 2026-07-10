@@ -1,0 +1,225 @@
+/* Sidebar compartido TutorFlash: estudiante, tutor y administrador. */
+:where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) {
+  box-sizing: border-box !important;
+  width: 230px !important;
+  min-width: 0 !important;
+  padding: 16px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(244, 180, 0, 0.12), transparent 30%),
+    linear-gradient(180deg, #09234f 0%, #061a3a 100%) !important;
+  box-shadow: 0 20px 40px rgba(6, 26, 58, 0.18) !important;
+}
+
+:where(.tf-sidebar-logo, .sidebar-logo, .admin-brand) {
+  min-height: 58px !important;
+  margin: 0 0 8px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+:where(.tf-sidebar-logo, .sidebar-logo) img {
+  display: none !important;
+}
+
+:where(.tf-sidebar-logo, .sidebar-logo)::before {
+  content: "" !important;
+  display: block !important;
+  width: 42px !important;
+  height: 42px !important;
+  flex: 0 0 42px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.08) url("../assets/img/rayito-tutorflash.png") center / 38px 38px no-repeat !important;
+}
+
+:where(.tf-sidebar-logo, .sidebar-logo)::after {
+  content: "TutorFlash" !important;
+  color: #ffffff !important;
+  font-size: 1.02rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+}
+
+:where(.tf-sidebar-menu, .sidebar-nav, .admin-menu) {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+}
+
+:where(.tf-sidebar-menu, .sidebar-nav, .admin-menu) .sidebar-link,
+.admin-menu-link {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: 15px !important;
+  background: transparent !important;
+  color: rgba(248, 250, 252, 0.84) !important;
+  font-size: 0.86rem !important;
+  line-height: 1.15 !important;
+  font-weight: 850 !important;
+  text-decoration: none !important;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease !important;
+}
+
+:where(.tf-sidebar-menu, .sidebar-nav, .admin-menu) .sidebar-link:hover,
+.admin-menu-link:hover {
+  background: rgba(255, 255, 255, 0.085) !important;
+  color: #ffffff !important;
+  transform: translateX(2px) !important;
+}
+
+:where(.tf-sidebar-menu, .sidebar-nav, .admin-menu) .sidebar-link:is(.active, .is-active, .activo),
+.admin-menu-link:is(.active, .is-active, .activo) {
+  color: #ffffff !important;
+  border-color: rgba(255, 199, 44, 0.82) !important;
+  background: rgba(255, 199, 44, 0.14) !important;
+  box-shadow: inset 3px 0 0 #f4b400 !important;
+}
+
+:where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) .sidebar-icon,
+:where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) .tf-svg-icon {
+  width: 19px !important;
+  height: 19px !important;
+  flex: 0 0 19px !important;
+}
+
+:where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) .sidebar-icon svg,
+:where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) .tf-svg-icon svg {
+  width: 19px !important;
+  height: 19px !important;
+  stroke-width: 2.1 !important;
+}
+
+:where(.tf-sidebar-card, .tf-sidebar-tip, .tutor-sidebar-card) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 104px !important;
+  margin-top: auto !important;
+  padding: 13px !important;
+  display: block !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035)),
+    radial-gradient(circle at 88% 84%, rgba(255, 199, 44, 0.16), transparent 38%) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+:where(.tf-sidebar-card, .tf-sidebar-tip, .tutor-sidebar-card) span,
+:where(.tf-sidebar-card, .tf-sidebar-tip, .tutor-sidebar-card) strong {
+  color: #ffc72c !important;
+  font-size: 0.75rem !important;
+  font-weight: 900 !important;
+}
+
+:where(.tf-sidebar-card, .tf-sidebar-tip, .tutor-sidebar-card) p {
+  margin: 7px 0 0 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.7rem !important;
+  line-height: 1.35 !important;
+  font-weight: 700 !important;
+}
+
+.tf-mobile-sidebar-logout {
+  box-sizing: border-box !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  min-height: 46px !important;
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: #061a3a !important;
+  font: inherit !important;
+  font-weight: 900 !important;
+  box-shadow: 0 12px 24px rgba(7, 27, 61, 0.14) !important;
+}
+
+@media (min-width: 901px) {
+  body.tf-has-app-header .tf-student-layout {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 12px 18px 12px 254px !important;
+    display: block !important;
+  }
+
+  body.tf-has-app-header .tf-sidebar,
+  body.tf-has-app-header .tutor-sidebar,
+  body.tf-has-app-header .perfil-sidebar,
+  body.tf-has-app-header .disponibilidad-sidebar,
+  body.tf-has-app-header .admin-sidebar {
+    position: fixed !important;
+    inset: 12px auto 12px 12px !important;
+    width: 230px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    border-radius: 24px !important;
+    transform: none !important;
+  }
+
+  body.tf-has-app-header .tf-student-main,
+  body.tf-has-app-header .tutor-main,
+  body.tf-has-app-header .perfil-main,
+  body.tf-has-app-header .disponibilidad-main,
+  body.tf-has-app-header .admin-content {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  body.tf-has-app-header .tf-student-main {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  body.tf-has-app-header .tutor-main,
+  body.tf-has-app-header .perfil-main,
+  body.tf-has-app-header .disponibilidad-main,
+  body.tf-has-app-header .admin-content {
+    width: calc(100% - 254px) !important;
+    margin-left: 254px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  :where(.tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar) {
+    width: min(86vw, 320px) !important;
+    height: calc(100dvh - 60px) !important;
+    overflow-y: auto !important;
+  }
+
+  :where(.tf-sidebar-card, .tf-sidebar-tip, .tutor-sidebar-card) {
+    min-height: 90px !important;
+  }
+
+  body.tf-sidebar-open :where(.tf-mini-chat-button, .tf-mini-chat-panel) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+

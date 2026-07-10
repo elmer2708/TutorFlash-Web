@@ -1,87 +1,88 @@
-﻿import {
+import {
   observarUsuario,
-  cerrarSesion,
   obtenerTutorActivoActual,
   actualizarPerfilTutorActual,
   actualizarDatosPagoTutor,
   obtenerMisDatosPagoTutor,
+  soloDigitos,
+  validarCelularPeruOpcional,
+  validarNumeroCuentaOpcional,
+  validarCciOpcional,
 } from "./firebase-service.js";
-import {
-  limitarTexto,
-  validarCelularPeru,
-  validarEnlaceClase,
-} from "./validaciones.js";
+import { limitarTexto, validarEnlaceClase } from "./validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const formPerfilTutor = document.getElementById("formPerfilTutor");
-  const mensajePerfilTutor = document.getElementById("mensajePerfilTutor");
-  const btnGuardarPerfilTutor = document.getElementById(
-    "btnGuardarPerfilTutor",
-  );
-  const btnCerrarSesionTutor = document.getElementById("btnCerrarSesionTutor");
-  const btnGuardarDatosPago = document.getElementById("btnGuardarDatosPago");
-  const mensajeDatosPago = document.getElementById("mensajeDatosPago");
+  const $ = (id) => document.getElementById(id);
 
-  const nombreInput = document.getElementById("nombreTutorPerfil");
-  const correoInput = document.getElementById("correoTutorPerfil");
-  const presentacionInput = document.getElementById("presentacionTutorPerfil");
-  const experienciaInput = document.getElementById("experienciaTutorPerfil");
-  const cursosInput = document.getElementById("cursosTutorPerfil");
-  const nivelInput = document.getElementById("nivelTutorPerfil");
-  const modalidadInput = document.getElementById("modalidadTutorPerfil");
-  const precioInput = document.getElementById("precioTutorPerfil");
-  const disponibilidadInput = document.getElementById(
-    "disponibilidadTutorPerfil",
-  );
-  const distritoInput = document.getElementById("distritoTutorPerfil");
-  const estadoPublicoInput = document.getElementById(
-    "estadoPublicoTutorPerfil",
-  );
-  const pagoYapeInput = document.getElementById("pagoYape");
-  const pagoPlinInput = document.getElementById("pagoPlin");
-  const pagoBancoInput = document.getElementById("pagoBanco");
-  const pagoCciInput = document.getElementById("pagoCci");
-  const pagoTitularInput = document.getElementById("pagoTitular");
-  const pagoInstruccionesInput = document.getElementById("pagoInstrucciones");
-  const cvUrlInput = document.getElementById("cvUrlTutorPerfil");
+  const formPerfilTutor = $("formPerfilTutor");
+  const mensajePerfilTutor = $("mensajePerfilTutor");
+  const btnGuardarPerfilTutor = $("btnGuardarPerfilTutor");
+  const btnGuardarDatosPago = $("btnGuardarDatosPago");
+  const mensajeDatosPago = $("mensajeDatosPago");
 
-  const avatarPreview = document.getElementById("avatarTutorPreview");
-  const previewNombre = document.getElementById("previewNombre");
-  const previewPresentacion = document.getElementById("previewPresentacion");
-  const previewCursos = document.getElementById("previewCursos");
-  const previewNivel = document.getElementById("previewNivel");
-  const previewModalidad = document.getElementById("previewModalidad");
-  const previewPrecio = document.getElementById("previewPrecio");
-  const previewDisponibilidad = document.getElementById(
-    "previewDisponibilidad",
-  );
-  const previewDistrito = document.getElementById("previewDistrito");
-  const previewEstado = document.getElementById("previewEstado");
+  const campos = {
+    nombre: $("nombreTutorPerfil"),
+    correo: $("correoTutorPerfil"),
+    presentacion: $("presentacionTutorPerfil"),
+    experiencia: $("experienciaTutorPerfil"),
+    cursos: $("cursosTutorPerfil"),
+    nivel: $("nivelTutorPerfil"),
+    modalidad: $("modalidadTutorPerfil"),
+    precio: $("precioTutorPerfil"),
+    disponibilidad: $("disponibilidadTutorPerfil"),
+    distrito: $("distritoTutorPerfil"),
+    estadoPublico: $("estadoPublicoTutorPerfil"),
+    cvUrl: $("cvUrlTutorPerfil"),
+  };
+
+  const pagoCampos = {
+    yape: $("pagoYape"),
+    plin: $("pagoPlin"),
+    banco: $("pagoBanco"),
+    numeroCuenta: $("pagoNumeroCuenta"),
+    cci: $("pagoCci"),
+    titular: $("pagoTitular"),
+    instrucciones: $("pagoInstrucciones"),
+  };
+
+  const preview = {
+    avatar: $("avatarTutorPreview"),
+    nombre: $("previewNombre"),
+    presentacion: $("previewPresentacion"),
+    cursos: $("previewCursos"),
+    nivel: $("previewNivel"),
+    modalidad: $("previewModalidad"),
+    precio: $("previewPrecio"),
+    disponibilidad: $("previewDisponibilidad"),
+    distrito: $("previewDistrito"),
+    estado: $("previewEstado"),
+  };
 
   let tutorActual = null;
 
-  function mostrarMensaje(texto, tipo = "info") {
-    if (!mensajePerfilTutor) return;
+  function mostrarMensaje(elemento, claseBase, texto, tipo = "info") {
+    if (!elemento) return;
 
-    mensajePerfilTutor.textContent = texto;
-    mensajePerfilTutor.className = `mensaje-perfil ${tipo}`;
-  }
-
-  function mostrarMensajeDatosPago(texto, tipo = "info") {
-    if (!mensajeDatosPago) return;
-
-    let mensajeTraducido = texto;
+    let mensaje = texto;
 
     if (
       String(texto).includes("Missing or insufficient permissions") ||
       String(texto).includes("permission-denied")
     ) {
-      mensajeTraducido =
-        "No tienes permisos para guardar tus datos de pago. Revisa las reglas de Firebase o vuelve a iniciar sesión.";
+      mensaje =
+        "No tienes permisos para guardar estos datos. Revisa las reglas de Firebase o vuelve a iniciar sesión.";
     }
 
-    mensajeDatosPago.textContent = mensajeTraducido;
-    mensajeDatosPago.className = `mensaje-datos-pago ${tipo}`;
+    elemento.textContent = mensaje;
+    elemento.className = `${claseBase} ${tipo}`;
+  }
+
+  function mostrarMensajePerfil(texto, tipo = "info") {
+    mostrarMensaje(mensajePerfilTutor, "mensaje-perfil", texto, tipo);
+  }
+
+  function mostrarMensajePago(texto, tipo = "info") {
+    mostrarMensaje(mensajeDatosPago, "mensaje-datos-pago", texto, tipo);
   }
 
   function capitalizarTexto(texto) {
@@ -91,13 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .split(" ")
       .filter(Boolean)
       .map((palabra, index) => {
-        const palabrasMinusculas = ["de", "del", "la", "las", "el", "los", "y"];
-
-        if (index > 0 && palabrasMinusculas.includes(palabra)) {
-          return palabra;
-        }
-
-        return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+        const minusculas = ["de", "del", "la", "las", "el", "los", "y"];
+        return index > 0 && minusculas.includes(palabra)
+          ? palabra
+          : palabra.charAt(0).toUpperCase() + palabra.slice(1);
       })
       .join(" ");
   }
@@ -155,74 +153,172 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function actualizarPreview() {
-    const nombre = nombreInput?.value.trim() || "TutorFlash Tutor";
+    const nombre = campos.nombre?.value.trim() || "TutorFlash Tutor";
     const presentacion =
-      presentacionInput?.value.trim() || "Tu presentación aparecerá aquí.";
-    const cursos = cursosInput?.value.trim() || "Cursos no registrados";
-    const nivel = nivelInput?.value || "Nivel no indicado";
+      campos.presentacion?.value.trim() || "Tu presentación aparecerá aquí.";
+    const cursos = campos.cursos?.value.trim() || "Cursos no registrados";
+    const nivel = campos.nivel?.value || "Nivel no indicado";
     const modalidad = "Virtual";
-    const precio = Number(precioInput?.value || 0);
-    const disponibilidad = disponibilidadInput?.value || "No indicada";
-    const distrito = distritoInput?.value.trim() || "No indicado";
-    const estadoPublico = estadoPublicoInput?.value || "activo";
+    const precio = Number(campos.precio?.value || 0);
+    const disponibilidad = campos.disponibilidad?.value || "No indicada";
+    const distrito = campos.distrito?.value.trim() || "No indicado";
+    const estadoPublico = campos.estadoPublico?.value || "activo";
 
-    if (avatarPreview) avatarPreview.textContent = obtenerIniciales(nombre);
-    if (previewNombre) previewNombre.textContent = nombre;
-    if (previewPresentacion) previewPresentacion.textContent = presentacion;
-    if (previewCursos) previewCursos.textContent = cursos;
-    if (previewNivel) previewNivel.textContent = nivel;
-    if (previewModalidad) previewModalidad.textContent = modalidad;
-    if (previewPrecio) previewPrecio.textContent = `S/ ${precio.toFixed(2)}`;
-    if (previewDisponibilidad)
-      previewDisponibilidad.textContent = disponibilidad;
-    if (previewDistrito) previewDistrito.textContent = distrito;
-
-    if (previewEstado) {
-      previewEstado.textContent =
-        estadoPublico === "pausado" ? "Pausado" : "Activo";
+    if (preview.avatar) preview.avatar.textContent = obtenerIniciales(nombre);
+    if (preview.nombre) preview.nombre.textContent = nombre;
+    if (preview.presentacion) preview.presentacion.textContent = presentacion;
+    if (preview.cursos) preview.cursos.textContent = cursos;
+    if (preview.nivel) preview.nivel.textContent = nivel;
+    if (preview.modalidad) preview.modalidad.textContent = modalidad;
+    if (preview.precio) preview.precio.textContent = `S/ ${precio.toFixed(2)}`;
+    if (preview.disponibilidad) preview.disponibilidad.textContent = disponibilidad;
+    if (preview.distrito) preview.distrito.textContent = distrito;
+    if (preview.estado) {
+      preview.estado.textContent = estadoPublico === "pausado" ? "Pausado" : "Activo";
     }
   }
 
   function llenarFormulario(tutor) {
-    const nombre = tutor.nombre || "";
-    const correo = tutor.correo || tutor.correoUsuario || "";
-    const presentacion = tutor.presentacion || "";
-    const experiencia = tutor.experiencia || tutor.descripcion || "";
-    const cursos = tutor.cursos || "";
-    const nivel = tutor.nivel || "";
-    const modalidad = "Virtual";
-    const precioHora = tutor.precioHora || tutor.precio || "";
-    const disponibilidad = tutor.disponibilidad || "";
-    const distrito = tutor.distrito || tutor.zona || "";
-    const estadoPublico = tutor.estadoPublico || "activo";
+    if (!tutor) return;
 
-    if (nombreInput) nombreInput.value = nombre;
-    if (correoInput) correoInput.value = correo;
-    if (presentacionInput) presentacionInput.value = presentacion;
-    if (experienciaInput) experienciaInput.value = experiencia;
-    if (cursosInput) cursosInput.value = cursos;
-    if (nivelInput) nivelInput.value = nivel;
-    if (modalidadInput) modalidadInput.value = modalidad;
-    if (precioInput) precioInput.value = precioHora;
-    if (disponibilidadInput) disponibilidadInput.value = disponibilidad;
-    if (distritoInput) distritoInput.value = distrito;
-    if (estadoPublicoInput) estadoPublicoInput.value = estadoPublico;
-    if (cvUrlInput) cvUrlInput.value = tutor.cvUrl || "";
+    const valores = {
+      nombre: tutor.nombre || "",
+      correo: tutor.correo || tutor.correoUsuario || tutor.email || "",
+      presentacion: tutor.presentacion || "",
+      experiencia: tutor.experiencia || tutor.descripcion || "",
+      cursos: tutor.cursos || tutor.curso || "",
+      nivel: tutor.nivel || "",
+      modalidad: "Virtual",
+      precio: tutor.precioHora || tutor.precio || "",
+      disponibilidad: tutor.disponibilidad || "",
+      distrito: tutor.distrito || tutor.zona || "",
+      estadoPublico: tutor.estadoPublico || "activo",
+      cvUrl: tutor.cvUrl || "",
+    };
+
+    Object.entries(valores).forEach(([clave, valor]) => {
+      if (campos[clave]) campos[clave].value = valor;
+    });
 
     actualizarPreview();
   }
 
-  function llenarFormularioDatosPago(datosPago) {
-    if (!datosPago) return;
+  function marcarValidez(input, esValido) {
+    if (!input) return;
 
-    if (pagoYapeInput) pagoYapeInput.value = datosPago.yape || "";
-    if (pagoPlinInput) pagoPlinInput.value = datosPago.plin || "";
-    if (pagoBancoInput) pagoBancoInput.value = datosPago.banco || "";
-    if (pagoCciInput) pagoCciInput.value = datosPago.cci || "";
-    if (pagoTitularInput) pagoTitularInput.value = datosPago.titular || "";
-    if (pagoInstruccionesInput) {
-      pagoInstruccionesInput.value = datosPago.instrucciones || "";
+    if (!input.value.trim()) {
+      input.removeAttribute("data-valido");
+      input.removeAttribute("aria-invalid");
+      return;
     }
+
+    input.dataset.valido = esValido ? "true" : "false";
+    input.setAttribute("aria-invalid", esValido ? "false" : "true");
+  }
+
+  function limitarCampoNumerico(input, maximo, validador) {
+    if (!input) return;
+
+    const limpiarYValidar = () => {
+      input.value = soloDigitos(input.value).slice(0, maximo);
+      marcarValidez(input, validador(input.value));
+    };
+
+    input.addEventListener("input", limpiarYValidar);
+    input.addEventListener("blur", limpiarYValidar);
+  }
+
+  function validarDatosPagoFormulario() {
+    const yape = validarCelularPeruOpcional(pagoCampos.yape?.value, "Yape");
+    const plin = validarCelularPeruOpcional(pagoCampos.plin?.value, "Plin");
+    const banco = limitarTexto(pagoCampos.banco?.value || "", 60, "banco").trim();
+    const numeroCuenta = validarNumeroCuentaOpcional(pagoCampos.numeroCuenta?.value);
+    const cci = validarCciOpcional(pagoCampos.cci?.value);
+    const titular = limitarTexto(pagoCampos.titular?.value || "", 120, "titular").trim();
+    const instrucciones = limitarTexto(
+      pagoCampos.instrucciones?.value || "",
+      250,
+      "instrucciones",
+    ).trim();
+
+    const tieneBilletera = Boolean(yape || plin);
+    const tieneCuentaBancaria = Boolean(numeroCuenta || cci);
+
+    if (!tieneBilletera && !tieneCuentaBancaria) {
+      throw new Error("Agrega al menos un método de pago: Yape, Plin o cuenta bancaria.");
+    }
+
+    if (tieneCuentaBancaria && !banco) {
+      throw new Error("Si registras cuenta bancaria, ingresa el nombre del banco.");
+    }
+
+    if (!titular) {
+      throw new Error("Ingresa el nombre del titular del pago.");
+    }
+
+    return {
+      yape,
+      plin,
+      banco,
+      numeroCuenta,
+      cci,
+      titular,
+      instrucciones,
+    };
+  }
+
+  function actualizarEstadoPagoEnVivo() {
+    try {
+      validarDatosPagoFormulario();
+      mostrarMensajePago("Los datos de pago tienen un formato correcto.", "exito");
+    } catch (error) {
+      mostrarMensajePago(error.message, "info");
+    }
+  }
+
+  function normalizarPagoCargado(datosPago) {
+    const yape = soloDigitos(datosPago?.yape || "").slice(0, 9);
+    const plin = soloDigitos(datosPago?.plin || "").slice(0, 9);
+    let numeroCuenta = soloDigitos(
+      datosPago?.numeroCuenta ||
+        datosPago?.numeroDeCuenta ||
+        datosPago?.cuenta ||
+        datosPago?.cuentaBanco ||
+        datosPago?.bancoCuenta ||
+        "",
+    ).slice(0, 20);
+    let cci = soloDigitos(datosPago?.cci || datosPago?.pagoCci || "").slice(0, 20);
+
+    if (!numeroCuenta && cci && cci.length !== 20) {
+      numeroCuenta = cci;
+      cci = "";
+    }
+
+    return {
+      yape,
+      plin,
+      banco: datosPago?.banco || "",
+      numeroCuenta,
+      cci,
+      titular: datosPago?.titular || "",
+      instrucciones: datosPago?.instrucciones || "",
+    };
+  }
+
+  function llenarFormularioDatosPago(datosPago) {
+    const pago = normalizarPagoCargado(datosPago);
+
+    Object.entries(pago).forEach(([clave, valor]) => {
+      if (pagoCampos[clave]) pagoCampos[clave].value = valor;
+    });
+
+    marcarValidez(pagoCampos.yape, !pago.yape || /^9\d{8}$/.test(pago.yape));
+    marcarValidez(pagoCampos.plin, !pago.plin || /^9\d{8}$/.test(pago.plin));
+    marcarValidez(
+      pagoCampos.numeroCuenta,
+      !pago.numeroCuenta || /^\d{10,20}$/.test(pago.numeroCuenta),
+    );
+    marcarValidez(pagoCampos.cci, !pago.cci || /^\d{20}$/.test(pago.cci));
   }
 
   async function cargarDatosPagoTutor() {
@@ -231,23 +327,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (datosPago) {
         llenarFormularioDatosPago(datosPago);
-        mostrarMensajeDatosPago(
-          "Datos de pago cargados correctamente.",
-          "exito",
-        );
+        mostrarMensajePago("Datos de pago cargados correctamente.", "exito");
         return;
       }
 
-      mostrarMensajeDatosPago(
-        "Agrega tus métodos de pago para mostrarlos al estudiante.",
+      mostrarMensajePago(
+        "Agrega Yape, Plin o una cuenta bancaria para aceptar reservas.",
         "info",
       );
     } catch (error) {
       console.error("Error al cargar datos de pago:", error);
-      mostrarMensajeDatosPago(
-        error.message || "No se pudieron cargar tus datos de pago.",
-        "error",
-      );
+      mostrarMensajePago(error.message || "No se pudieron cargar tus datos de pago.", "error");
     }
   }
 
@@ -259,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        mostrarMensaje("Validando perfil del tutor...", "info");
+        mostrarMensajePerfil("Validando perfil del tutor...", "info");
 
         const tutorActivo = await obtenerTutorActivoActual();
 
@@ -272,219 +362,169 @@ document.addEventListener("DOMContentLoaded", () => {
         llenarFormulario(tutorActual);
         await cargarDatosPagoTutor();
 
-        mostrarMensaje(
+        mostrarMensajePerfil(
           "Perfil cargado correctamente. Puedes editar tus datos.",
           "exito",
         );
       } catch (error) {
         console.error("Error al cargar perfil tutor:", error);
-        mostrarMensaje("No se pudo cargar tu perfil de tutor.", "error");
+        mostrarMensajePerfil("No se pudo cargar tu perfil de tutor.", "error");
       }
     });
   }
 
-  const camposPreview = [
-    nombreInput,
-    presentacionInput,
-    cursosInput,
-    nivelInput,
-    modalidadInput,
-    precioInput,
-    disponibilidadInput,
-    distritoInput,
-    estadoPublicoInput,
-    cvUrlInput,
-  ];
-
-  camposPreview.forEach((campo) => {
+  [
+    campos.nombre,
+    campos.presentacion,
+    campos.cursos,
+    campos.nivel,
+    campos.modalidad,
+    campos.precio,
+    campos.disponibilidad,
+    campos.distrito,
+    campos.estadoPublico,
+    campos.cvUrl,
+  ].forEach((campo) => {
     campo?.addEventListener("input", actualizarPreview);
     campo?.addEventListener("change", actualizarPreview);
   });
 
-  nombreInput?.addEventListener("blur", () => {
-    nombreInput.value = capitalizarTexto(nombreInput.value);
+  campos.nombre?.addEventListener("blur", () => {
+    campos.nombre.value = capitalizarTexto(campos.nombre.value);
     actualizarPreview();
   });
 
-  cursosInput?.addEventListener("blur", () => {
-    cursosInput.value = corregirCursosTexto(cursosInput.value);
+  campos.cursos?.addEventListener("blur", () => {
+    campos.cursos.value = corregirCursosTexto(campos.cursos.value);
     actualizarPreview();
   });
 
-  distritoInput?.addEventListener("blur", () => {
-    distritoInput.value = capitalizarTexto(distritoInput.value);
+  campos.distrito?.addEventListener("blur", () => {
+    campos.distrito.value = capitalizarTexto(campos.distrito.value);
     actualizarPreview();
   });
 
-  if (formPerfilTutor) {
-    formPerfilTutor.addEventListener("submit", async (event) => {
-      event.preventDefault();
+  formPerfilTutor?.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-      if (!tutorActual) {
-        mostrarMensaje(
-          "No se encontró un tutor activo para actualizar.",
-          "error",
-        );
-        return;
+    if (!tutorActual) {
+      mostrarMensajePerfil("No se encontró un tutor activo para actualizar.", "error");
+      return;
+    }
+
+    const nombre = capitalizarTexto(campos.nombre?.value || "");
+    const correo = campos.correo?.value.trim().toLowerCase() || "";
+    const presentacion = campos.presentacion?.value.trim() || "";
+    const experiencia = campos.experiencia?.value.trim() || "";
+    const cursos = corregirCursosTexto(campos.cursos?.value || "");
+    const nivel = campos.nivel?.value || "";
+    const modalidad = "Virtual";
+    const precioHora = Number(campos.precio?.value || 0);
+    const disponibilidad = campos.disponibilidad?.value || "";
+    const distrito = capitalizarTexto(campos.distrito?.value || "");
+    const estadoPublico = campos.estadoPublico?.value || "activo";
+    const cvUrl = campos.cvUrl?.value.trim() || "";
+
+    if (
+      !nombre ||
+      !presentacion ||
+      !experiencia ||
+      !cursos ||
+      !nivel ||
+      !precioHora ||
+      !disponibilidad
+    ) {
+      mostrarMensajePerfil("Completa todos los campos antes de guardar tu perfil.", "error");
+      return;
+    }
+
+    if (precioHora <= 0) {
+      mostrarMensajePerfil("El precio por hora debe ser mayor a cero.", "error");
+      return;
+    }
+
+    if (precioHora > 300) {
+      mostrarMensajePerfil("El precio por hora no debe superar S/ 300.", "error");
+      return;
+    }
+
+    try {
+      const cvUrlValidado = cvUrl ? validarEnlaceClase(cvUrl) : "";
+
+      if (btnGuardarPerfilTutor) {
+        btnGuardarPerfilTutor.disabled = true;
+        btnGuardarPerfilTutor.textContent = "Guardando perfil...";
       }
 
-      const nombre = capitalizarTexto(nombreInput?.value || "");
-      const correo = correoInput?.value.trim().toLowerCase() || "";
-      const presentacion = presentacionInput?.value.trim() || "";
-      const experiencia = experienciaInput?.value.trim() || "";
-      const cursos = corregirCursosTexto(cursosInput?.value || "");
-      const nivel = nivelInput?.value || "";
-      const modalidad = "Virtual";
-      const precioHora = Number(precioInput?.value || 0);
-      const disponibilidad = disponibilidadInput?.value || "";
-      const distrito = capitalizarTexto(distritoInput?.value || "");
-      const estadoPublico = estadoPublicoInput?.value || "activo";
-      const cvUrl = cvUrlInput?.value.trim() || "";
+      const perfilActualizado = await actualizarPerfilTutorActual({
+        nombre,
+        correo,
+        presentacion,
+        experiencia,
+        cursos,
+        nivel,
+        modalidad,
+        precioHora,
+        disponibilidad,
+        distrito,
+        zona: distrito,
+        estadoPublico,
+        cvUrl: cvUrlValidado,
+        cvTipo: cvUrlValidado.includes("drive.google.com")
+          ? "drive"
+          : cvUrlValidado
+            ? "enlace"
+            : "",
+        perfilCompleto: true,
+      });
 
-      if (
-        !nombre ||
-        !presentacion ||
-        !experiencia ||
-        !cursos ||
-        !nivel ||
-        !precioHora ||
-        !disponibilidad
-      ) {
-        mostrarMensaje(
-          "Completa todos los campos antes de guardar tu perfil.",
-          "error",
-        );
-        return;
+      tutorActual = perfilActualizado;
+      llenarFormulario(tutorActual);
+      mostrarMensajePerfil("Perfil actualizado correctamente.", "exito");
+    } catch (error) {
+      console.error("Error al guardar perfil:", error);
+      mostrarMensajePerfil(error.message || "No se pudo guardar el perfil del tutor.", "error");
+    } finally {
+      if (btnGuardarPerfilTutor) {
+        btnGuardarPerfilTutor.disabled = false;
+        btnGuardarPerfilTutor.textContent = "Guardar perfil";
       }
+    }
+  });
 
-      if (precioHora <= 0) {
-        mostrarMensaje("El precio por hora debe ser mayor a cero.", "error");
-        return;
-      }
+  limitarCampoNumerico(pagoCampos.yape, 9, (valor) => !valor || /^9\d{8}$/.test(valor));
+  limitarCampoNumerico(pagoCampos.plin, 9, (valor) => !valor || /^9\d{8}$/.test(valor));
+  limitarCampoNumerico(
+    pagoCampos.numeroCuenta,
+    20,
+    (valor) => !valor || /^\d{10,20}$/.test(valor),
+  );
+  limitarCampoNumerico(pagoCampos.cci, 20, (valor) => !valor || /^\d{20}$/.test(valor));
 
-      if (precioHora > 300) {
-        mostrarMensaje("El precio por hora no debe superar S/ 300.", "error");
-        return;
-      }
+  Object.values(pagoCampos).forEach((campo) => {
+    campo?.addEventListener("input", actualizarEstadoPagoEnVivo);
+    campo?.addEventListener("change", actualizarEstadoPagoEnVivo);
+  });
 
-      try {
-        const cvUrlValidado = cvUrl ? validarEnlaceClase(cvUrl) : "";
+  btnGuardarDatosPago?.addEventListener("click", async () => {
+    try {
+      const datosPago = validarDatosPagoFormulario();
 
-        if (btnGuardarPerfilTutor) {
-          btnGuardarPerfilTutor.disabled = true;
-          btnGuardarPerfilTutor.textContent = "Guardando perfil...";
-        }
+      btnGuardarDatosPago.disabled = true;
+      btnGuardarDatosPago.textContent = "Guardando datos...";
 
-        const perfilActualizado = await actualizarPerfilTutorActual({
-          nombre,
-          correo,
-          presentacion,
-          experiencia,
-          cursos,
-          nivel,
-          modalidad,
-          precioHora,
-          disponibilidad,
-          distrito,
-          zona: distrito,
-          estadoPublico,
-          cvUrl: cvUrlValidado,
-          cvTipo: cvUrlValidado.includes("drive.google.com")
-            ? "drive"
-            : cvUrlValidado
-              ? "enlace"
-              : "",
-          perfilCompleto: true,
-        });
+      await actualizarDatosPagoTutor(datosPago);
 
-        tutorActual = perfilActualizado;
-        llenarFormulario(tutorActual);
+      llenarFormularioDatosPago(datosPago);
+      mostrarMensajePago("Datos de pago guardados correctamente.", "exito");
+    } catch (error) {
+      console.error("Error al guardar datos de pago:", error);
+      mostrarMensajePago(error.message || "No se pudieron guardar tus datos de pago.", "error");
+    } finally {
+      btnGuardarDatosPago.disabled = false;
+      btnGuardarDatosPago.textContent = "Guardar datos de pago";
+    }
+  });
 
-        mostrarMensaje("Perfil actualizado correctamente.", "exito");
-      } catch (error) {
-        console.error("Error al guardar perfil:", error);
-
-        mostrarMensaje(
-          error.message || "No se pudo guardar el perfil del tutor.",
-          "error",
-        );
-      } finally {
-        if (btnGuardarPerfilTutor) {
-          btnGuardarPerfilTutor.disabled = false;
-          btnGuardarPerfilTutor.textContent = "Guardar perfil";
-        }
-      }
-    });
-  }
-
-  if (btnGuardarDatosPago) {
-    btnGuardarDatosPago.addEventListener("click", async () => {
-      let yape = pagoYapeInput?.value.trim() || "";
-      let plin = pagoPlinInput?.value.trim() || "";
-      const banco = pagoBancoInput?.value.trim() || "";
-      const cci = pagoCciInput?.value.trim() || "";
-      const titular = pagoTitularInput?.value.trim() || "";
-      const instrucciones = pagoInstruccionesInput?.value.trim() || "";
-      const tieneMetodoPago = yape || plin || banco || cci;
-
-      if (!tieneMetodoPago) {
-        mostrarMensajeDatosPago(
-          "Agrega al menos un método de pago: Yape, Plin, banco o CCI.",
-          "error",
-        );
-        return;
-      }
-
-      if (!titular) {
-        mostrarMensajeDatosPago(
-          "Ingresa el nombre del titular del pago.",
-          "error",
-        );
-        return;
-      }
-
-      try {
-        if (yape) yape = validarCelularPeru(yape, "Yape");
-        if (plin) plin = validarCelularPeru(plin, "Plin");
-
-        if (banco.length > 60) {
-          throw new Error("El banco no debe superar 60 caracteres.");
-        }
-
-        if (cci && !/^[0-9\s-]{5,34}$/.test(cci)) {
-          throw new Error(
-            "El CCI o número de cuenta solo debe tener números, espacios o guiones.",
-          );
-        }
-
-        btnGuardarDatosPago.disabled = true;
-        btnGuardarDatosPago.textContent = "Guardando datos...";
-
-        await actualizarDatosPagoTutor({
-          yape,
-          plin,
-          banco,
-          cci,
-          titular,
-          instrucciones: limitarTexto(instrucciones, 500, "instrucciones"),
-        });
-
-        mostrarMensajeDatosPago(
-          "Datos de pago guardados correctamente.",
-          "exito",
-        );
-      } catch (error) {
-        console.error("Error al guardar datos de pago:", error);
-        mostrarMensajeDatosPago(
-          error.message || "No se pudieron guardar tus datos de pago.",
-          "error",
-        );
-      } finally {
-        btnGuardarDatosPago.disabled = false;
-        btnGuardarDatosPago.textContent = "Guardar datos de pago";
-      }
-    });
-  }
   validarAcceso();
 });
-

@@ -1,0 +1,27 @@
+{
+  "name": "tutorflash-web",
+  "version": "1.0.0",
+  "description": "TutorFlash-Web es un MVP web hecho con HTML, CSS y JavaScript puro. Funciona como una plataforma de tutorias rapidas para estudiantes que necesitan reforzar un curso antes de un examen.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elmer2708/TutorFlash-Web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/elmer2708/TutorFlash-Web/issues"
+  },
+  "homepage": "https://github.com/elmer2708/TutorFlash-Web#readme",
+  "dependencies": {
+    "firebase-admin": "^14.1.0"
+  }
+}

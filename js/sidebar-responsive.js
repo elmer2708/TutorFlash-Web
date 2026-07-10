@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (!document.getElementById("tf-sidebar-shell-styles")) {
+    const sidebarStyles = document.createElement("link");
+    sidebarStyles.id = "tf-sidebar-shell-styles";
+    sidebarStyles.rel = "stylesheet";
+    sidebarStyles.href = "../css/sidebar-shell.css?v=tf-sidebar-shell-v1";
+    document.head.append(sidebarStyles);
+  }
+
   const sidebar = document.querySelector(
     ".tf-sidebar, .tutor-sidebar, .perfil-sidebar, .disponibilidad-sidebar, .admin-sidebar",
   );
@@ -152,6 +160,173 @@ document.addEventListener("DOMContentLoaded", () => {
           padding-right: 8px;
         }
       }
+
+      /* Contrato único del sidebar: escritorio desde 901 px, off-canvas hasta 900 px. */
+      @media (min-width: 901px) {
+        body.tf-has-app-header .tf-app-header {
+          display: none !important;
+        }
+        body.tf-has-app-header .tf-sidebar-overlay,
+        body.tf-has-app-header .tf-mobile-sidebar-logout {
+          display: none !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+        body.tf-has-app-header .tf-topbar,
+        body.tf-has-app-header .tf-student-topbar,
+        body.tf-has-app-header .tutor-topbar,
+        body.tf-has-app-header .admin-topbar {
+          display: flex !important;
+        }
+        body.tf-has-app-header.tf-student-page .tf-student-layout {
+          width: 100% !important;
+          max-width: none !important;
+          padding: 12px 18px 12px 254px !important;
+          display: block !important;
+        }
+        body.tf-has-app-header.tf-student-page .tf-sidebar {
+          position: fixed !important;
+          inset: 12px auto 12px 12px !important;
+          width: 230px !important;
+          height: auto !important;
+          transform: none !important;
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          border-radius: 24px !important;
+        }
+        body.tf-has-app-header.tf-student-page .tf-student-main {
+          width: 100% !important;
+          min-width: 0 !important;
+          margin: 0 !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        html,
+        body.tf-has-app-header {
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }
+        body.tf-has-app-header.tf-sidebar-open {
+          overflow: hidden !important;
+        }
+        body.tf-has-app-header .tf-app-header {
+          z-index: 10000 !important;
+        }
+        body.tf-has-app-header .tf-student-layout,
+        body.tf-has-app-header .admin-layout {
+          width: 100% !important;
+          max-width: 100% !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+        body.tf-has-app-header .tf-sidebar,
+        body.tf-has-app-header .tutor-sidebar,
+        body.tf-has-app-header .perfil-sidebar,
+        body.tf-has-app-header .disponibilidad-sidebar,
+        body.tf-has-app-header .admin-sidebar {
+          position: fixed !important;
+          inset: 60px auto 0 0 !important;
+          z-index: 9999 !important;
+          width: min(86vw, 320px) !important;
+          max-width: 320px !important;
+          height: calc(100dvh - 60px) !important;
+          min-height: 0 !important;
+          margin: 0 !important;
+          padding: 16px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          border-radius: 0 24px 24px 0 !important;
+          transform: translateX(-110%) !important;
+          transition: transform 0.25s ease !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+        body.tf-has-app-header.tf-sidebar-open .tf-sidebar,
+        body.tf-has-app-header.tf-sidebar-open .tutor-sidebar,
+        body.tf-has-app-header.tf-sidebar-open .perfil-sidebar,
+        body.tf-has-app-header.tf-sidebar-open .disponibilidad-sidebar,
+        body.tf-has-app-header.tf-sidebar-open .admin-sidebar {
+          transform: translateX(0) !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
+        }
+        body.tf-has-app-header .tf-sidebar-menu,
+        body.tf-has-app-header .sidebar-nav,
+        body.tf-has-app-header .admin-menu {
+          width: 100% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          grid-template-columns: none !important;
+        }
+        body.tf-has-app-header .tf-sidebar-menu a,
+        body.tf-has-app-header .sidebar-nav a,
+        body.tf-has-app-header .admin-menu a {
+          width: 100% !important;
+          min-width: 0 !important;
+          justify-content: flex-start !important;
+        }
+        body.tf-has-app-header .tf-sidebar-overlay {
+          position: fixed !important;
+          inset: 60px 0 0 !important;
+          z-index: 9998 !important;
+          display: block !important;
+          background: rgba(6, 26, 58, 0.45) !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          transition: opacity 0.25s ease, visibility 0.25s ease !important;
+        }
+        body.tf-has-app-header.tf-sidebar-open .tf-sidebar-overlay {
+          opacity: 1 !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
+        }
+        body.tf-has-app-header .tf-mobile-sidebar-logout {
+          display: none !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+        body.tf-has-app-header.tf-sidebar-open .tf-mobile-sidebar-logout {
+          display: inline-flex !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
+          flex: 0 0 auto !important;
+          width: 100% !important;
+          margin-top: auto !important;
+        }
+        body.tf-has-app-header .tf-student-main,
+        body.tf-has-app-header .tutor-main,
+        body.tf-has-app-header .perfil-main,
+        body.tf-has-app-header .disponibilidad-main,
+        body.tf-has-app-header .admin-content,
+        body.tf-has-app-header .chat-shell {
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-left: 0 !important;
+          box-sizing: border-box !important;
+        }
+      }
+
+      @media (max-width: 390px) {
+        .tf-app-header {
+          grid-template-columns: 42px minmax(0, 1fr) auto !important;
+          gap: 8px !important;
+          padding-inline: 8px !important;
+        }
+        .tf-app-header-brand {
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          white-space: nowrap !important;
+        }
+        .tf-app-header-link {
+          min-height: 40px !important;
+          padding-inline: 10px !important;
+          font-size: 0.82rem !important;
+        }
+      }
     `;
     document.head.append(styles);
   }
@@ -200,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function cerrarMenu() {
     document.body.classList.remove("tf-sidebar-open");
+    toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", sidebar ? "Abrir menú" : "Volver al panel");
     toggle.textContent = "☰";
   }
@@ -211,12 +387,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const abierto = document.body.classList.toggle("tf-sidebar-open");
+    toggle.setAttribute("aria-expanded", String(abierto));
     toggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
     toggle.textContent = abierto ? "×" : "☰";
   }
 
   toggle.addEventListener("click", alternarMenu);
   overlay.addEventListener("click", cerrarMenu);
+
+  toggle.setAttribute("aria-expanded", "false");
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && document.body.classList.contains("tf-sidebar-open")) {
+      cerrarMenu();
+      toggle.focus();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) cerrarMenu();
+  });
 
   sidebar?.querySelectorAll("a, button").forEach((elemento) => {
     elemento.addEventListener("click", () => {

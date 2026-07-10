@@ -107,16 +107,44 @@ function validarUrlOpcional(valor, campo = "enlace") {
   return enlace;
 }
 
-function validarCelularPeruOpcional(valor, campo = "celular") {
+export function validarCelularPeruOpcional(valor, campo = "celular") {
   const celular = String(valor || "").replace(/\s+/g, "");
 
   if (!celular) return "";
 
   if (!/^9\d{8}$/.test(celular)) {
-    throw new Error(`Ingresa un ${campo} válido de 9 dígitos.`);
+    throw new Error(`${campo} debe tener 9 dígitos y empezar con 9.`);
   }
 
   return celular;
+}
+
+export function soloDigitos(valor) {
+  return String(valor || "").replace(/\D/g, "");
+}
+
+export function validarNumeroCuentaOpcional(valor) {
+  const numero = soloDigitos(valor);
+
+  if (!numero) return "";
+
+  if (numero.length < 10 || numero.length > 20) {
+    throw new Error("El número de cuenta debe tener entre 10 y 20 dígitos.");
+  }
+
+  return numero;
+}
+
+export function validarCciOpcional(valor) {
+  const numero = soloDigitos(valor);
+
+  if (!numero) return "";
+
+  if (numero.length !== 20) {
+    throw new Error("El CCI debe tener exactamente 20 dígitos.");
+  }
+
+  return numero;
 }
 
 function obtenerCvTipo(url) {
@@ -727,6 +755,7 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
         datosPagoTutor.yape ||
         datosPagoTutor.plin ||
         datosPagoTutor.banco ||
+        datosPagoTutor.numeroCuenta ||
         datosPagoTutor.cci;
 
       if (!tieneDatosPago || !datosPagoTutor.titular) {
@@ -739,6 +768,7 @@ export async function actualizarEstadoReserva(reservaId, nuevoEstado) {
         yape: datosPagoTutor.yape || "",
         plin: datosPagoTutor.plin || "",
         banco: datosPagoTutor.banco || "",
+        numeroCuenta: datosPagoTutor.numeroCuenta || datosPagoTutor.numeroDeCuenta || "",
         cci: datosPagoTutor.cci || "",
         titular: datosPagoTutor.titular || "",
         instrucciones: datosPagoTutor.instrucciones || "",
@@ -1501,25 +1531,38 @@ export async function actualizarDatosPagoTutor(datosPago) {
     throw new Error("Debes iniciar sesión para actualizar tus datos de pago.");
   }
 
+  const numeroCuentaAnterior =
+    datosPago.numeroCuenta ||
+    datosPago.numeroDeCuenta ||
+    datosPago.cuenta ||
+    datosPago.cuentaBanco ||
+    datosPago.bancoCuenta ||
+    "";
+  const cciAnterior = datosPago.cci || datosPago.pagoCci || "";
+
   const datosPagoLimpios = {
     uid: usuario.uid,
     yape: validarCelularPeruOpcional(datosPago.yape, "Yape"),
     plin: validarCelularPeruOpcional(datosPago.plin, "Plin"),
-    banco: String(datosPago.banco || "").trim(),
-    cci: String(datosPago.cci || "").trim(),
-    titular: String(datosPago.titular || "").trim(),
-    instrucciones: String(datosPago.instrucciones || "").trim(),
+    banco: limpiarTextoSeguro(datosPago.banco).slice(0, 60),
+    numeroCuenta: validarNumeroCuentaOpcional(numeroCuentaAnterior),
+    cci: validarCciOpcional(cciAnterior),
+    titular: limpiarTextoSeguro(datosPago.titular).slice(0, 120),
+    instrucciones: limpiarTextoSeguro(datosPago.instrucciones).slice(0, 250),
     actualizadoEn: serverTimestamp(),
   };
 
-  const tieneAlgunMetodo =
-    datosPagoLimpios.yape ||
-    datosPagoLimpios.plin ||
-    datosPagoLimpios.banco ||
-    datosPagoLimpios.cci;
+  const tieneBilletera = Boolean(datosPagoLimpios.yape || datosPagoLimpios.plin);
+  const tieneCuentaBancaria = Boolean(
+    datosPagoLimpios.numeroCuenta || datosPagoLimpios.cci,
+  );
 
-  if (!tieneAlgunMetodo) {
-    throw new Error("Agrega al menos un método de pago: Yape, Plin o banco.");
+  if (!tieneBilletera && !tieneCuentaBancaria) {
+    throw new Error("Agrega al menos un método de pago: Yape, Plin o cuenta bancaria.");
+  }
+
+  if (tieneCuentaBancaria && !datosPagoLimpios.banco) {
+    throw new Error("Para usar una cuenta bancaria, ingresa el nombre del banco.");
   }
 
   if (!datosPagoLimpios.titular) {
@@ -1528,12 +1571,6 @@ export async function actualizarDatosPagoTutor(datosPago) {
 
   if (datosPagoLimpios.banco.length > 60) {
     throw new Error("El banco no debe superar 60 caracteres.");
-  }
-
-  if (datosPagoLimpios.cci && !/^[0-9\s-]{5,34}$/.test(datosPagoLimpios.cci)) {
-    throw new Error(
-      "El CCI o número de cuenta solo debe tener números, espacios o guiones.",
-    );
   }
 
   await setDoc(doc(db, "datosPagoTutores", usuario.uid), datosPagoLimpios, {

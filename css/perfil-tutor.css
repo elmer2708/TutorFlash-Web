@@ -531,100 +531,6 @@ textarea:disabled {
   }
 }
 
-.pago-section {
-  display: grid;
-  gap: 18px;
-  margin-top: 28px;
-  padding: 24px;
-  border: 1px solid rgba(12, 35, 64, 0.08);
-  border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 12px 28px rgba(12, 35, 64, 0.07);
-}
-
-.pago-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.pago-field {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.pago-field-full {
-  grid-column: 1 / -1;
-}
-
-.pago-field label {
-  color: #123b5d;
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-
-.pago-field input,
-.pago-field textarea {
-  width: 100%;
-  border: 1px solid #d7dde6;
-  border-radius: 14px;
-  padding: 13px 14px;
-  background: #ffffff;
-  color: #0c2340;
-  font-size: 0.95rem;
-  outline: none;
-}
-
-.pago-field textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-.pago-field input:focus,
-.pago-field textarea:focus {
-  border-color: #f2b705;
-  box-shadow: 0 0 0 3px rgba(242, 183, 5, 0.18);
-}
-
-.pago-help {
-  margin: 10px 0 0;
-  color: #64748b;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.mensaje-datos-pago {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: #eaf0f7;
-  color: #0c2340;
-  font-weight: 800;
-  line-height: 1.45;
-}
-
-.mensaje-datos-pago.exito {
-  background: #e8f8ef;
-  color: #137333;
-}
-
-.mensaje-datos-pago.error {
-  background: #ffe6e6;
-  color: #b42318;
-}
-
-@media (max-width: 620px) {
-  .pago-section {
-    padding: 20px;
-    border-radius: 22px;
-  }
-
-  .pago-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
 .perfil-header {
   min-height: 215px;
@@ -636,23 +542,19 @@ textarea:disabled {
 }
 
 .preview-card,
-.form-card,
-.pago-section {
+.form-card {
   padding: clamp(24px, 4vw, 34px);
 }
 
 .form-grupo input,
 .form-grupo select,
-.form-grupo textarea,
-.pago-field input,
-.pago-field textarea {
+.form-grupo textarea {
   border-color: var(--tf-borde);
   background: #ffffff;
 }
 
 .form-grupo input,
-.form-grupo select,
-.pago-field input {
+.form-grupo select {
   min-height: 56px;
 }
 
@@ -725,8 +627,7 @@ textarea:disabled {
 }
 
 .preview-card,
-.form-card,
-.pago-section {
+.form-card {
   border-color: rgba(12, 35, 64, 0.1);
   box-shadow: 0 18px 36px rgba(7, 27, 61, 0.08);
 }
@@ -880,8 +781,7 @@ textarea:disabled {
   line-height: 1.55;
 }
 
-.mensaje-perfil,
-.mensaje-datos-pago {
+.mensaje-perfil {
   border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
@@ -893,13 +793,11 @@ textarea:disabled {
   gap: 18px;
 }
 
-.form-grupo,
-.pago-field {
+.form-grupo {
   gap: 8px;
 }
 
-.form-grupo label,
-.pago-field label {
+.form-grupo label {
   color: #0c2340;
   font-size: 0.95rem;
   font-weight: 900;
@@ -907,24 +805,19 @@ textarea:disabled {
 
 .form-grupo input,
 .form-grupo select,
-.form-grupo textarea,
-.pago-field input,
-.pago-field textarea {
+.form-grupo textarea {
   border-radius: 18px;
   padding: 15px 16px;
   background: #ffffff;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
 }
 
-.form-grupo textarea,
-.pago-field textarea {
+.form-grupo textarea {
   min-height: 128px;
 }
 
 .form-grupo input::placeholder,
-.form-grupo textarea::placeholder,
-.pago-field input::placeholder,
-.pago-field textarea::placeholder {
+.form-grupo textarea::placeholder {
   color: #94a3b8;
 }
 
@@ -939,18 +832,6 @@ textarea:disabled {
   background: linear-gradient(180deg, #133a7a 0%, #0a285a 100%);
 }
 
-.pago-section {
-  gap: 20px;
-  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-}
-
-.pago-grid {
-  gap: 16px;
-}
-
-.pago-help {
-  margin-top: 8px;
-}
 
 .tf-mobile-sidebar-logout {
   display: none;
@@ -1029,8 +910,7 @@ textarea:disabled {
   }
 
   .preview-card,
-  .form-card,
-  .pago-section {
+  .form-card {
     padding: 22px 18px;
     border-radius: 24px;
   }
@@ -1078,14 +958,12 @@ textarea:disabled {
 }
 
 .form-card,
-.pago-section,
 .preview-card {
   border-radius: 28px !important;
 }
 
 /* Labels con íconos */
-.form-grupo label,
-.pago-field label {
+.form-grupo label {
   display: inline-flex !important;
   align-items: center !important;
   gap: 9px !important;
@@ -1093,8 +971,7 @@ textarea:disabled {
   font-weight: 900 !important;
 }
 
-.form-grupo label::before,
-.pago-field label::before {
+.form-grupo label::before {
   font-family: "bootstrap-icons" !important;
   display: inline-grid !important;
   width: 22px !important;
@@ -1120,19 +997,10 @@ label[for="distritoTutorPerfil"]::before { content: "\F3E8"; }
 label[for="cvUrlTutorPerfil"]::before { content: "\F470"; }
 label[for="estadoPublicoTutorPerfil"]::before { content: "\F26A"; }
 
-/* Pagos */
-label[for="pagoYape"]::before { content: "\F5D1"; }
-label[for="pagoPlin"]::before { content: "\F5D1"; }
-label[for="pagoBanco"]::before { content: "\F62A"; }
-label[for="pagoCci"]::before { content: "\F2C2"; }
-label[for="pagoTitular"]::before { content: "\F4D7"; }
-label[for="pagoInstrucciones"]::before { content: "\F4CB"; }
 
 .form-grupo input,
 .form-grupo select,
-.form-grupo textarea,
-.pago-field input,
-.pago-field textarea {
+.form-grupo textarea {
   border-radius: 18px !important;
   border: 1px solid rgba(191, 204, 224, .96) !important;
   background: #ffffff !important;
@@ -1141,21 +1009,17 @@ label[for="pagoInstrucciones"]::before { content: "\F4CB"; }
 }
 
 .form-grupo input,
-.form-grupo select,
-.pago-field input {
+.form-grupo select {
   min-height: 58px !important;
 }
 
-.form-grupo textarea,
-.pago-field textarea {
+.form-grupo textarea {
   min-height: 135px !important;
 }
 
 .form-grupo input:focus,
 .form-grupo select:focus,
-.form-grupo textarea:focus,
-.pago-field input:focus,
-.pago-field textarea:focus {
+.form-grupo textarea:focus {
   border-color: #ffc72c !important;
   box-shadow: 0 0 0 4px rgba(255, 199, 44, .20) !important;
 }
@@ -1276,33 +1140,209 @@ label[for="pagoInstrucciones"]::before { content: "\F4CB"; }
   }
 
   .form-card,
-  .pago-section,
   .preview-card {
     border-radius: 24px !important;
   }
 }
 
-/* =====================================================
-   FIX: Cerrar sesión del sidebar solo en móvil
-===================================================== */
-@media (min-width: 901px) {
-  .tf-mobile-sidebar-logout {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
+
+
+
+/* ===== Métodos de pago ordenados v3 ===== */
+.pago-section-v3 {
+  display: grid !important;
+  gap: 22px !important;
+  margin-top: 28px !important;
+  padding: clamp(24px, 4vw, 34px) !important;
+  border: 1px solid rgba(195, 210, 232, .95) !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 199, 44, .18), transparent 34%),
+    linear-gradient(180deg, #f8fbff 0%, #ffffff 100%) !important;
+  box-shadow: 0 18px 38px rgba(12, 35, 64, .08) !important;
+}
+
+.pago-section-v3 .pago-heading {
+  margin-bottom: 0 !important;
+}
+
+.pago-section-v3 .pago-help {
+  max-width: 780px !important;
+  margin: 10px 0 0 !important;
+  color: #64748b !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+}
+
+.pago-regla-box {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  border: 1px dashed rgba(37, 99, 235, .35) !important;
+  border-radius: 18px !important;
+  background: #eef6ff !important;
+  color: #0a285a !important;
+  font-weight: 800 !important;
+  line-height: 1.45 !important;
+}
+
+.pago-regla-box > i {
+  display: inline-grid !important;
+  width: 34px !important;
+  height: 34px !important;
+  place-items: center !important;
+  flex: 0 0 34px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #2563eb !important;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .12) !important;
+}
+
+.pago-regla-box strong {
+  color: #061a3a !important;
+}
+
+.pago-bloque {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+.pago-subtitle {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  background: #fff4cf !important;
+  color: #9a6500 !important;
+  font-size: .78rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .09em !important;
+  text-transform: uppercase !important;
+}
+
+.pago-section-v3 .pago-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.pago-section-v3 .pago-field {
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.pago-section-v3 .pago-field-full {
+  grid-column: 1 / -1 !important;
+}
+
+.pago-section-v3 .pago-field label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  margin: 0 !important;
+  color: #061a3a !important;
+  font-size: .96rem !important;
+  font-weight: 900 !important;
+}
+
+.pago-section-v3 .pago-field label::before {
+  content: none !important;
+  display: none !important;
+}
+
+.pago-section-v3 .pago-field label i {
+  color: #123b83 !important;
+  font-size: 1.05rem !important;
+}
+
+.pago-section-v3 .pago-field input,
+.pago-section-v3 .pago-field textarea {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: 1px solid rgba(191, 204, 224, .96) !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  color: #061a3a !important;
+  font-size: 1rem !important;
+  outline: none !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65) !important;
+}
+
+.pago-section-v3 .pago-field input {
+  min-height: 58px !important;
+  padding: 0 16px !important;
+}
+
+.pago-section-v3 .pago-field textarea {
+  min-height: 135px !important;
+  padding: 15px 16px !important;
+  resize: vertical !important;
+}
+
+.pago-section-v3 .pago-field input:focus,
+.pago-section-v3 .pago-field textarea:focus {
+  border-color: #ffc72c !important;
+  box-shadow: 0 0 0 4px rgba(255, 199, 44, .20) !important;
+}
+
+.pago-note {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #64748b !important;
+  font-size: .82rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+.pago-section-v3 .pago-field input[data-valido="true"] {
+  border-color: rgba(34, 197, 94, .75) !important;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, .10) !important;
+}
+
+.pago-section-v3 .pago-field input[data-valido="false"] {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, .12) !important;
+}
+
+.mensaje-datos-pago {
+  margin: 0 !important;
+  padding: 13px 16px !important;
+  border: 1px solid rgba(37, 99, 235, .12) !important;
+  border-radius: 16px !important;
+  background: #eaf0f7 !important;
+  color: #0c2340 !important;
+  font-weight: 850 !important;
+  line-height: 1.45 !important;
+}
+
+.mensaje-datos-pago.exito {
+  border-color: rgba(34, 197, 94, .18) !important;
+  background: #e8f8ef !important;
+  color: #137333 !important;
+}
+
+.mensaje-datos-pago.error {
+  border-color: rgba(239, 68, 68, .18) !important;
+  background: #ffe6e6 !important;
+  color: #b42318 !important;
+}
+
+.btn-guardar-pago {
+  width: 100% !important;
+}
+
+@media (max-width: 720px) {
+  .pago-section-v3 .pago-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pago-regla-box {
+    flex-direction: column !important;
   }
 }
 
-@media (max-width: 900px) {
-  body.tf-sidebar-open .tf-mobile-sidebar-logout {
-    display: inline-flex !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-  }
-
-  body:not(.tf-sidebar-open) .tf-mobile-sidebar-logout {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-}

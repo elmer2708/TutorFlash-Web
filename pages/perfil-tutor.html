@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="../css/panel-tutor.css" />
     <link rel="stylesheet" href="../css/perfil-tutor.css" />
       <link rel="stylesheet" href="../css/chat.css" />
-    <link rel="stylesheet" href="../css/tutorflash-theme.css?v=tf-redesign2" />
   </head>
   <body>
         <aside class="tutor-sidebar">
@@ -292,86 +291,136 @@
             </button>
           </form>
 
-          <section class="pago-section">
-            <div class="form-heading">
-              <span class="tf-tutor-section-label"><i class="bi bi-credit-card"></i> Pagos</span>
-              <h2>Métodos de pago</h2>
+          <section class="pago-section pago-section-v3" aria-labelledby="tituloMetodosPago">
+            <div class="form-heading pago-heading">
+              <span class="tf-tutor-section-label"><i class="bi bi-credit-card-2-front"></i> Pagos</span>
+              <h2 id="tituloMetodosPago">Métodos de pago</h2>
               <p class="pago-help">
-                Agrega los datos que ver el estudiante cuando deba realizar el
-                pago de una tutora aceptada.
+                Registra al menos una opción de pago. Por ahora pueden ser datos ficticios, pero deben cumplir el formato correcto.
               </p>
             </div>
 
-            <div class="pago-grid">
-              <div class="pago-field">
-                <label for="pagoYape">Yape</label>
-                <input
-                  type="text"
-                  id="pagoYape"
-                  placeholder="Ejemplo: 999 888 777"
-                  inputmode="numeric"
-                  minlength="9"
-                  maxlength="9"
-                  pattern="^9[0-9]{8}$"
-                />
+            <div class="pago-regla-box">
+              <i class="bi bi-shield-check" aria-hidden="true"></i>
+              <div>
+                <strong>Regla:</strong>
+                completa <b>Yape</b>, <b>Plin</b> o una <b>cuenta bancaria</b>. Si usas banco, escribe el banco y agrega número de cuenta o CCI.
+              </div>
+            </div>
+
+            <div class="pago-bloque">
+              <div class="pago-subtitle">
+                <i class="bi bi-phone"></i>
+                Billeteras digitales
               </div>
 
-              <div class="pago-field">
-                <label for="pagoPlin">Plin</label>
-                <input
-                  type="text"
-                  id="pagoPlin"
-                  placeholder="Ejemplo: 999 888 777"
-                  inputmode="numeric"
-                  minlength="9"
-                  maxlength="9"
-                  pattern="^9[0-9]{8}$"
-                />
+              <div class="pago-grid pago-grid-billetera">
+                <div class="pago-field">
+                  <label for="pagoYape"><i class="bi bi-phone"></i> Yape</label>
+                  <input
+                    type="tel"
+                    id="pagoYape"
+                    placeholder="999888777"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    maxlength="9"
+                    aria-describedby="ayudaPagoYape"
+                  />
+                  <small id="ayudaPagoYape" class="pago-note">Opcional. Debe tener 9 dígitos y empezar con 9.</small>
+                </div>
+
+                <div class="pago-field">
+                  <label for="pagoPlin"><i class="bi bi-phone-vibrate"></i> Plin</label>
+                  <input
+                    type="tel"
+                    id="pagoPlin"
+                    placeholder="999888777"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    maxlength="9"
+                    aria-describedby="ayudaPagoPlin"
+                  />
+                  <small id="ayudaPagoPlin" class="pago-note">Opcional. Debe tener 9 dígitos y empezar con 9.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="pago-bloque pago-bloque-banco">
+              <div class="pago-subtitle">
+                <i class="bi bi-bank"></i>
+                Cuenta bancaria
               </div>
 
-              <div class="pago-field">
-                <label for="pagoBanco">Banco</label>
-                <input
-                  type="text"
-                  id="pagoBanco"
-                  placeholder="Ejemplo: BCP, Interbank, BBVA"
-                />
-              </div>
+              <div class="pago-grid pago-grid-banco">
+                <div class="pago-field">
+                  <label for="pagoBanco"><i class="bi bi-bank"></i> Banco</label>
+                  <input
+                    type="text"
+                    id="pagoBanco"
+                    placeholder="Ejemplo: BCP, Interbank, BBVA"
+                    maxlength="60"
+                    aria-describedby="ayudaPagoBanco"
+                  />
+                  <small id="ayudaPagoBanco" class="pago-note">Obligatorio si registras número de cuenta o CCI. Máximo 60 caracteres.</small>
+                </div>
 
-              <div class="pago-field">
-                <label for="pagoCci">CCI o nmero de cuenta</label>
-                <input
-                  type="text"
-                  id="pagoCci"
-                  placeholder="Ejemplo: 002-123456789..."
-                />
-              </div>
+                <div class="pago-field">
+                  <label for="pagoNumeroCuenta"><i class="bi bi-123"></i> Número de cuenta</label>
+                  <input
+                    type="tel"
+                    id="pagoNumeroCuenta"
+                    placeholder="Ejemplo: 12345678901234"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    maxlength="20"
+                    aria-describedby="ayudaPagoNumeroCuenta"
+                  />
+                  <small id="ayudaPagoNumeroCuenta" class="pago-note">Opcional. Entre 10 y 20 dígitos. No acepta letras, espacios ni guiones.</small>
+                </div>
 
-              <div class="pago-field">
-                <label for="pagoTitular">Titular</label>
-                <input
-                  type="text"
-                  id="pagoTitular"
-                  placeholder="Nombre del titular de la cuenta"
-                />
-              </div>
+                <div class="pago-field">
+                  <label for="pagoCci"><i class="bi bi-upc-scan"></i> CCI</label>
+                  <input
+                    type="tel"
+                    id="pagoCci"
+                    placeholder="Ejemplo: 00212345678901234567"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    maxlength="20"
+                    aria-describedby="ayudaPagoCci"
+                  />
+                  <small id="ayudaPagoCci" class="pago-note">Opcional. Debe tener exactamente 20 dígitos.</small>
+                </div>
 
-              <div class="pago-field pago-field-full">
-                <label for="pagoInstrucciones">Instrucciones de pago</label>
-                <textarea
-                  id="pagoInstrucciones"
-                  rows="4"
-                  placeholder="Ejemplo: Despus de pagar, registra el nmero de operacin en TutorFlash."
-                ></textarea>
+                <div class="pago-field">
+                  <label for="pagoTitular"><i class="bi bi-person-badge"></i> Titular</label>
+                  <input
+                    type="text"
+                    id="pagoTitular"
+                    placeholder="Nombre del titular de la cuenta"
+                    maxlength="120"
+                  />
+                  <small class="pago-note">Obligatorio cuando guardas cualquier método de pago.</small>
+                </div>
+
+                <div class="pago-field pago-field-full">
+                  <label for="pagoInstrucciones"><i class="bi bi-pencil-square"></i> Instrucciones de pago</label>
+                  <textarea
+                    id="pagoInstrucciones"
+                    rows="4"
+                    maxlength="250"
+                    placeholder="Ejemplo: Después de pagar, registra el número de operación en TutorFlash."
+                  ></textarea>
+                  <small class="pago-note">Opcional. Máximo 250 caracteres.</small>
+                </div>
               </div>
             </div>
 
             <p id="mensajeDatosPago" class="mensaje-datos-pago">
-              Completa tus mtodos de pago para que el estudiante tenga
-              instrucciones claras.
+              Completa Yape, Plin o una cuenta bancaria. El número de cuenta y el CCI se guardan en campos separados.
             </p>
 
-            <button type="button" id="btnGuardarDatosPago" class="btn-guardar">
+            <button type="button" id="btnGuardarDatosPago" class="btn-guardar btn-guardar-pago">
               Guardar datos de pago
             </button>
           </section>
@@ -380,15 +429,10 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script type="module" src="../js/sidebar-responsive.js"></script>
+    <script type="module" src="../js/sidebar-responsive.js?v=tf-sidebar-unified-v2"></script>
     <script type="module" src="../js/tutor-account.js"></script>
     <script type="module" src="../js/perfil-tutor.js"></script>
-      <script type="module" src="../js/chat.js"></script>
+    <script type="module" src="../js/chat.js"></script>
   </body>
 </html>
-
-
-
-
-
 

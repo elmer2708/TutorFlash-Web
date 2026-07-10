@@ -11,7 +11,7 @@
   obtenerMisFavoritos,
   eliminarTutorFavorito,
 } from "./firebase-service.js";
-import { mostrarAviso } from "./mensajes-ui.js";
+import { escaparHtml, mostrarAviso } from "./mensajes-ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tituloBienvenida = document.querySelector("#tituloBienvenida");
@@ -106,14 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "sábado",
   ];
 
-  function limpiarTexto(valor) {
-    return String(valor ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+  const limpiarTexto = escaparHtml;
 
   function mostrarAvisoDisponibilidad(mensaje, contenedor = document.body) {
     if (!contenedor) return;
