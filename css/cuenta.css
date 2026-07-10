@@ -356,7 +356,26 @@ img {
   transform: translateY(-50%);
   color: #72819a;
   font-size: 1rem;
-  pointer-events: none;
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.input-action:hover {
+  color: var(--azul-800);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.input-action:focus-visible {
+  outline: 3px solid rgba(244, 180, 0, 0.42);
+  outline-offset: 2px;
 }
 
 .auth-form input,

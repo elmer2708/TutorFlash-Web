@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginPassword = document.querySelector("#loginPassword");
   const btnLogin = document.querySelector("#btnLogin");
   const btnGoogleLogin = document.querySelector("#btnGoogleLogin");
-  const btnTogglePassword = document.querySelector("#btnTogglePassword");
+  const botonesTogglePassword = document.querySelectorAll("[data-password-target]");
   const btnRestablecerPassword = document.querySelector(
     "#btnRestablecerPassword",
   );
@@ -316,6 +316,29 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registroForm) {
     registroForm.addEventListener("submit", manejarRegistro);
   }
+
+  botonesTogglePassword.forEach((boton) => {
+    boton.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const input = document.getElementById(boton.dataset.passwordTarget || "");
+      if (!input || !["password", "text"].includes(input.type)) return;
+
+      const mostrarPassword = input.type === "password";
+      input.type = mostrarPassword ? "text" : "password";
+
+      const descripcion = mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña";
+      boton.setAttribute("aria-label", descripcion);
+      boton.setAttribute("title", descripcion);
+      boton.setAttribute("aria-pressed", String(mostrarPassword));
+
+      const icono = boton.querySelector("i");
+      if (icono) {
+        icono.classList.toggle("bi-eye", !mostrarPassword);
+        icono.classList.toggle("bi-eye-slash", mostrarPassword);
+      }
+    });
+  });
 
   btnRestablecerPassword?.addEventListener("click", async () => {
     if (accionAuthEnProceso) return;

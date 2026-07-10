@@ -120,7 +120,17 @@
                   minlength="6"
                   required
                 />
-                <span class="input-action" aria-hidden="true"><i class="bi bi-eye"></i></span>
+                <button
+                  type="button"
+                  id="btnTogglePassword"
+                  class="input-action"
+                  data-password-target="loginPassword"
+                  aria-label="Mostrar contraseña"
+                  title="Mostrar contraseña"
+                  aria-pressed="false"
+                >
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
               </div>
 
               <button
@@ -200,6 +210,17 @@
                   minlength="6"
                   required
                 />
+                <button
+                  type="button"
+                  id="btnToggleRegistroPassword"
+                  class="input-action"
+                  data-password-target="registroPassword"
+                  aria-label="Mostrar contraseña"
+                  title="Mostrar contraseña"
+                  aria-pressed="false"
+                >
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
               </div>
 
               <button type="submit" id="btnRegistro" class="btn-auth-principal">
